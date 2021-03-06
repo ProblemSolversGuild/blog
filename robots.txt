@@ -1,1 +1,1 @@
-Sitemap: https://blog.problemsolversguild.com/sitemap.xml
+Sitemap: https://problemsolversguild.github.io/sitemap.xml
