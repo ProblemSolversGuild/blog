@@ -60,7 +60,7 @@ show_tags: true
 # Add your Google Analytics ID here if you have one and want to use it
 google_analytics: 
 
-matomo: true
+matomo: problemsolversguild.com
 
 exclude:
   - docker-compose.yml
