@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>fastai’s Text DLs Exploration | The Problem Solvers Guild</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="fastai’s Text DLs Exploration" />
+<meta name="author" content="Kevin Bird" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Exploring different methods to create the dls object in fastai" />
+<meta property="og:description" content="Exploring different methods to create the dls object in fastai" />
+<link rel="canonical" href="https://blog.problemsolversguild.com/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html" />
+<meta property="og:url" content="https://blog.problemsolversguild.com/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html" />
+<meta property="og:site_name" content="The Problem Solvers Guild" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-05-14T00:00:00-05:00" />
+<script type="application/ld+json">
+{"url":"https://blog.problemsolversguild.com/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html","@type":"BlogPosting","headline":"fastai’s Text DLs Exploration","dateModified":"2021-05-14T00:00:00-05:00","datePublished":"2021-05-14T00:00:00-05:00","author":{"@type":"Person","name":"Kevin Bird"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.problemsolversguild.com/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html"},"description":"Exploring different methods to create the dls object in fastai","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://blog.problemsolversguild.com/feed.xml" title="The Problem Solvers Guild" />
+
+<!-- Matomo -->
+<script  type="text/javascript">
+    var _paq = window._paq = window._paq || [];_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);_paq.push(['alwaysUseSendBeacon']);_paq.push(['setTrackerUrl', "\/\/problemsolversguild.com\/wp-json\/matomo\/v1\/hit\/"]);_paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];g.type='text/javascript'; g.async=true; g.src="\/\/problemsolversguild.com\/wp-json\/matomo\/v1\/hit\/"; s.parentNode.insertBefore(g,s);
+</script>
+<!-- End Matomo Code -->
+<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">The Problem Solvers Guild</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/search/">Search</a><a class="page-link" href="/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">fastai&#39;s Text DLs Exploration</h1><p class="page-description">Exploring different methods to create the dls object in fastai</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-05-14T00:00:00-05:00" itemprop="datePublished">
+        May 14, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Kevin Bird</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      9 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#fastai">fastai</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#technical">technical</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/categories/#exploration">exploration</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/ProblemSolversGuild/blog/tree/master/_notebooks/2021-05-14-Text_DLs_Exploration.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/ProblemSolversGuild/blog/master?filepath=_notebooks%2F2021-05-14-Text_DLs_Exploration.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/ProblemSolversGuild/blog/blob/master/_notebooks/2021-05-14-Text_DLs_Exploration.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Introduction">Introduction </a></li>
+<li class="toc-entry toc-h2"><a href="#Using-Datasets-+-Dataloaders">Using Datasets + Dataloaders </a></li>
+<li class="toc-entry toc-h2"><a href="#Using-Datasets-->-train-TfmdDL-+-valid-TfmdDL-->-dataloaders">Using Datasets -&gt; train TfmdDL + valid TfmdDL -&gt; dataloaders </a></li>
+<li class="toc-entry toc-h2"><a href="#Using-DataBlock-->-datasets-->-dataloaders">Using DataBlock -&gt; datasets -&gt; dataloaders </a></li>
+<li class="toc-entry toc-h2"><a href="#Using-DataBlock-->-dataloaders">Using DataBlock -&gt; dataloaders </a></li>
+<li class="toc-entry toc-h2"><a href="#Conclusion">Conclusion </a></li>
+<li class="toc-entry toc-h2"><a href="#Useful-Links">Useful Links </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-05-14-Text_DLs_Exploration.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Introduction">
+<a class="anchor" href="#Introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction<a class="anchor-link" href="#Introduction"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This post is an exploration into how to convert data into dls objects that can be used by fastai's learner.  I was having issues creating a dls object that had the ability to <code>show_batch</code> and met my arbitrarily custom needs.  So I set out to figure out how to create dls that worked well for my needs.</p>
+<p>This blog post uses the Human Numbers dataset which is a dataset that counts sequentially from 1 to 9999 but in english text rather than numerical form.  This is an interesting problem because there is quite a bit of repetition, but also new tokens and patterns being introduced regularly that a model will need to figure out.</p>
+<p>My goal was to create a dls that would have X=1,2,3 and y=4.  Over the course of this blog post, I will show ~4 ways to create dls that enable show_batch to work as expected.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.text.all</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">HUMAN_NUMBERS</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>First, I create a tokenizer, combine all of the text into a single string, and tokenize each word</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">WordTokenizer</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Testing the Tokenizer</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tokenizer</span><span class="p">(</span><span class="s1">'one two three'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#4) ['xxbos','one','two','three']</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tokenizer</span><span class="p">(</span><span class="s1">'one, two'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#4) ['xxbos','one',',','two']</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Reading the train and validation files:</p>
+<ul>
+<li>train - [1-8000]</li>
+<li>valid = [8001-9999]</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_txt</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">'train.txt'</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+<span class="n">valid_txt</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">'valid.txt'</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For this problem, I will create my own validation set.  It will split close to the same as this, but by creating my own split, I don't have to do anything special when creating chunks around the train-&gt;validation split point</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_text</span> <span class="o">=</span> <span class="n">train_txt</span><span class="o">+</span><span class="n">valid_txt</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_text_tok</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">all_text</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_text_tok</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#63094) ['xxbos','one',',','two',',','three',',','four',',','five'...]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, I take the tokenized text, count how many times each tokenizer occurs and create a vocab with that.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">count</span><span class="o">=</span><span class="n">Counter</span><span class="p">(</span><span class="n">all_text_tok</span><span class="p">)</span>
+<span class="n">vocab</span> <span class="o">=</span> <span class="n">make_vocab</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Counter({',': 9996, 'hundred': 9000, 'thousand': 8999, 'one': 2900, 'two': 2900, 'three': 2900, 'four': 2900, 'five': 2900, 'six': 2900, 'seven': 2900, 'nine': 2899, 'eight': 2898, 'twenty': 1000, 'thirty': 1000, 'forty': 1000, 'fifty': 1000, 'sixty': 1000, 'seventy': 1000, 'eighty': 1000, 'ninety': 1000, 'ten': 100, 'eleven': 100, 'twelve': 100, 'thirteen': 100, 'fourteen': 100, 'fifteen': 100, 'sixteen': 100, 'seventeen': 100, 'eighteen': 100, 'nineteen': 100, 'xxbos': 1, 'nineeight': 1})
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">vocab</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>['xxunk', 'xxpad', 'xxbos', 'xxeos', 'xxfld', 'xxrep', 'xxwrep', 'xxup', 'xxmaj', ',', 'hundred', 'thousand', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'nine', 'eight', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'xxfake']
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_text_tok_chunked</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chunked</span><span class="p">(</span><span class="n">all_text_tok</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_text_tok_chunked</span> <span class="o">=</span> <span class="n">all_text_tok_chunked</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next I create something that will get_x and get_y from  the chunked data.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_x</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">o</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">get_y</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">o</span><span class="p">[</span><span class="mi">10</span><span class="p">]]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span> <span class="k">else</span> <span class="p">[</span><span class="s1">'.'</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">get_x</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">get_y</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>['xxbos', 'one', ',', 'two', ',', 'three', ',', 'four', ',', 'five'] -&gt; [',']
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">get_x</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">get_y</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>['nine', 'thousand', 'nine', 'hundred', 'ninety', 'seven', ',', 'nine', 'thousand', 'nine'] -&gt; ['hundred']
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>TitledStringDecoder is a transform that only decodes and what it enables is the show_batch and show_results function to actually work properly.  Without this, I had troubles getting those functions to work because TensorText doesn't have a proper show function or a truncate function.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">TitledStringDecoder</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decodes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TitledStr</span><span class="p">(</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>All TitledStringDecoder really does is takes an array of text ('one', 'two') and converts it into a space-concatenated string instead of type Titled str which knows how to display itself in a nice way.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">TitledStr</span><span class="p">(</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">'one'</span><span class="p">,</span> <span class="s1">'two'</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'one two'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tmp_ts</span> <span class="o">=</span> <span class="n">TitledStr</span><span class="p">(</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_text_tok</span><span class="p">[:</span><span class="mi">10</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tmp_ts</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'xxbos one , two , three , four , five'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tmp_ts</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>'xxbos one ,'</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I create the splits based off the chunks.  Putting 80% of the chunks into the training set and the last 20% in the validation set</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span> <span class="o">=</span> <span class="p">[</span><span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">)</span><span class="o">*</span><span class="mf">0.8</span><span class="p">))),</span> <span class="n">L</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">)</span><span class="o">*</span><span class="mf">0.8</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">)))]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(#4588) [0,1,2,3,4,5,6,7,8,9...],
+ (#1147) [4588,4589,4590,4591,4592,4593,4594,4595,4596,4597...]]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now, let's test the transforms work properly</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)(</span><span class="n">TitledStringDecoder</span><span class="p">()(</span><span class="n">get_x</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And confirm that they will work as a pipeline as well</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">TitledStringDecoder</span><span class="p">,</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_x</span><span class="p">(</span><span class="n">pipeline</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline_x</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">get_x</span><span class="p">,</span> <span class="n">TitledStringDecoder</span><span class="p">,</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)])</span>
+<span class="n">pipeline_y</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span><span class="n">get_y</span><span class="p">,</span> <span class="n">TitledStringDecoder</span><span class="p">,</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pipeline_y</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>TensorText([9])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-Datasets-+-Dataloaders">
+<a class="anchor" href="#Using-Datasets-+-Dataloaders" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Datasets + Dataloaders<a class="anchor-link" href="#Using-Datasets-+-Dataloaders"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsets</span> <span class="o">=</span> <span class="n">Datasets</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="p">[</span><span class="n">pipeline_x</span><span class="p">,</span><span class="n">pipeline_y</span><span class="p">],</span> <span class="n">splits</span><span class="o">=</span><span class="n">splits</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16]), TensorText([9]))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsets</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">dsets</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>xxbos one , two , three , four , five
+,
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we can create the dataloaders.  This can be done with either <code>DataLoaders.from_dsets(...)</code> or <code>dsets.dataloaders(...)</code>. Both methods are shown below.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">DataLoaders</span><span class="o">.</span><span class="n">from_dsets</span><span class="p">(</span><span class="n">dsets</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">dsets</span><span class="o">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-Datasets--&gt;-train-TfmdDL-+-valid-TfmdDL--&gt;-dataloaders">
+<a class="anchor" href="#Using-Datasets--&gt;-train-TfmdDL-+-valid-TfmdDL--&gt;-dataloaders" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Datasets -&gt; train TfmdDL + valid TfmdDL -&gt; dataloaders<a class="anchor-link" href="#Using-Datasets--&gt;-train-TfmdDL-+-valid-TfmdDL--&gt;-dataloaders"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Another way to get dls is to create TfmdDLs and pass those into DataLoaders.  If you use DataLoader rather than TfmdDL, dls won't have a show_batch method available.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">dsets</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">valid_dl</span> <span class="o">=</span> <span class="n">TfmdDL</span><span class="p">(</span><span class="n">dsets</span><span class="o">.</span><span class="n">valid</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">DataLoaders</span><span class="p">(</span><span class="n">train_dl</span><span class="p">,</span> <span class="n">valid_dl</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">dls</span><span class="o">.</span><span class="n">one_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-DataBlock--&gt;-datasets--&gt;-dataloaders">
+<a class="anchor" href="#Using-DataBlock--&gt;-datasets--&gt;-dataloaders" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using DataBlock -&gt; datasets -&gt; dataloaders<a class="anchor-link" href="#Using-DataBlock--&gt;-datasets--&gt;-dataloaders"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Another way to get dataloaders is to use DataBlock.  DataBlock wants to know what type of data will be passed which can be specified to <code>blocks</code>.  It also wants a <code>splitter</code> and the functions to <code>get_x</code> and <code>get_y</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">blocks</span> <span class="o">=</span> <span class="p">[</span><span class="n">TransformBlock</span><span class="p">(</span><span class="n">type_tfms</span><span class="o">=</span><span class="p">[</span><span class="n">TitledStringDecoder</span><span class="p">,</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)]),</span> <span class="c1"># x piece</span>
+          <span class="n">TransformBlock</span><span class="p">(</span><span class="n">type_tfms</span><span class="o">=</span><span class="p">[</span><span class="n">TitledStringDecoder</span><span class="p">,</span> <span class="n">Numericalize</span><span class="p">(</span><span class="n">vocab</span><span class="p">)])]</span> <span class="c1"># y piece</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">splits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#1147) [4588,4589,4590,4591,4592,4593,4594,4595,4596,4597...]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">IndexSplitter</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])(</span><span class="n">all_text_tok_chunked</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((#4588) [0,1,2,3,4,5,6,7,8,9...],
+ (#1147) [4588,4589,4590,4591,4592,4593,4594,4595,4596,4597...])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dblock</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">blocks</span><span class="o">=</span><span class="n">blocks</span><span class="p">,</span>
+                   <span class="n">splitter</span><span class="o">=</span><span class="n">IndexSplitter</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                   <span class="n">get_x</span><span class="o">=</span><span class="n">get_x</span><span class="p">,</span>
+                   <span class="n">get_y</span><span class="o">=</span><span class="n">get_y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With the dblock created, you can create a dset and then from the dset, you can create a dls similar to the one created above.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsets_via_dblock</span> <span class="o">=</span> <span class="n">dblock</span><span class="o">.</span><span class="n">datasets</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsets_via_dblock</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#5735) [(TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16]), TensorText([9])),(TensorText([17,  9, 18,  9, 20,  9, 19,  9, 29,  9]), TensorText([30])),(TensorText([ 9, 31,  9, 32,  9, 33,  9, 34,  9, 35]), TensorText([9])),(TensorText([36,  9, 37,  9, 38,  9, 21,  9, 21, 12]), TensorText([9])),(TensorText([21, 13,  9, 21, 14,  9, 21, 15,  9, 21]), TensorText([16])),(TensorText([ 9, 21, 17,  9, 21, 18,  9, 21, 20,  9]), TensorText([21])),(TensorText([19,  9, 22,  9, 22, 12,  9, 22, 13,  9]), TensorText([22])),(TensorText([14,  9, 22, 15,  9, 22, 16,  9, 22, 17]), TensorText([9])),(TensorText([22, 18,  9, 22, 20,  9, 22, 19,  9, 23]), TensorText([9])),(TensorText([23, 12,  9, 23, 13,  9, 23, 14,  9, 23]), TensorText([15]))...]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dsets_via_dblock</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">dsets_via_dblock</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>xxbos one , two , three , four , five
+,
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">dsets_via_dblock</span><span class="o">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span><span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-DataBlock--&gt;-dataloaders">
+<a class="anchor" href="#Using-DataBlock--&gt;-dataloaders" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using DataBlock -&gt; dataloaders<a class="anchor-link" href="#Using-DataBlock--&gt;-dataloaders"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Another option is to go directly from dblock to dls with <code>dblock.dataloaders</code>.  Behind the scenes this is creating a dataset as well, but it can be a cleaner looking way to handle it if you always go from dblock -&gt; dls.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">dblock</span><span class="o">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">all_text_tok_chunked</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Conclusion">
+<a class="anchor" href="#Conclusion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conclusion<a class="anchor-link" href="#Conclusion"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Creating <code>dls</code> is an extremely important capability when using fastai because that is what a learn expects to deal with all of the data.  There are many different ways to get a dls object created so this isn't a comprehensive list, but at least shows a few ways to do the task.  In a future blog post, I will be using this dls and exploring transformer models with it.  Hopefully this will help others get their DLs working.</p>
+<p>I'd like to give a special thanks to Arto for helping me get things working properly and everybody in the fastai discord channel for dealing with my questions and for creating a great community to learn with every step of the way.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Useful-Links">
+<a class="anchor" href="#Useful-Links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Useful Links<a class="anchor-link" href="#Useful-Links"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://arampacha.github.io/thoughtsamples/fastai/pytorch/2021/01/02/transformer-lm-from-scratch.html">https://arampacha.github.io/thoughtsamples/fastai/pytorch/2021/01/02/transformer-lm-from-scratch.html</a></p>
+<p><a href="https://github.com/fastai/fastai/blob/ab154927696338741e59e0ffc4774777c4a9781c/nbs/39_tutorial.transformers.ipynb">https://github.com/fastai/fastai/blob/ab154927696338741e59e0ffc4774777c4a9781c/nbs/39_tutorial.transformers.ipynb</a><br>
+<a href="https://github.com/fastai/fastai/blob/ab154927696338741e59e0ffc4774777c4a9781c/dev_nbs/course/lesson7-human-numbers.ipynb">https://github.com/fastai/fastai/blob/ab154927696338741e59e0ffc4774777c4a9781c/dev_nbs/course/lesson7-human-numbers.ipynb</a></p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="ProblemSolversGuild/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Blog</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/ProblemSolversGuild" title="ProblemSolversGuild"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/tpsg_io" title="tpsg_io"><svg class="svg-icon grey"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
