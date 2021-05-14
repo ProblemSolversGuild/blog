@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://blog.problemsolversguild.com/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html</loc>
+<loc>https://problemsolversguild.com/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html</loc>
 <lastmod>2021-05-14T00:00:00-05:00</lastmod>
 </url>
 <url>
-<loc>https://blog.problemsolversguild.com/</loc>
+<loc>https://problemsolversguild.com/</loc>
 </url>
 <url>
-<loc>https://blog.problemsolversguild.com/search/</loc>
+<loc>https://problemsolversguild.com/search/</loc>
 </url>
 <url>
-<loc>https://blog.problemsolversguild.com/categories/</loc>
+<loc>https://problemsolversguild.com/categories/</loc>
 </url>
 </urlset>
