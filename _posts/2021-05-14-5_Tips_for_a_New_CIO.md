@@ -3,6 +3,7 @@ title: 5 Tips for a New CIO
 toc: true
 layout: post
 categories: [advice]
+author: Kevin Bird
 hide: true
 ---
 Congratulations on your new role as CIO!  As the CIO, your job is to remove roadblocks, provide a vision, and enable your business partners without spending more than is required to do so.  Here are 5 tips that I have gathered as an employee watching multiple CIO transitions.  
