@@ -1,12 +1,18 @@
 ---
-layout: posts
+layout: default
 permalink: /posts/
 title: Posts
 ---
 This is a test: 
 
+  {% if site.paginate %}
+    {% assign rawposts = paginator.posts %}
+  {% else %}
+    {% assign rawposts = site.posts %}
+  {% endif %}
+
 <ul>
-  {% for post in site.posts %}
+  {% for post in rawposts %}
     <li>
       <a href="{{ post.url }}">{{ post.title }}</a>
       {{ post.excerpt }}
