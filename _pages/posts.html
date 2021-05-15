@@ -10,7 +10,7 @@ This is a test:
   {% else %}
     {% assign rawposts = site.posts %}
   {% endif %}
-{% assign rawposts = paginator.posts %}
+{% assign rawposts = site.posts %}
 {{ site }}
 <ul>
   {% for post in rawposts %}
