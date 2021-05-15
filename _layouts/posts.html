@@ -1,11 +1,7 @@
 ---
 layout: default
 ---
-
-<div class="home">
-
   {{ content | markdownify }}
-
 
   {% if site.paginate %}
     {% assign rawposts = paginator.posts %}
@@ -75,5 +71,3 @@ layout: default
     {%- endif %}
 
   {%- endif -%}
-
-</div>
