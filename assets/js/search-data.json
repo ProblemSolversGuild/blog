@@ -31,7 +31,7 @@
   
       ,"page2": {
           "title": "Posts",
-          "content": "This is a test: . .",
+          "content": "This is a test: . Jekyll::Drops::SiteDrop . .",
           "url": "https://blog.problemsolversguild.com/posts/",
           "relUrl": "/posts/",
           "date": ""
