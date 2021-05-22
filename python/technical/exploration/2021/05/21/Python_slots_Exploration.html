@@ -1154,7 +1154,18 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>So now that we have given <code>B3B</code> a <code>__slots__</code> it is no longer able to behave the same way that <code>B3A</code> is.</p>
+<p>So now that we have given <code>B3B</code> a <code>__slots__</code> it is no longer behaves the same way that <code>B3A</code> is.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here is what the official documentation says about this:</p>
+<blockquote>
+<p>The action of a __slots__ declaration is not limited to the class where it is defined. __slots__ declared in parents are available in child classes. However, child subclasses will get a __dict__ and __weakref__ unless they also define __slots__ (which should only contain names of any additional slots). (<a href="https://docs.python.org/3.8/reference/datamodel.html#notes-on-using-slots">https://docs.python.org/3.8/reference/datamodel.html#notes-on-using-slots</a> 5th bullet)</p>
+</blockquote>
 
 </div>
 </div>
