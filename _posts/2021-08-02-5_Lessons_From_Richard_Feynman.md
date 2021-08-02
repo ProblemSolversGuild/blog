@@ -7,10 +7,6 @@ author: Kevin Bird
 hide: true
 ---
 
-
-
-# Lessons Learned
-
 I recently listened to a [biography about Richard Feynman](https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!) and I had some takeaways that surprised me.  I had always vaguely known that Richard Feynman was an interesting guy and a great professor, but this book went so much deeper and taught me some valuable lessons.  
 
 ### Lesson 1: Don't Stay in Your Lane
