@@ -27,8 +27,8 @@ Not knowing an answer to a question is not something that should discourage you.
 
 ### Lesson 5: Define the Problem
 
-If you are part of a group of people brainstorming solutions, make sure everybody is focusing on solving the same problem.  Use real-world examples when discussing what the problem actually is.  Having different viewpoints is great when brainstorming, but make sure everybody is at least focusing on the same problem and not talking past each other.  
+Whether you are working by yourself or with a group of people, focus on defining the problem before trying to come up with a solution.  Use real-world examples when discussing what the problem actually is.  Having different viewpoints is great when brainstorming, but make sure everybody is at least focusing on the same problem and not talking past each other.  
 
 ### Conclusion
 
-I could probably go on and on about things that I learned from this book, but I think these are 5 of the main lessons from the book.  Hope this was helpful and somebody gets some good ideas from this blog post.  Looking forward to discussing these ideas with you further.  
+These five lessons are just the start of what I learned from this book which is also full of entertaining stories and facts about Richard Feynman's life.  It's well worth the read (or listen). 
