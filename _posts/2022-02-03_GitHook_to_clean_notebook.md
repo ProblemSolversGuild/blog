@@ -2,7 +2,7 @@
 
 To avoid merge issues and make PR review easier, we wanted a [Git Hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) which will:
 - Clear output of Jupyter Notebook
-- Only the files that were modified for this PR
+- Only clean the files that were modified for this PR
 
 
 There are many hook samples in `.git/hooks` folder. You want to create a file called `pre-commit` with the following code:
