@@ -4,17 +4,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Tags | The Problem Solvers Guild</title>
+<title>Using Git Hook to Clean Jupyter Notebook on Commit | The Problem Solvers Guild</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Tags" />
+<meta property="og:title" content="Using Git Hook to Clean Jupyter Notebook on Commit" />
+<meta name="author" content="Hiromi Suenaga" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Blog" />
-<meta property="og:description" content="Blog" />
-<link rel="canonical" href="https://blog.problemsolversguild.com/categories/" />
-<meta property="og:url" content="https://blog.problemsolversguild.com/categories/" />
+<meta name="description" content="To avoid merge issues and make PR review easier, we wanted a Git Hook which will: Clear output of Jupyter Notebook Only clean the files that were modified for this PR" />
+<meta property="og:description" content="To avoid merge issues and make PR review easier, we wanted a Git Hook which will: Clear output of Jupyter Notebook Only clean the files that were modified for this PR" />
+<link rel="canonical" href="https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html" />
+<meta property="og:url" content="https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html" />
 <meta property="og:site_name" content="The Problem Solvers Guild" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-02-05T00:00:00-06:00" />
 <script type="application/ld+json">
-{"url":"https://blog.problemsolversguild.com/categories/","@type":"WebPage","headline":"Tags","description":"Blog","@context":"https://schema.org"}</script>
+{"url":"https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html","@type":"BlogPosting","headline":"Using Git Hook to Clean Jupyter Notebook on Commit","dateModified":"2022-02-05T00:00:00-06:00","datePublished":"2022-02-05T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html"},"author":{"@type":"Person","name":"Hiromi Suenaga"},"description":"To avoid merge issues and make PR review easier, we wanted a Git Hook which will: Clear output of Jupyter Notebook Only clean the files that were modified for this PR","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://blog.problemsolversguild.com/feed.xml" title="The Problem Solvers Guild" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -105,127 +108,67 @@ window.onload = wrap_img;
       </nav></div>
 </header><main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Using Git Hook to Clean Jupyter Notebook on Commit</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-02-05T00:00:00-06:00" itemprop="datePublished">
+        Feb 5, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Hiromi Suenaga</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/categories/#technical">technical</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+</ul><p>To avoid merge issues and make PR review easier, we wanted a <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">Git Hook</a> which will:</p>
+<ul>
+  <li>Clear output of Jupyter Notebook</li>
+  <li>Only clean the files that were modified for this PR</li>
+</ul>
+
+<p>There are many hook samples in <code class="language-plaintext highlighter-rouge">.git/hooks</code> folder. You want to create a file called <code class="language-plaintext highlighter-rouge">pre-commit</code> with the following code:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="k">for </span>file <span class="k">in</span> <span class="si">$(</span>git diff <span class="nt">--diff-filter</span><span class="o">=</span>d <span class="nt">--cached</span> <span class="nt">--name-only</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'customers/.+\.ipynb$'</span><span class="si">)</span>
+<span class="k">do
+	</span>jupyter nbconvert <span class="nt">--ClearOutputPreprocessor</span>.enabled<span class="o">=</span>True <span class="nt">--inplace</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
+	git add <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<p>Run <code class="language-plaintext highlighter-rouge">chmod +x pre-commit</code> to make the file executable.</p>
+
+<p>That’s it!</p>
+
+<p>In the next post, we will show you how to create this Git Hook with Makefile.</p>
+
+<hr>
+
+<p>If the above code gives you the following error:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[NbConvertApp] WARNING | Config option `template_path` not recognized by `NotebookExporter`.
+</code></pre></div></div>
+
+<p>You need to run <code class="language-plaintext highlighter-rouge">pip install -U nbconvert</code> to get a newer version (https://github.com/jupyter/nbconvert/issues/1229#issuecomment-608721332).</p>
 
 
-<h2>Contents</h2>
-
-  
-  
-  
-
-  <ul>
-  
-    <li><a href="#advice">advice</a></li>
-  
-    <li><a href="#exploration">exploration</a></li>
-  
-    <li><a href="#fastai">fastai</a></li>
-  
-    <li><a href="#python">python</a></li>
-  
-    <li><a href="#rate">rate</a></li>
-  
-    <li><a href="#technical">technical</a></li>
-  
-    <li><a href="#texas">texas</a></li>
-  
-  </ul>
-
-  
-      <h3 id ="advice"><i class="fas fa-tags category-tags-icon"></i></i> advice</h3>
-      <a name="advice"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/advice/2021/08/03/5_Lessons_From_Richard_Feynman.html">5 Lessons from Richard Feynman</a>  • Aug 3, 2021</p>
-        </article>
-        
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/advice/2021/05/18/5_Tips_for_a_New_CIO.html">5 Tips for a New CIO</a>  • May 18, 2021</p>
-        </article>
-        
-      
-  
-      <h3 id ="exploration"><i class="fas fa-tags category-tags-icon"></i></i> exploration</h3>
-      <a name="exploration"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/python/technical/exploration/2021/05/21/Python_slots_Exploration.html">Python Native __slots__ Attribute Exploration</a>  • May 21, 2021</p>
-        </article>
-        
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html">fastai's Text DLs Exploration</a>  • May 14, 2021</p>
-        </article>
-        
-      
-  
-      <h3 id ="fastai"><i class="fas fa-tags category-tags-icon"></i></i> fastai</h3>
-      <a name="fastai"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html">fastai's Text DLs Exploration</a>  • May 14, 2021</p>
-        </article>
-        
-      
-  
-      <h3 id ="python"><i class="fas fa-tags category-tags-icon"></i></i> python</h3>
-      <a name="python"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/python/technical/exploration/2021/05/21/Python_slots_Exploration.html">Python Native __slots__ Attribute Exploration</a>  • May 21, 2021</p>
-        </article>
-        
-      
-  
-      <h3 id ="rate"><i class="fas fa-tags category-tags-icon"></i></i> rate</h3>
-      <a name="rate"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/texas/rate/2021/09/19/Texas-Rate-Inspector.html">Texas Rate Inspector Overview</a>  • Sep 19, 2021</p>
-        </article>
-        
-      
-  
-      <h3 id ="technical"><i class="fas fa-tags category-tags-icon"></i></i> technical</h3>
-      <a name="technical"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/technical/2022/02/05/GitHook_to_clean_notebook.html">Using Git Hook to Clean Jupyter Notebook on Commit</a>  • Feb 5, 2022</p>
-        </article>
-        
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/technical/2021/08/16/Tabular_Normalization_Exploration.html">Normalizing fastai Tabular Inputs</a>  • Aug 16, 2021</p>
-        </article>
-        
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/python/technical/exploration/2021/05/21/Python_slots_Exploration.html">Python Native __slots__ Attribute Exploration</a>  • May 21, 2021</p>
-        </article>
-        
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/fastai/technical/exploration/2021/05/14/Text_DLs_Exploration.html">fastai's Text DLs Exploration</a>  • May 14, 2021</p>
-        </article>
-        
-      
-  
-      <h3 id ="texas"><i class="fas fa-tags category-tags-icon"></i></i> texas</h3>
-      <a name="texas"></a>
-      
-        <article class="archive-item">
-          <p class="post-meta post-meta-title"><a class="page-meta" href="/texas/rate/2021/09/19/Texas-Rate-Inspector.html">Texas Rate Inspector Overview</a>  • Sep 19, 2021</p>
-        </article>
-        
-      
-  
-
-
-
-
-</div>
+  </div><a class="u-url" href="/technical/2022/02/05/GitHook_to_clean_notebook.html" hidden></a>
+</article>
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
