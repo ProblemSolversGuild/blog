@@ -77,7 +77,7 @@ $dt-green-light: rgb(172, 229, 145);
     pre, code {
      background: $dt-code-cell-background;
      color: $dt-gray-light;
-     font-size: 110%;
+    //  font-size: 110%;
     }
    
     .hll,
@@ -218,5 +218,5 @@ $dt-green-light: rgb(172, 229, 145);
 }
 
 p code{
-  font-size: 19px;
+  // font-size: 19px;
 }
