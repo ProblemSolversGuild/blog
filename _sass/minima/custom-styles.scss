@@ -9,3 +9,34 @@
 
 // If you want to turn off dark background for syntax highlighting, comment or delete the below line.
 @import "minima/fastpages-dracula-highlight"; 
+
+
+.post-content p, .post-content li {
+   font-size: 1em;
+   color: #515151;
+}
+
+p code {
+    font-size: 1em;
+}
+
+pre code {
+    background: $dt-code-cell-background;
+    color: $dt-gray-light;
+    font-size: 0.9em !important;
+}
+
+.post-meta-title, .post-meta {
+    font-size: 100%;
+}
+
+.page-description {
+    margin-top: .5rem !important;
+    margin-bottom: .5rem !important;
+    color: #585858;
+    font-size: 100%;
+}
+
+.post-title, .post-content h1 {
+    font-size: 2rem;
+}

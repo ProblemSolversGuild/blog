@@ -4,7 +4,7 @@
     {%- assign default_paths = site.pages | map: "path" -%}
     {%- assign page_paths = site.header_pages | default: default_paths -%}
     {%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
-    <a class="site-title" rel="author" href="{{ "https://www.problemsolversguild.com" }}">{{ site.title | escape }}</a>
+    <a class="site-title" rel="author" href="{{ "https://www.problemsolversguild.com" }}"><img src='https://www.problemsolversguild.com/wp-content/uploads/2022/02/Logo-1-5-e1608007634482-384x384x0x30x384x322x16080076371-1-e1644101739772.png' /> {{ site.title | escape }}</a>
 
     {%- if titles_size > 0 -%}
       <nav class="site-nav">
