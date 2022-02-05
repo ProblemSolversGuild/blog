@@ -19,8 +19,8 @@ There are many hook samples in `.git/hooks` folder. You want to create a file ca
 #!/bin/sh
 for file in $(git diff --diff-filter=d --cached --name-only | grep -E 'customers/.+\.ipynb$')
 do
-	jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$file"
-	git add "$file"
+    jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$file"
+    git add "$file"
 done
 ```
 
