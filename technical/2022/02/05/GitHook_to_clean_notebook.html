@@ -147,8 +147,8 @@ window.onload = wrap_img;
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
 <span class="k">for </span>file <span class="k">in</span> <span class="si">$(</span>git diff <span class="nt">--diff-filter</span><span class="o">=</span>d <span class="nt">--cached</span> <span class="nt">--name-only</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'customers/.+\.ipynb$'</span><span class="si">)</span>
 <span class="k">do
-	</span>jupyter nbconvert <span class="nt">--ClearOutputPreprocessor</span>.enabled<span class="o">=</span>True <span class="nt">--inplace</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
-	git add <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
+    </span>jupyter nbconvert <span class="nt">--ClearOutputPreprocessor</span>.enabled<span class="o">=</span>True <span class="nt">--inplace</span> <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
+    git add <span class="s2">"</span><span class="nv">$file</span><span class="s2">"</span>
 <span class="k">done</span>
 </code></pre></div></div>
 
