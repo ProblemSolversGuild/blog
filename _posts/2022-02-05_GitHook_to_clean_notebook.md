@@ -1,4 +1,12 @@
-# Using Git Hook to Clean Jupyter Notebook on Commit
+---
+title: Using Git Hook to Clean Jupyter Notebook on Commit
+toc: true
+layout: post
+categories: [technical]
+author: Hiromi Suenaga
+hide: false
+---
+
 
 To avoid merge issues and make PR review easier, we wanted a [Git Hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) which will:
 - Clear output of Jupyter Notebook
