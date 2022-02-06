@@ -1,0 +1,6 @@
+#!/bin/sh
+for file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.ipynb$')
+do
+	jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$file"
+	git add "$file"
+done
