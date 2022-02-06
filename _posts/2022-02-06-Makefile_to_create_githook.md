@@ -9,6 +9,7 @@ hide: false
 
 In the [previous post](https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html), we created a Git Hook that will stirip all the superfluous metadata automatically when you commit notebooks. We wanted to make the installation of this hook easier by creating a Makefile target.
 
+Here is what we came up with: 
 
 ```bash
 SHELL := /bin/bash
@@ -24,13 +25,13 @@ Run `make hook` and Voila! You have your Git Hook that will reduce merge conflic
 
 ---
 
-## My Web Searches While Creating This Makefile
+## My web searches while creating this Makefile
 
 ### How to convert multiline file into a string with newline `\n` characters:
 ```bash
 awk '$1=$1' ORS='\\n' file
 ```
-This is how I converted an existing hook file into a single string. I had to add tabs (`\t`) manually, but this `awk` got me close enough. 
+>This is how I converted an existing hook file into a single string. I had to add tabs (`\t`) manually, but this `awk` got me close enough. 
 
 <br />
 
