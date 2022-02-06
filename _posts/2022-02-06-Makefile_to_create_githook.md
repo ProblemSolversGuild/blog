@@ -19,7 +19,7 @@ hook:
 	@echo -e '#!/bin/sh\nfor file in $$(git diff --diff-filter=d --cached --name-only | grep -E '"'"'\.ipynb$$'"'"')\ndo\n\tjupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$$file"\n\tgit add "$$file"\ndone\n'  > .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 ```
-
+[[Download]('https://blog.problemsolversguild.com/assets/Makefile')]
 
 Run `make hook` and Voila! You have your Git Hook that will reduce merge conflicts headaches.
 
@@ -53,8 +53,8 @@ Escape `$` by adding another `$` (i.e. `$$`)
 <br />
 
 ### References
-- https://stackoverflow.com/a/26451573
-- https://unix.stackexchange.com/a/219270
-- https://stackoverflow.com/a/1250279  
-- https://til.hashrocket.com/posts/k3kjqxtppx-escape-dollar-sign-on-makefiles 
+- [https://stackoverflow.com/a/26451573](https://stackoverflow.com/a/26451573)
+- [https://unix.stackexchange.com/a/219270](https://unix.stackexchange.com/a/219270)
+- [https://stackoverflow.com/a/1250279](https://stackoverflow.com/a/1250279)  
+- [https://til.hashrocket.com/posts/k3kjqxtppx-escape-dollar-sign-on-makefiles](https://til.hashrocket.com/posts/k3kjqxtppx-escape-dollar-sign-on-makefiles)
    
