@@ -159,10 +159,10 @@ hook:
 </code></pre></div></div>
 
 <blockquote>
-  <p>This is how I converted an existing hook file (<a href="assets/files/pre-commit">pre-commit</a>) into a single string. I had to add tabs (<code class="language-plaintext highlighter-rouge">\t</code>) manually, but this <code class="language-plaintext highlighter-rouge">awk</code> got me close enough.</p>
+  <p>This is how I converted an existing hook file (<a href="/assets/files/pre-commit">pre-commit</a>) into a single string. I had to add tabs (<code class="language-plaintext highlighter-rouge">\t</code>) manually, but this <code class="language-plaintext highlighter-rouge">awk</code> got me close enough.</p>
 </blockquote>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>awk '$1=$1' ORS='\\n' pre-commit
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="s1">'$1=$1'</span> <span class="nv">ORS</span><span class="o">=</span><span class="s1">'\\n'</span> pre-commit
 </code></pre></div></div>
 <p>will return:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/sh\nfor file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.ipynb$')\ndo\njupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$file"\ngit add "$file"\ndone\n
