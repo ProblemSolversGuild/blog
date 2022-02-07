@@ -492,4 +492,14 @@ pre code { background: #323443; color: #f8f8f2; font-size: 0.9rem !important; }
 
 .post-title, .post-content h1 { font-size: 2rem; }
 
+.post-content h2 { font-size: 1.5rem; }
+
+.post-content h3 { font-size: 1.17rem; }
+
+.post-content h4 { font-size: 1.25rem; }
+
+.post-content h5 { font-size: .83rem; }
+
+.post-content h6 { font-size: .67rem; }
+
 /*# sourceMappingURL=style.css.map */
