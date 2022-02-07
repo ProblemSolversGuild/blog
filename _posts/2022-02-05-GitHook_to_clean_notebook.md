@@ -1,6 +1,6 @@
 ---
 title: Using Git Hook to Clean Jupyter Notebook on Commit
-toc: true
+toc: false
 layout: post
 categories: [technical]
 author: Hiromi Suenaga
@@ -24,13 +24,13 @@ do
 done
 
 ```
-[[Download]('https://blog.problemsolversguild.com/assets/files/pre-commit')]
+[[Download]('/assets/files/pre-commit')]
 
 Run `chmod +x pre-commit` to make the file executable.
 
 That's it!
 
-In the next post, we will show you how to create this Git Hook with Makefile.
+In [the next post](/technical/2022/02/06/Makefile_to_create_githook.html), we will show you how to create this Git Hook with Makefile.
 
 <br />
 

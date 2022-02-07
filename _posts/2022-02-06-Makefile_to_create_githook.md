@@ -1,6 +1,6 @@
 ---
 title: Using Makefile to Create Git Hook
-toc: true
+toc: false
 layout: post
 categories: [technical]
 author: Hiromi Suenaga
@@ -19,7 +19,7 @@ hook:
 	@echo -e '#!/bin/sh\nfor file in $$(git diff --diff-filter=d --cached --name-only | grep -E '"'"'\.ipynb$$'"'"')\ndo\n\tjupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$$file"\n\tgit add "$$file"\ndone\n'  > .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 ```
-[[Download]('https://blog.problemsolversguild.com/assets/files/Makefile')]
+[[Download]('/assets/files/Makefile')]
 
 Run `make hook` and Voila! You have your Git Hook that will reduce merge conflicts headaches.
 
