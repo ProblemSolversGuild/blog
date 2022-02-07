@@ -480,11 +480,11 @@ pre code { font-size: 15px !important; }
 
 p code { font-size: 19px; }
 
-.post-content p, .post-content li { font-size: 1em; color: #515151; }
+.post-content p, .post-content li { font-size: 1rem; color: #515151; }
 
-p code { font-size: 1em; }
+p code { font-size: 1rem; }
 
-pre code { background: #323443; color: #f8f8f2; font-size: 0.9em !important; }
+pre code { background: #323443; color: #f8f8f2; font-size: 0.9rem !important; }
 
 .post-meta-title, .post-meta { font-size: 100%; }
 
