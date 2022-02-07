@@ -146,7 +146,7 @@ hook:
 	@echo <span class="nt">-e</span> <span class="s1">'#!/bin/sh\nfor file in $$(git diff --diff-filter=d --cached --name-only | grep -E '</span><span class="s2">"'"</span><span class="s1">'\.ipynb$$'</span><span class="s2">"'"</span><span class="s1">')\ndo\n\tjupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$$file"\n\tgit add "$$file"\ndone\n'</span>  <span class="o">&gt;</span> .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 </code></pre></div></div>
-<p>[<a href="'/assets/files/Makefile'">Download</a>]</p>
+<p>[<a href="/assets/files/Makefile">Download</a>]</p>
 
 <p>Run <code class="language-plaintext highlighter-rouge">make hook</code> and Voila! You have your Git Hook that will reduce merge conflicts headaches.</p>
 
