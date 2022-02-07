@@ -135,17 +135,7 @@ window.onload = wrap_img;
     </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <ul class="section-nav">
-<li class="toc-entry toc-h2"><a href="#my-web-searches-while-creating-this-makefile">My web searches while creating this Makefile</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#how-to-convert-multiline-file-into-a-string-with-newline-n-characters">How to convert multiline file into a string with newline \n characters:</a></li>
-<li class="toc-entry toc-h3"><a href="#how-to-write-a-multiline-file-with-echo">How to write a multiline file with echo:</a></li>
-<li class="toc-entry toc-h3"><a href="#how-to-escape-single-quotes-in-single-quoted-strings">How to escape single quotes in single quoted strings:</a></li>
-<li class="toc-entry toc-h3"><a href="#how-to-escape-dollar-signs--in-makefile">How to escape dollar signs $ in Makefile:</a></li>
-<li class="toc-entry toc-h3"><a href="#references">References</a></li>
-</ul>
-</li>
-</ul><p>In our <a href="https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html">previous post</a>, we created a Git Hook that will strip all the superfluous metadata automatically when you commit notebooks. We wanted to make the installation of this hook easier by creating a Makefile target.</p>
+    <p>In our <a href="https://blog.problemsolversguild.com/technical/2022/02/05/GitHook_to_clean_notebook.html">previous post</a>, we created a Git Hook that will strip all the superfluous metadata automatically when you commit notebooks. We wanted to make the installation of this hook easier by creating a Makefile target.</p>
 
 <p>Here is what we came up with:</p>
 
@@ -156,17 +146,15 @@ hook:
 	@echo <span class="nt">-e</span> <span class="s1">'#!/bin/sh\nfor file in $$(git diff --diff-filter=d --cached --name-only | grep -E '</span><span class="s2">"'"</span><span class="s1">'\.ipynb$$'</span><span class="s2">"'"</span><span class="s1">')\ndo\n\tjupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$$file"\n\tgit add "$$file"\ndone\n'</span>  <span class="o">&gt;</span> .git/hooks/pre-commit
 	@chmod +x .git/hooks/pre-commit
 </code></pre></div></div>
-<p>[<a href="'https://blog.problemsolversguild.com/assets/files/Makefile'">Download</a>]</p>
+<p>[<a href="'/assets/files/Makefile'">Download</a>]</p>
 
 <p>Run <code class="language-plaintext highlighter-rouge">make hook</code> and Voila! You have your Git Hook that will reduce merge conflicts headaches.</p>
 
-<hr>
+<hr />
 
-<h2 id="my-web-searches-while-creating-this-makefile">
-<a class="anchor" href="#my-web-searches-while-creating-this-makefile" aria-hidden="true"><span class="octicon octicon-link"></span></a>My web searches while creating this Makefile</h2>
+<h2 id="my-web-searches-while-creating-this-makefile">My web searches while creating this Makefile</h2>
 
-<h3 id="how-to-convert-multiline-file-into-a-string-with-newline-n-characters">
-<a class="anchor" href="#how-to-convert-multiline-file-into-a-string-with-newline-n-characters" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to convert multiline file into a string with newline <code class="language-plaintext highlighter-rouge">\n</code> characters:</h3>
+<h3 id="how-to-convert-multiline-file-into-a-string-with-newline-n-characters">How to convert multiline file into a string with newline <code class="language-plaintext highlighter-rouge">\n</code> characters:</h3>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="s1">'$1=$1'</span> <span class="nv">ORS</span><span class="o">=</span><span class="s1">'\\n'</span> filename
 </code></pre></div></div>
 
@@ -180,29 +168,25 @@ hook:
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#!/bin/sh\nfor file in $(git diff --diff-filter=d --cached --name-only | grep -E '\.ipynb$')\ndo\njupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$file"\ngit add "$file"\ndone\n
 </code></pre></div></div>
 
-<p><br></p>
+<p><br /></p>
 
-<h3 id="how-to-write-a-multiline-file-with-echo">
-<a class="anchor" href="#how-to-write-a-multiline-file-with-echo" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to write a multiline file with <code class="language-plaintext highlighter-rouge">echo</code>:</h3>
+<h3 id="how-to-write-a-multiline-file-with-echo">How to write a multiline file with <code class="language-plaintext highlighter-rouge">echo</code>:</h3>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"Line 1</span><span class="se">\r\n</span><span class="s2">Line2"</span> <span class="o">&gt;&gt;</span> readme.txt
 </code></pre></div></div>
 
-<p><br></p>
+<p><br /></p>
 
-<h3 id="how-to-escape-single-quotes-in-single-quoted-strings">
-<a class="anchor" href="#how-to-escape-single-quotes-in-single-quoted-strings" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to escape single quotes in single quoted strings:</h3>
+<h3 id="how-to-escape-single-quotes-in-single-quoted-strings">How to escape single quotes in single quoted strings:</h3>
 <p><code class="language-plaintext highlighter-rouge">'"'"'</code> is interpreted as <code class="language-plaintext highlighter-rouge">'</code></p>
 
-<p><br></p>
+<p><br /></p>
 
-<h3 id="how-to-escape-dollar-signs--in-makefile">
-<a class="anchor" href="#how-to-escape-dollar-signs--in-makefile" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to escape dollar signs <code class="language-plaintext highlighter-rouge">$</code> in Makefile:</h3>
+<h3 id="how-to-escape-dollar-signs--in-makefile">How to escape dollar signs <code class="language-plaintext highlighter-rouge">$</code> in Makefile:</h3>
 <p>Escape <code class="language-plaintext highlighter-rouge">$</code> by adding another <code class="language-plaintext highlighter-rouge">$</code> (i.e. <code class="language-plaintext highlighter-rouge">$$</code>)</p>
 
-<p><br></p>
+<p><br /></p>
 
-<h3 id="references">
-<a class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h3>
+<h3 id="references">References</h3>
 <ul>
   <li><a href="https://stackoverflow.com/a/26451573">https://stackoverflow.com/a/26451573</a></li>
   <li><a href="https://unix.stackexchange.com/a/219270">https://unix.stackexchange.com/a/219270</a></li>
