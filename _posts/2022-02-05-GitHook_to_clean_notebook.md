@@ -22,13 +22,17 @@ do
     jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace "$file"
     git add "$file"
 done
+
 ```
+[[Download]('https://blog.problemsolversguild.com/assets/files/pre-commit')]
 
 Run `chmod +x pre-commit` to make the file executable.
 
 That's it!
 
 In the next post, we will show you how to create this Git Hook with Makefile.
+
+<br />
 
 ---
 
