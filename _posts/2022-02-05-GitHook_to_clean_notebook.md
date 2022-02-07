@@ -24,7 +24,7 @@ do
 done
 
 ```
-[[Download]('/assets/files/pre-commit')]
+[[Download](/assets/files/pre-commit)]
 
 Run `chmod +x pre-commit` to make the file executable.
 
