@@ -32,9 +32,9 @@ Run `make hook` and Voila! You have your Git Hook that will reduce merge conflic
 awk '$1=$1' ORS='\\n' filename
 ```
 
->This is how I converted an existing hook file ([pre-commit](assets/files/pre-commit)) into a single string. I had to add tabs (`\t`) manually, but this `awk` got me close enough. 
+>This is how I converted an existing hook file ([pre-commit](/assets/files/pre-commit)) into a single string. I had to add tabs (`\t`) manually, but this `awk` got me close enough. 
 
-```
+```bash
 awk '$1=$1' ORS='\\n' pre-commit
 ```
 will return:
