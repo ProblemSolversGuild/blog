@@ -170,8 +170,9 @@ Enter same passphrase again:
 
 <h2 id="2-copy-public-key-to-the-remote-server">
 <a class="anchor" href="#2-copy-public-key-to-the-remote-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Copy public key to the remote server:</h2>
+<p>Let’s say, the remote server is running SSH on a non-standard port. If your remote server is using the standard port, you can omit the port settings:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-copy-id <span class="nt">-i</span> ~/.ssh/id_ed25519 sunny@remote_server_address 
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-copy-id <span class="nt">-i</span> ~/.ssh/id_ed25519 <span class="nt">-p</span> 123 sunny@remote_server_address 
 </code></pre></div></div>
 <p><code class="language-plaintext highlighter-rouge">.pub</code> is automatically added if you specify a filename that does not end with <code class="language-plaintext highlighter-rouge">.pub</code>.</p>
 
@@ -212,7 +213,7 @@ Enter same passphrase again:
 
 <p>Instead of:</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -i ~/.ssh/id_ed25519 sunny@123.45.678.90
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -i ~/.ssh/id_ed25519 -p 123 sunny@123.45.678.90
 </code></pre></div></div>
 
 <hr>
