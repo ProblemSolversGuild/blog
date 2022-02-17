@@ -482,9 +482,13 @@ p code { font-size: 19px; }
 
 .post-content p, .post-content li { font-size: 1rem; color: #515151; }
 
-p code { font-size: 1rem; }
+p code { font-size: 90%; }
+
+h1 code, h2 code, h3 code, h4 code { font-size: 90%; }
 
 pre code { background: #323443; color: #f8f8f2; font-size: 0.9rem !important; }
+
+tt, code { font-size: 90%; }
 
 .post-meta-title, .post-meta { font-size: 100%; }
 
