@@ -52,7 +52,7 @@ In the next post, we will show you how to automate the creation of this cron job
 
 ### Cron basics and `MAILTO`
 
-https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804
+[https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804](https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804)
 
 
 ### How to make cron send email only when script throws errors?
@@ -60,13 +60,13 @@ https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tas
 ```
 20 6-10 * * 1-5 ~/job_failure_test.sh > ~/job_fail.log 2>&1 || mail -s "Errors" myemail@something.com < ~/job_fail.log
 ```
-https://unix.stackexchange.com/a/314647
+[https://unix.stackexchange.com/a/314647](https://unix.stackexchange.com/a/314647)
 
 ### Why can't my cron job send emails? 
 
 Before you uninstall Postfix and install Sendmail (not because you prefer Sendmail, but because you are not receiving emails) __check your spam/junk folder!__. That would have saved me a couple hours of struggle.
 
-https://tecadmin.net/install-sendmail-on-ubuntu/
+[https://tecadmin.net/install-sendmail-on-ubuntu/](https://tecadmin.net/install-sendmail-on-ubuntu/)
 
 
 ### How to catch an exception thrown by a python script in shell script (so I can do something like sending an email)
@@ -77,7 +77,7 @@ https://tecadmin.net/install-sendmail-on-ubuntu/
 } 
 ```
 
-https://stackoverflow.com/a/24208293/6999874 
+[https://stackoverflow.com/a/24208293/6999874](https://stackoverflow.com/a/24208293/6999874)
 
 
 ### How can I use conda in bash script? I get an error: CommandNotFoundError: Your shell has not been properly configured to use `conda activate`. To initialize your shell, run `$ conda init <SHELL_NAME>`
@@ -87,5 +87,6 @@ Conda puts something like this to your `.bashrc` or `.zshrc` when you install it
 source /opt/conda/etc/profile.d/conda.sh
 ```
 
-https://unix.stackexchange.com/a/577347
-https://askubuntu.com/a/1218657
+[https://unix.stackexchange.com/a/577347](https://unix.stackexchange.com/a/577347)
+
+[https://askubuntu.com/a/1218657](https://askubuntu.com/a/1218657)

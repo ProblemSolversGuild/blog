@@ -17,15 +17,22 @@
 }
 
 p code {
-    font-size: 1rem;
+    font-size: 90%;
 }
 
+h1, h2, h3, h4 { 
+    code {
+      font-size: 90%;
+    }
+}
 pre code {
     background: $dt-code-cell-background;
     color: $dt-gray-light;
     font-size: 0.9rem !important;
 }
-
+tt, code {
+    font-size: 90%
+}
 .post-meta-title, .post-meta {
     font-size: 100%;
 }
