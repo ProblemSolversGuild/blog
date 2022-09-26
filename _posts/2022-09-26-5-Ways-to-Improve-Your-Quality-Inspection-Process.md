@@ -2,6 +2,7 @@
 title: 5 Ways to Improve Your Quality Inspection Process
 toc: true
 layout: post
+comments: true
 categories: [Manufacturing, Quality]
 author: Kevin Bird
 hide: false
