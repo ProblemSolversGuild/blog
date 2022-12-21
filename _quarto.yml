@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Problem Solvers Guild Blog"
+  favicon: "favicon.ico"
   google-analytics: "G-FJDC3EN75W"
   navbar:
     right:

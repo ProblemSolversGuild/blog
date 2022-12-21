@@ -96,6 +96,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -188,9 +189,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#genetic-algorithms" id="toc-genetic-algorithms" class="nav-link active" data-scroll-target="#genetic-algorithms">Genetic Algorithms</a>
-  <ul class="collapse">
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#initialize-the-population" id="toc-initialize-the-population" class="nav-link" data-scroll-target="#initialize-the-population">Initialize the population</a>
   <ul class="collapse">
   <li><a href="#initialize_population-in-code" id="toc-initialize_population-in-code" class="nav-link" data-scroll-target="#initialize_population-in-code">initialize_population in code</a></li>
@@ -213,8 +212,8 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
   <ul class="collapse">
   <li><a href="#genetic_algorithm-in-code" id="toc-genetic_algorithm-in-code" class="nav-link" data-scroll-target="#genetic_algorithm-in-code">genetic_algorithm in code</a></li>
   </ul></li>
+  <li><a href="#choosing-an-appropriate-representation-in-a-genetic-algorithm" id="toc-choosing-an-appropriate-representation-in-a-genetic-algorithm" class="nav-link" data-scroll-target="#choosing-an-appropriate-representation-in-a-genetic-algorithm">Choosing an appropriate representation in a genetic algorithm</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -259,9 +258,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 
 </header>
 
-<section id="genetic-algorithms" class="level1">
-<h1>Genetic Algorithms</h1>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:29:44.961926Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:29:44.959262Z&quot;}" data-execution_count="19">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.307928Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.301036Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> List, Callable</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> copy <span class="im">import</span> deepcopy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -281,7 +278,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <section id="initialize_population-in-code" class="level3">
 <h3 class="anchored" data-anchor-id="initialize_population-in-code">initialize_population in code</h3>
 <p><code>initialize_population</code> takes two integer parameters: <code>solution_size</code>, which represents the size of a single solution (i.e., the number of genes), and <code>population_size</code>, which represents the size of the population (i.e., the number of solutions). It returns a list of lists containing random integers, representing the initial population.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.595736Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.586216Z&quot;}" data-execution_count="2">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.325441Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.309531Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> initialize_population(solution_size: <span class="bu">int</span>, population_size: <span class="bu">int</span>) <span class="op">-&gt;</span> List[List[<span class="bu">int</span>]]:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Generates a random initial population.</span></span>
@@ -295,7 +292,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [[random.randint(<span class="dv">0</span>, <span class="dv">1</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(solution_size)] <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(population_size)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.604878Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.597363Z&quot;}" data-execution_count="3">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.336849Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.327117Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test_initialize_population(solution_size, population_size):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    population <span class="op">=</span> initialize_population(solution_size, population_size)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -312,13 +309,13 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check that each integer is either 0 or 1</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">all</span>(<span class="bu">all</span>(x <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> x <span class="op">==</span> <span class="dv">1</span> <span class="cf">for</span> x <span class="kw">in</span> solution) <span class="cf">for</span> solution <span class="kw">in</span> population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.616202Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.606496Z&quot;}" data-execution_count="4">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.347949Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.338511Z&quot;}" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>test_initialize_population(<span class="dv">5</span>,<span class="dv">10</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>test_initialize_population(<span class="dv">10</span>,<span class="dv">5</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>test_initialize_population(<span class="dv">0</span>,<span class="dv">5</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>test_initialize_population(<span class="dv">5</span>,<span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.628854Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.617469Z&quot;}" data-execution_count="5">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.358143Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.349845Z&quot;}" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>solution_size <span class="op">=</span> <span class="dv">5</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>population_size <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -333,7 +330,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <section id="fitness-in-code" class="level3">
 <h3 class="anchored" data-anchor-id="fitness-in-code">fitness in code</h3>
 <p><code>fitness</code> takes a single parameter, <code>solution</code>, which is a list of integers representing a solution. It returns an integer representing the fitness of the solution. In this particular implementation, the fitness is calculated by counting the number of 1s in the solution.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.636908Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.630257Z&quot;}" data-execution_count="6">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.366903Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.359654Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fitness(solution: List[<span class="bu">int</span>]) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculates the fitness of a solution.</span></span>
@@ -348,7 +345,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># For example, you could count the number of 1s in the solution</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> solution.count(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.645330Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.639326Z&quot;}" data-execution_count="7">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.379912Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.368390Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with a solution containing all 0s</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>solution <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> fitness(solution) <span class="op">==</span> <span class="dv">0</span></span>
@@ -377,7 +374,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <h3 class="anchored" data-anchor-id="selection-in-code">selection in code</h3>
 <p><code>selection</code> takes two parameters: <code>population</code>, which is a list of lists representing the population, and <code>fitness_fn</code>, which is a function that calculates the fitness of a solution. It returns a list of the fittest individuals in the population.</p>
 <p>It does this by sorting the population by fitness using the fitness_fn function as the key, and then selecting the top half of the population (i.e., the individuals with the highest fitness).</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.653320Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.646661Z&quot;}" data-execution_count="8">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.391844Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.381314Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> selection(population: List[List[<span class="bu">int</span>]], fitness_fn: Callable[[List[<span class="bu">int</span>]], <span class="bu">int</span>]) <span class="op">-&gt;</span> List[List[<span class="bu">int</span>]]:</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Selects the fittest individuals from the population.</span></span>
@@ -394,7 +391,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select the top individuals</span></span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sorted_population[:<span class="bu">int</span>(<span class="bu">len</span>(sorted_population) <span class="op">/</span> <span class="dv">2</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.664864Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.654492Z&quot;}" data-execution_count="9">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.405723Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.393116Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with a population of size 10</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> [[<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>], </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>], </span>
@@ -423,7 +420,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that the last list has 2 1s</span></span>
 <span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> fitness(fittest[<span class="op">-</span><span class="dv">1</span>]) <span class="op">==</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.675913Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.666191Z&quot;}" data-execution_count="10">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.416478Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.407032Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fittest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>[[1, 1, 1, 1, 0],
@@ -446,7 +443,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <h3 class="anchored" data-anchor-id="crossover-in-code">crossover in code</h3>
 <p><code>crossover</code> takes two parameters: <code>parent1</code>, which is a list of integers representing the first parent, and <code>parent2</code>, which is a list of integers representing the second parent. It returns a list of integers representing the offspring, generated through crossover.</p>
 <p>It does this by choosing a random crossover point and combining the two parents by taking the first part of parent1 and the second part of parent2, or vice versa.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.687511Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.677414Z&quot;}" data-execution_count="11">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.424267Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.418467Z&quot;}" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> crossover(parent1: List[<span class="bu">int</span>], parent2: List[<span class="bu">int</span>]) <span class="op">-&gt;</span> List[<span class="bu">int</span>]:</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Generates offspring through crossover.</span></span>
@@ -464,7 +461,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    offspring <span class="op">=</span> parent1[:crossover_point] <span class="op">+</span> parent2[crossover_point:]</span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> offspring</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.695725Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.688731Z&quot;}" data-execution_count="12">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.435845Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.425502Z&quot;}" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>offspring <span class="op">=</span> crossover([<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>])</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that the returned value is a list</span></span>
@@ -478,10 +475,10 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> offspring[<span class="dv">0</span>] <span class="op">==</span> <span class="dv">0</span></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> offspring[<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.707876Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.696945Z&quot;}" data-execution_count="13">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.452685Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.437049Z&quot;}" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>offspring</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
-<pre><code>[0, 0, 0, 0, 1, 1, 1, 1, 1, 1]</code></pre>
+<pre><code>[0, 0, 0, 0, 0, 1, 1, 1, 1, 1]</code></pre>
 </div>
 </div>
 </section>
@@ -489,7 +486,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <h3 class="anchored" data-anchor-id="mutate-in-code">mutate in code</h3>
 <p><code>mutate</code> takes two parameters: <code>populations</code>, which is a list of lists of integers representing the population, and <code>mutation_rate</code>, which is a float representing the probability of a mutation occurring. It returns the modified population.</p>
 <p>It does this by iterating over each gene in each individual in the population and randomly flipping its value with a probability of mutation_rate.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.716049Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.709008Z&quot;}" data-execution_count="14">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.463246Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.453919Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mutate(populations: List[List[<span class="bu">int</span>]], mutation_rate: <span class="bu">float</span>) <span class="op">-&gt;</span> List[List[<span class="bu">int</span>]]:</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Introduces mutations into the population.</span></span>
@@ -509,7 +506,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>                population[i] <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> population[i]</span>
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> populations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.725699Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.717249Z&quot;}" data-execution_count="15">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.477357Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.464539Z&quot;}" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with population = [[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]] and mutation_rate = 0.5</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>populations <span class="op">=</span> [[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>]]</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>mutation_rate <span class="op">=</span> <span class="fl">0.5</span></span>
@@ -525,7 +522,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Check that the result contains at least one mutation</span></span>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">any</span>(i <span class="op">!=</span> j <span class="cf">for</span> i, j <span class="kw">in</span> <span class="bu">zip</span>(result[<span class="dv">0</span>], populations[<span class="dv">0</span>])) <span class="kw">or</span> <span class="bu">any</span>(i <span class="op">!=</span> j <span class="cf">for</span> i, j <span class="kw">in</span> <span class="bu">zip</span>(result[<span class="dv">1</span>], populations[<span class="dv">1</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:14:00.734022Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.726898Z&quot;}" data-execution_count="16">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.490994Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.478867Z&quot;}" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test with population = [[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]] and mutation_rate = 0.0</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>populations <span class="op">=</span> [[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>], [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>]]</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>mutation_rate <span class="op">=</span> <span class="dv">0</span></span>
@@ -552,7 +549,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <p>The process is repeated until a satisfactory solution is found or a predetermined number of iterations has been reached. The genetic algorithm continues to evolve the population until a satisfactory solution is found or the maximum number of iterations is reached.</p>
 <section id="genetic_algorithm-in-code" class="level3">
 <h3 class="anchored" data-anchor-id="genetic_algorithm-in-code">genetic_algorithm in code</h3>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:40:03.252246Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:40:03.248878Z&quot;}" data-execution_count="20">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:43.499746Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.492521Z&quot;}" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the genetic algorithm</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> genetic_algorithm(solution_size, population_size, fitness_fn, mutation_rate):</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize the population</span></span>
@@ -572,16 +569,26 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> fitness_fn(offspring) <span class="op">==</span> <span class="bu">len</span>(offspring):</span>
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> offspring</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T16:16:41.286592Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T16:14:00.747693Z&quot;}" data-execution_count="18">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-21T22:24:57.315982Z&quot;,&quot;start_time&quot;:&quot;2022-12-21T22:24:43.501242Z&quot;}" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test the genetic algorithm</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> genetic_algorithm(<span class="dv">100</span>, <span class="dv">100</span>, fitness, <span class="fl">0.005</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> genetic_algorithm(<span class="dv">100</span>, <span class="dv">100</span>, fitness, <span class="fl">0.001</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1]
+<pre><code>[0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1]
 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]</code></pre>
 </div>
 </div>
 </section>
+</section>
+<section id="choosing-an-appropriate-representation-in-a-genetic-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-an-appropriate-representation-in-a-genetic-algorithm">Choosing an appropriate representation in a genetic algorithm</h2>
+<p>Representation is an important aspect of genetic algorithms because it determines how the solutions are encoded and how they can be manipulated. In order to design a genetic algorithm, it is necessary to choose an appropriate representation that is well-suited to the problem being solved.</p>
+<p>There are many different ways to represent solutions in a genetic algorithm. For example, solutions can be represented as binary strings, floating-point numbers, permutations, or even images. The choice of representation depends on the problem being solved and the available resources.</p>
+<p>One common representation in genetic algorithms is the binary string, which is a sequence of 0s and 1s. This representation is well-suited to problems that have a discrete set of solutions, such as finding the shortest path in a graph.</p>
+<p>Another common representation is the floating-point number, which is a real number represented in binary format. This representation is well-suited to continuous optimization problems, such as finding the maximum value of a mathematical function.</p>
+<p>Permutations are also a common representation in genetic algorithms. They are used to solve problems that involve rearranging a set of items, such as scheduling tasks or arranging objects in a warehouse.</p>
+<p>Finally, images can also be used as a representation in genetic algorithms. This is particularly useful for tasks such as image generation or image recognition.</p>
+<p>When choosing a representation, it is important to consider the size of the solution space, the complexity of the problem, and the available resources. The representation should be able to capture the key features of the problem and allow for efficient manipulation of the solutions.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
@@ -590,7 +597,6 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <p>Overall, genetic algorithms are a powerful optimization technique that can be used to solve a wide range of problems, particularly those with large solution spaces or unstructured problems. By understanding the key components and how they work together, you can design and implement a genetic algorithm that can find high-quality solutions to complex problems.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

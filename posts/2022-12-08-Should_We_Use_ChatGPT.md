@@ -4,6 +4,7 @@ aliases:
 author: Kevin Bird
 categories:
 - advice
+- ChatGPT
 date: '2022-12-08'
 hide: false
 layout: post
@@ -11,8 +12,6 @@ title: Should We Use ChatGPT?
 toc: true
 
 ---
-
-# Should We Use ChatGPT?
 
 Until a few days ago when I started trying out ChatGPT, I didn't think this was a question I would have to contemplate for at least a few years, but, realistically, I thought this was 10+ years away from being a question for me. But recently, I have been contemplating the question of what types of problems should I allow a system like ChatGPT to solve? What do I feel comfortable using it for and what tasks should I do without assistance? 
 
