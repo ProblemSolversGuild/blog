@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kevin Bird">
+<meta name="dcterms.date" content="2021-09-19">
+
+<title>Problem Solvers Guild Blog - Texas Rate Inspector Overview</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Problem Solvers Guild Blog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/TPSG_io"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#whats-the-problem" id="toc-whats-the-problem" class="nav-link active" data-scroll-target="#whats-the-problem">What’s the Problem?</a></li>
+  <li><a href="#whats-the-solution" id="toc-whats-the-solution" class="nav-link" data-scroll-target="#whats-the-solution">What’s the Solution?</a></li>
+  <li><a href="#how-does-it-work" id="toc-how-does-it-work" class="nav-link" data-scroll-target="#how-does-it-work">How does it work?</a></li>
+  <li><a href="#grabbing-historical-usage" id="toc-grabbing-historical-usage" class="nav-link" data-scroll-target="#grabbing-historical-usage">Grabbing Historical Usage</a></li>
+  <li><a href="#plan-1-flat-rate" id="toc-plan-1-flat-rate" class="nav-link" data-scroll-target="#plan-1-flat-rate">Plan 1: Flat Rate</a></li>
+  <li><a href="#plan-2-free-weekends" id="toc-plan-2-free-weekends" class="nav-link" data-scroll-target="#plan-2-free-weekends">Plan 2: Free Weekends</a></li>
+  <li><a href="#plan-3-tiered-rate" id="toc-plan-3-tiered-rate" class="nav-link" data-scroll-target="#plan-3-tiered-rate">Plan 3: Tiered Rate</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Texas Rate Inspector Overview</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">texas</div>
+    <div class="quarto-category">rate</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kevin Bird </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 19, 2021</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="whats-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="whats-the-problem">What’s the Problem?</h2>
+<p>Currently Texas’ rate selection process is heavily driven by the lowest cost for a typical user. However, this limits the imagination of Retail Electricity Providers (REP) and ends up hurting residential customers by creating a single variable rate plan that every REP optimizes for. We at the Problem Solvers Guild have a different way of measuring plans that utilizes a customers’ true historical usage. Now the question is, which of the 159 plans currently available in almost any zip code in Texas is right for an individual?</p>
+<p><img src="notebook_images/2021-09-19-Texas-Rate-Inspector/powertochoose.png" title="159 Plans found on PowerToChoose for 77095" class="img-fluid"></p>
+</section>
+<section id="whats-the-solution" class="level2">
+<h2 class="anchored" data-anchor-id="whats-the-solution">What’s the Solution?</h2>
+<p>The Problem Solvers Guild has developed a method to take any electric <code>rate plan</code> and apply an individual’s <code>usage</code> to calculate a more accurate price-per-kilowatt than what is typically provided by REPs. With this solution, we help residential customers identify plans they would have previously overlooked.</p>
+<p>We grab usage by working with <a href="https://www.smartmetertexas.com/aboutus">Smart Meter Texas</a>. A site that was created to allow residential customers to access their 15-minute usage data. This site also allows customers to share this access with companies with just a few pieces of information.</p>
+<p>All of the rate plans that we currently use come from <a href="https://powertochoose.org">Power to Choose</a> which is a site where REPs are able to advertise their available rates to residential customers. Each plan has an electricity facts label (EFL) that describes the plan in detail. We use these EFLs to model different rate plans that are offered.</p>
+<p>Once we have all of this information, we combine the data and find the rate that would have given an individual the lowest price-per-kilowatt over the past year. If this is something you are interested in knowing for yourself, <a href="https://texasratefinder.com/#Sign-Up">fill out our form</a> and we will run an analysis for you. If you are a company that would like to use our library to create better rate plans or to drive your rate engine, feel free to contact us and we can find a solution based on your needs as well.</p>
+</section>
+<section id="how-does-it-work" class="level2">
+<h2 class="anchored" data-anchor-id="how-does-it-work">How does it work?</h2>
+<p>The Texas Rate Inspector was developed by The Problem Solvers Guild as a tool that allows an individual to quickly simulate any rate plan with their historical usage. Let me take you on a quick tour of how this tool works.</p>
+<p>Here are three rate plans to choose from.<br>
+1. <strong>Plan 1 (Flat Rate)</strong> charges <span><span class="math inline">\(&lt;/span&gt;0.119 per kWh plus a &lt;span&gt;\)</span></span>9.95 monthly charge if your usage for that month is less than 1000 kWh. 1. <strong>Plan 2 (Free Weekends)</strong> charges <span><span class="math inline">\(&lt;/span&gt;0.200 per kWh between 12:00 AM Monday to 7:00 PM Friday plus a &lt;span&gt;\)</span></span>4.95 monthly charge. 1. <strong>Plan 3 (Tiered Rate)</strong> charges <span><span class="math inline">\(&lt;/span&gt;0.089 per kWh between 0 and 1200 kWh of usage and &lt;span&gt;\)</span></span>0.145 per kWh past that. This plan also has a <span><span class="math inline">\(&lt;/span&gt;9.95 monthly charge and a &lt;span&gt;\)</span></span>30 credit if you use more than 800 kWh.</p>
+<p>Now that I’ve given you all the information you need, which of these plans is the best option for a residential customer in Texas?</p>
+<p>You can close your Excel sheet. I will walk you through each of these scenarios and at the end, I will tell you which of these is the best plan for the user.</p>
+</section>
+<section id="grabbing-historical-usage" class="level2">
+<h2 class="anchored" data-anchor-id="grabbing-historical-usage">Grabbing Historical Usage</h2>
+<p>First, we grab a user’s usage from Smart Meter Texas.<br>
+note: If you are interested in providing your usage information to us, <a href="https://texasratefinder.com/#Sign-Up">fill out our form</a> and we will request access to your usage.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.866581Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.288542Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rate_inspector.usage <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> pd.to_datetime(datetime.date(<span class="dv">2021</span>, <span class="dv">7</span>, <span class="dv">1</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> pd.to_datetime(datetime.date(<span class="dv">2021</span>, <span class="dv">7</span>,<span class="dv">31</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">'../assets/example_usage.csv'</span>, parse_dates<span class="op">=</span>[<span class="st">'USAGE_DATE'</span>])</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> get_data(data, start_date, end_date)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>july_usage_data <span class="op">=</span> UsageComponent.from_historical_df(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is a single day of historical usage (96 15-minute intervals).</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.940529Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.867680Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>july_usage_data.plot_usage(<span class="dv">0</span>,<span class="dv">96</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-09-19-Texas-Rate-Inspector_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Now that we have historical usage, let’s model each of the three plans.</p>
+</section>
+<section id="plan-1-flat-rate" class="level2">
+<h2 class="anchored" data-anchor-id="plan-1-flat-rate">Plan 1: Flat Rate</h2>
+<blockquote class="blockquote">
+<p>Plan 1 (Flat Rate) charges <span><span class="math inline">\(&lt;/span&gt;0.119 per kWh plus a &lt;span&gt;\)</span></span>9.95 monthly charge if your usage for that month is less than 1000 kWh</p>
+</blockquote>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.943557Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.941481Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rate_inspector.rate <span class="im">import</span> <span class="op">*</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rate_inspector.plan <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First, we identify the rate components. This first plan has a <code>FlatThreshold</code> component that has a flat charge up to a threshold.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.950685Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.944292Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>base_w_peak <span class="op">=</span> FlatThreshold(<span class="st">'Flat Charge'</span>, <span class="fl">9.95</span>, max_thresh<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>kwh_charge <span class="op">=</span> TimeOfUseRate(<span class="st">'Energy Charge'</span>, <span class="fl">0.119</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once all of the rate components have been defined, we create a rate plan that contains all of the rate components.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.958537Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.951496Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plan1 <span class="op">=</span> RatePlan(<span class="st">'Flat Rate'</span>, [base_w_peak, kwh_charge])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we create a statement which combines the plan and the usage.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.967077Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.959343Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>statement1 <span class="op">=</span> Statement(plan1, july_usage_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Since total_usage was under 1000 kWh in this case, the <span>$</span>9.95 base charge is applied.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.974874Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.968400Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>statement1.print_line_item()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Flat Charge: 9.9500
+Energy Charge: 96.2753</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.982667Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.975723Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>statement1.total_usage</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>809.0359999999996</code></pre>
+</div>
+</div>
+<p>So our total cost per kwh is <span>$</span>0.131/kWh for Plan 1</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.989767Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.983461Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>statement1.price_per_kwh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>0.1312985874546989</code></pre>
+</div>
+</div>
+</section>
+<section id="plan-2-free-weekends" class="level2">
+<h2 class="anchored" data-anchor-id="plan-2-free-weekends">Plan 2: Free Weekends</h2>
+<blockquote class="blockquote">
+<p>Plan 2 (Free Weekends) charges <span><span class="math inline">\(&lt;/span&gt;0.200 per kWh between 12:00 AM Monday to 7:00 PM Friday plus a &lt;span&gt;\)</span></span>4.95 monthly charge</p>
+</blockquote>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:39.997079Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.990463Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>energy_kwh_rest_of_week <span class="op">=</span> TimeOfUseRate(<span class="st">'RoW Energy Charge'</span>, <span class="fl">0.20</span>, days_of_week<span class="op">=</span>[calendar.MONDAY, calendar.TUESDAY, calendar.WEDNESDAY, calendar.THURSDAY])</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>energy_kwh_friday <span class="op">=</span> TimeOfUseRate(<span class="st">'Friday Energy Charge'</span>, <span class="fl">0.20</span>, days_of_week<span class="op">=</span>[calendar.FRIDAY], end_time<span class="op">=</span>datetime.time(<span class="dv">7</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> Flat(<span class="st">'Base Charge'</span>, <span class="fl">4.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.004688Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:39.997860Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plan2 <span class="op">=</span> RatePlan(<span class="st">'Free Weekends'</span>, [energy_kwh_rest_of_week, energy_kwh_friday, base])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.013229Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.005501Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>statement2 <span class="op">=</span> Statement(plan2, july_usage_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.020897Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.014009Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>statement2.print_line_item()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>RoW Energy Charge: 82.3296
+Friday Energy Charge: 1.7952
+Base Charge: 4.9500</code></pre>
+</div>
+</div>
+<p>So our total cost per kwh is <span><span class="math inline">\(&lt;/span&gt;0.11/kWh for Plan 2 even though the advertised price on PowerToChoose shows the minimum price per kWh to be &lt;span&gt;\)</span></span>0.132 (@ 2000 kWh)</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.029164Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.021637Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>statement2.price_per_kwh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>0.11009992138792346</code></pre>
+</div>
+</div>
+</section>
+<section id="plan-3-tiered-rate" class="level2">
+<h2 class="anchored" data-anchor-id="plan-3-tiered-rate">Plan 3: Tiered Rate</h2>
+<blockquote class="blockquote">
+<p>Plan 3 (Tiered Rate) charges <span><span class="math inline">\(&lt;/span&gt;0.089 per kWh between 0 and 1200 kWh of usage and &lt;span&gt;\)</span></span>0.145 per kWh past that. This plan also has a <span><span class="math inline">\(&lt;/span&gt;9.95 monthly charge and a &lt;span&gt;\)</span></span>30 credit if you use more than 800 kWh.</p>
+</blockquote>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.041935Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.029997Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> Flat(<span class="st">'Base Charge'</span>, <span class="fl">9.95</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>tier1 <span class="op">=</span> Tier(<span class="st">'0-1200 kWh'</span>, <span class="fl">0.089</span>, max_kwh<span class="op">=</span><span class="dv">1200</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>tier2 <span class="op">=</span> Tier(<span class="st">'&gt; 1200 kWh'</span>, <span class="fl">0.145</span>, min_kwh<span class="op">=</span><span class="dv">1200</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>credit <span class="op">=</span> FlatThreshold(<span class="st">'800 kwh credit'</span>, <span class="op">-</span><span class="dv">30</span>, min_thresh<span class="op">=</span><span class="dv">800</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.049717Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.043087Z&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>plan3 <span class="op">=</span> RatePlan(<span class="st">'Tiered Rate'</span>, [base, tier1, tier2, credit])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.058119Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.050982Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>statement3 <span class="op">=</span> Statement(plan3, july_usage_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.076225Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.059608Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>statement3.print_line_item()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Base Charge: 9.9500
+0-1200 kWh: 72.0042
+&gt; 1200 kWh: 0.0000
+800 kwh credit: -30.0000</code></pre>
+</div>
+</div>
+<p>Plan 3 ends up being a great option for the usage. Our user would have paid just <span>$</span>0.064/kWh for plan number three. One thing to keep in mind is that we are only simulating a single month at this point.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-09-20T03:10:40.089227Z&quot;,&quot;start_time&quot;:&quot;2021-09-20T03:10:40.081064Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>statement3.price_per_kwh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>0.06421741924957602</code></pre>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This blog post shows an example of how the Texas Rate Inspector works. If you are interested in getting your electric rates modeled or would like to hear more about what we do, <a href="https://texasratefinder.com/#Sign-Up">please reach out</a>. We would love to take your usage and help you find your next rate plan.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

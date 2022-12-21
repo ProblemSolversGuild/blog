@@ -1,0 +1,24 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/2022-12-21-genetic_algorithm.html",
+      "/posts/2022-12-08-Should_We_Use_ChatGPT.html",
+      "/posts/2022-11-02-diffedit-implementation.html",
+      "/posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html",
+      "/posts/2022-05-02-zero_init_last_resnetperformance.html",
+      "/posts/2022-02-22-exploring-torch.lerp.html",
+      "/posts/2022-02-17-Cron_job_failure_email.html",
+      "/posts/2022-02-15-SSH-key.html",
+      "/posts/2022-02-07-python-function-default-argument-value.html",
+      "/posts/2022-02-06-Makefile_to_create_githook.html",
+      "/posts/2022-02-05-GitHook_to_clean_notebook.html",
+      "/posts/2021-09-19-texas-rate-inspector.html",
+      "/posts/2021-08-16-tabular_normalization_exploration.html",
+      "/posts/2021-08-03-5_Lessons_From_Richard_Feynman.html",
+      "/posts/2021-05-21-python_slots_exploration.html",
+      "/posts/2021-05-18-5_Tips_for_a_New_CIO.html",
+      "/posts/2021-05-14-text_dls_exploration.html"
+    ]
+  }
+]

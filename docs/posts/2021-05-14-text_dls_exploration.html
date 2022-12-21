@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kevin Bird">
+<meta name="dcterms.date" content="2021-05-14">
+<meta name="description" content="Exploring different methods to create the dls object in fastai">
+
+<title>Problem Solvers Guild Blog - fastai’s Text DLs Exploration</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Problem Solvers Guild Blog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/TPSG_io"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#using-datasets-dataloaders" id="toc-using-datasets-dataloaders" class="nav-link" data-scroll-target="#using-datasets-dataloaders">Using Datasets + Dataloaders</a></li>
+  <li><a href="#using-datasets---train-tfmddl-valid-tfmddl---dataloaders" id="toc-using-datasets---train-tfmddl-valid-tfmddl---dataloaders" class="nav-link" data-scroll-target="#using-datasets---train-tfmddl-valid-tfmddl---dataloaders">Using Datasets -&gt; train TfmdDL + valid TfmdDL -&gt; dataloaders</a></li>
+  <li><a href="#using-datablock---datasets---dataloaders" id="toc-using-datablock---datasets---dataloaders" class="nav-link" data-scroll-target="#using-datablock---datasets---dataloaders">Using DataBlock -&gt; datasets -&gt; dataloaders</a></li>
+  <li><a href="#using-datablock---dataloaders" id="toc-using-datablock---dataloaders" class="nav-link" data-scroll-target="#using-datablock---dataloaders">Using DataBlock -&gt; dataloaders</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#useful-links" id="toc-useful-links" class="nav-link" data-scroll-target="#useful-links">Useful Links</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">fastai’s Text DLs Exploration</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">fastai</div>
+    <div class="quarto-category">technical</div>
+    <div class="quarto-category">exploration</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Exploring different methods to create the dls object in fastai
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kevin Bird </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 14, 2021</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This post is an exploration into how to convert data into dls objects that can be used by fastai’s learner. I was having issues creating a dls object that had the ability to <code>show_batch</code> and met my arbitrarily custom needs. So I set out to figure out how to create dls that worked well for my needs.</p>
+<p>This blog post uses the Human Numbers dataset which is a dataset that counts sequentially from 1 to 9999 but in english text rather than numerical form. This is an interesting problem because there is quite a bit of repetition, but also new tokens and patterns being introduced regularly that a model will need to figure out.</p>
+<p>My goal was to create a dls that would have X=1,2,3 and y=4. Over the course of this blog post, I will show ~4 ways to create dls that enable show_batch to work as expected.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-15T05:43:24.105088Z&quot;,&quot;start_time&quot;:&quot;2021-05-15T05:43:24.101411Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.text.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-15T05:43:55.506024Z&quot;,&quot;start_time&quot;:&quot;2021-05-15T05:43:55.500418Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastai, fastcore</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-15T05:44:16.847986Z&quot;,&quot;start_time&quot;:&quot;2021-05-15T05:44:16.838184Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fastai.__version__,fastcore.__version__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>('2.3.1', '1.3.20')</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-15T05:44:07.938459Z&quot;,&quot;start_time&quot;:&quot;2021-05-15T05:44:07.927351Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> untar_data(URLs.HUMAN_NUMBERS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First, I create a tokenizer, combine all of the text into a single string, and tokenize each word</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.649533Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.488065Z&quot;}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> Tokenizer(WordTokenizer())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Testing the Tokenizer</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.654206Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.650566Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tokenizer(<span class="st">'one two three'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>(#4) ['xxbos','one','two','three']</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.664175Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.655063Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tokenizer(<span class="st">'one, two'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>(#4) ['xxbos','one',',','two']</code></pre>
+</div>
+</div>
+<p>Reading the train and validation files:<br>
+* train - [1-8000] * valid = [8001-9999]</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.673816Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.664967Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>train_txt <span class="op">=</span> <span class="st">', '</span>.join(o.strip() <span class="cf">for</span> o <span class="kw">in</span> (path<span class="op">/</span><span class="st">'train.txt'</span>).readlines())</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>valid_txt <span class="op">=</span> <span class="st">', '</span>.join(o.strip() <span class="cf">for</span> o <span class="kw">in</span> (path<span class="op">/</span><span class="st">'valid.txt'</span>).readlines())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For this problem, I will create my own validation set. It will split close to the same as this, but by creating my own split, I don’t have to do anything special when creating chunks around the train-&gt;validation split point</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.683394Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.678260Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>all_text <span class="op">=</span> train_txt<span class="op">+</span>valid_txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.885952Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.685073Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>all_text_tok <span class="op">=</span> tokenizer(all_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.889085Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.887034Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>all_text_tok</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>(#63094) ['xxbos','one',',','two',',','three',',','four',',','five'...]</code></pre>
+</div>
+</div>
+<p>Next, I take the tokenized text, count how many times each tokenizer occurs and create a vocab with that.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.901008Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.889799Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>count<span class="op">=</span>Counter(all_text_tok)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vocab <span class="op">=</span> make_vocab(count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.909618Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.901792Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Counter({',': 9996, 'hundred': 9000, 'thousand': 8999, 'one': 2900, 'two': 2900, 'three': 2900, 'four': 2900, 'five': 2900, 'six': 2900, 'seven': 2900, 'nine': 2899, 'eight': 2898, 'twenty': 1000, 'thirty': 1000, 'forty': 1000, 'fifty': 1000, 'sixty': 1000, 'seventy': 1000, 'eighty': 1000, 'ninety': 1000, 'ten': 100, 'eleven': 100, 'twelve': 100, 'thirteen': 100, 'fourteen': 100, 'fifteen': 100, 'sixteen': 100, 'seventeen': 100, 'eighteen': 100, 'nineteen': 100, 'xxbos': 1, 'nineeight': 1})</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.917544Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.910361Z&quot;}" data-scrolled="true" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(vocab)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['xxunk', 'xxpad', 'xxbos', 'xxeos', 'xxfld', 'xxrep', 'xxwrep', 'xxup', 'xxmaj', ',', 'hundred', 'thousand', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'nine', 'eight', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'xxfake']</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.928109Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.918366Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>all_text_tok_chunked <span class="op">=</span> <span class="bu">list</span>(chunked(all_text_tok, <span class="dv">11</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.935925Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.929114Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#drop last non-full row</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>all_text_tok_chunked <span class="op">=</span> all_text_tok_chunked[:<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next I create something that will get_x and get_y from the chunked data.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.943842Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.936742Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_x(o):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> o[:<span class="dv">10</span>]</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_y(o):</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [o[<span class="dv">10</span>]] <span class="cf">if</span> <span class="bu">len</span>(o) <span class="op">==</span> <span class="dv">11</span> <span class="cf">else</span> [<span class="st">'.'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.952379Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.944704Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>get_x(all_text_tok_chunked[<span class="dv">0</span>])<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>get_y(all_text_tok_chunked[<span class="dv">0</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['xxbos', 'one', ',', 'two', ',', 'three', ',', 'four', ',', 'five'] -&gt; [',']</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.960130Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.953221Z&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>get_x(all_text_tok_chunked[<span class="op">-</span><span class="dv">1</span>])<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>get_y(all_text_tok_chunked[<span class="op">-</span><span class="dv">1</span>])<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['nine', 'thousand', 'nine', 'hundred', 'ninety', 'seven', ',', 'nine', 'thousand', 'nine'] -&gt; ['hundred']</code></pre>
+</div>
+</div>
+<p>TitledStringDecoder is a transform that only decodes and what it enables is the show_batch and show_results function to actually work properly. Without this, I had troubles getting those functions to work because TensorText doesn’t have a proper show function or a truncate function.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.967829Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.961004Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TitledStringDecoder(Transform):</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> decodes(<span class="va">self</span>, o):</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> TitledStr(<span class="st">' '</span>.join(o))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All TitledStringDecoder really does is takes an array of text (‘one’, ‘two’) and converts it into a space-concatenated string instead of type Titled str which knows how to display itself in a nice way.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.976425Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.968677Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>TitledStr(<span class="st">' '</span>.join([<span class="st">'one'</span>, <span class="st">'two'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>'one two'</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.983446Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.977263Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>tmp_ts <span class="op">=</span> TitledStr(<span class="st">' '</span>.join(all_text_tok[:<span class="dv">10</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.991594Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.984407Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tmp_ts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>'xxbos one , two , three , four , five'</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:39.999886Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:39.992424Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tmp_ts.truncate(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>'xxbos one ,'</code></pre>
+</div>
+</div>
+<p>I create the splits based off the chunks. Putting 80% of the chunks into the training set and the last 20% in the validation set</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:40.007291Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:40.001606Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>splits <span class="op">=</span> [L(<span class="bu">range</span>(<span class="bu">int</span>(<span class="bu">len</span>(all_text_tok_chunked)<span class="op">*</span><span class="fl">0.8</span>))), L(<span class="bu">range</span>(<span class="bu">int</span>(<span class="bu">len</span>(all_text_tok_chunked)<span class="op">*</span><span class="fl">0.8</span>),<span class="bu">len</span>(all_text_tok_chunked)))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:40.015206Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:40.008295Z&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>splits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>[(#4588) [0,1,2,3,4,5,6,7,8,9...],
+ (#1147) [4588,4589,4590,4591,4592,4593,4594,4595,4596,4597...]]</code></pre>
+</div>
+</div>
+<p>Now, let’s test the transforms work properly</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:40.024634Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:40.016052Z&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Numericalize(vocab)(TitledStringDecoder()(get_x(all_text_tok_chunked[<span class="dv">0</span>])))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16])</code></pre>
+</div>
+</div>
+<p>And confirm that they will work as a pipeline as well</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:40.036605Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:40.025523Z&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> Pipeline([TitledStringDecoder, Numericalize(vocab)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:14:45.620235Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:14:45.608320Z&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>get_x(pipeline(all_text_tok_chunked[<span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16])</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:30.153079Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:30.148348Z&quot;}" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>pipeline_x <span class="op">=</span> Pipeline([get_x, TitledStringDecoder, Numericalize(vocab)])</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>pipeline_y <span class="op">=</span> Pipeline([get_y, TitledStringDecoder, Numericalize(vocab)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:31.036450Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:31.032927Z&quot;}" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>pipeline_y(all_text_tok_chunked[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<pre><code>TensorText([9])</code></pre>
+</div>
+</div>
+</section>
+<section id="using-datasets-dataloaders" class="level2">
+<h2 class="anchored" data-anchor-id="using-datasets-dataloaders">Using Datasets + Dataloaders</h2>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:49.130576Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:49.119040Z&quot;}" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>dsets <span class="op">=</span> Datasets(all_text_tok_chunked, tfms<span class="op">=</span>[pipeline_x,pipeline_y], splits<span class="op">=</span>splits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:49.610728Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:49.607422Z&quot;}" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>dsets[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>(TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16]), TensorText([9]))</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:51.644375Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:51.638557Z&quot;}" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>dsets.show(dsets[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>xxbos one , two , three , four , five
+,</code></pre>
+</div>
+</div>
+<p>Next, we can create the dataloaders. This can be done with either <code>DataLoaders.from_dsets(...)</code> or <code>dsets.dataloaders(...)</code>. Both methods are shown below.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:53.394816Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:53.390271Z&quot;}" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> DataLoaders.from_dsets(dsets, shuffle<span class="op">=</span><span class="va">False</span>, drop_last<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:53.670354Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:53.593034Z&quot;}" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>dls.show_batch()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:58.825631Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:57.311002Z&quot;}" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> dsets.dataloaders(bs<span class="op">=</span><span class="dv">16</span>, shuffle<span class="op">=</span><span class="va">False</span>, drop_last<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:16:58.845996Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:16:58.826632Z&quot;}" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>dls.show_batch()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="using-datasets---train-tfmddl-valid-tfmddl---dataloaders" class="level2">
+<h2 class="anchored" data-anchor-id="using-datasets---train-tfmddl-valid-tfmddl---dataloaders">Using Datasets -&gt; train TfmdDL + valid TfmdDL -&gt; dataloaders</h2>
+<p>Another way to get dls is to create TfmdDLs and pass those into DataLoaders. If you use DataLoader rather than TfmdDL, dls won’t have a show_batch method available.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:19.756797Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:19.750489Z&quot;}" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>train_dl <span class="op">=</span> TfmdDL(dsets.train, bs<span class="op">=</span><span class="dv">16</span>, drop_last<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:20.498823Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:20.495324Z&quot;}" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>valid_dl <span class="op">=</span> TfmdDL(dsets.valid, bs<span class="op">=</span><span class="dv">16</span>, drop_last<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:21.526842Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:21.520610Z&quot;}" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> DataLoaders(train_dl, valid_dl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:21.774212Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:21.748182Z&quot;}" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>dls.show_batch()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:24.322085Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:24.308174Z&quot;}" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>X,y <span class="op">=</span> dls.one_batch()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="using-datablock---datasets---dataloaders" class="level2">
+<h2 class="anchored" data-anchor-id="using-datablock---datasets---dataloaders">Using DataBlock -&gt; datasets -&gt; dataloaders</h2>
+<p>Another way to get dataloaders is to use DataBlock. DataBlock wants to know what type of data will be passed which can be specified to <code>blocks</code>. It also wants a <code>splitter</code> and the functions to <code>get_x</code> and <code>get_y</code></p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:25.801956Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:25.796645Z&quot;}" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>blocks <span class="op">=</span> [TransformBlock(type_tfms<span class="op">=</span>[TitledStringDecoder, Numericalize(vocab)]), <span class="co"># x piece</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>          TransformBlock(type_tfms<span class="op">=</span>[TitledStringDecoder, Numericalize(vocab)])] <span class="co"># y piece</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:26.009182Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:26.006091Z&quot;}" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>splits[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="54">
+<pre><code>(#1147) [4588,4589,4590,4591,4592,4593,4594,4595,4596,4597...]</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:26.379875Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:26.367879Z&quot;}" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>IndexSplitter(splits[<span class="op">-</span><span class="dv">1</span>])(all_text_tok_chunked)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
+<pre><code>((#4588) [0,1,2,3,4,5,6,7,8,9...],
+ (#1147) [4588,4589,4590,4591,4592,4593,4594,4595,4596,4597...])</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:26.720054Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:26.717070Z&quot;}" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>dblock <span class="op">=</span> DataBlock(blocks<span class="op">=</span>blocks,</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>                   splitter<span class="op">=</span>IndexSplitter(splits[<span class="op">-</span><span class="dv">1</span>]),</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>                   get_x<span class="op">=</span>get_x,</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>                   get_y<span class="op">=</span>get_y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With the dblock created, you can create a dset and then from the dset, you can create a dls similar to the one created above.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:27.399812Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:27.351179Z&quot;}" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>dsets_via_dblock <span class="op">=</span> dblock.datasets(all_text_tok_chunked)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:27.719824Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:27.712937Z&quot;}" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>dsets_via_dblock</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>(#5735) [(TensorText([ 2, 12,  9, 13,  9, 14,  9, 15,  9, 16]), TensorText([9])),(TensorText([17,  9, 18,  9, 20,  9, 19,  9, 29,  9]), TensorText([30])),(TensorText([ 9, 31,  9, 32,  9, 33,  9, 34,  9, 35]), TensorText([9])),(TensorText([36,  9, 37,  9, 38,  9, 21,  9, 21, 12]), TensorText([9])),(TensorText([21, 13,  9, 21, 14,  9, 21, 15,  9, 21]), TensorText([16])),(TensorText([ 9, 21, 17,  9, 21, 18,  9, 21, 20,  9]), TensorText([21])),(TensorText([19,  9, 22,  9, 22, 12,  9, 22, 13,  9]), TensorText([22])),(TensorText([14,  9, 22, 15,  9, 22, 16,  9, 22, 17]), TensorText([9])),(TensorText([22, 18,  9, 22, 20,  9, 22, 19,  9, 23]), TensorText([9])),(TensorText([23, 12,  9, 23, 13,  9, 23, 14,  9, 23]), TensorText([15]))...]</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:27.961370Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:27.948230Z&quot;}" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>dsets_via_dblock.show(dsets_via_dblock[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>xxbos one , two , three , four , five
+,</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:28.381205Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:28.349483Z&quot;}" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> dsets_via_dblock.dataloaders(bs<span class="op">=</span><span class="dv">16</span>,shuffle<span class="op">=</span><span class="va">False</span>, drop_last<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:28.893570Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:28.857130Z&quot;}" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>dls.show_batch()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="using-datablock---dataloaders" class="level2">
+<h2 class="anchored" data-anchor-id="using-datablock---dataloaders">Using DataBlock -&gt; dataloaders</h2>
+<p>Another option is to go directly from dblock to dls with <code>dblock.dataloaders</code>. Behind the scenes this is creating a dataset as well, but it can be a cleaner looking way to handle it if you always go from dblock -&gt; dls.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:30.468170Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:30.448103Z&quot;}" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>dls <span class="op">=</span> dblock.dataloaders(all_text_tok_chunked, bs<span class="op">=</span><span class="dv">16</span>, shuffle<span class="op">=</span><span class="va">False</span>, drop_last<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-05-14T20:17:30.869863Z&quot;,&quot;start_time&quot;:&quot;2021-05-14T20:17:30.818000Z&quot;}" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>dls.show_batch()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>text</th>
+      <th>text_</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos one , two , three , four , five</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>six , seven , eight , nine , ten ,</td>
+      <td>eleven</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>, twelve , thirteen , fourteen , fifteen , sixteen</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>seventeen , eighteen , nineteen , twenty , twenty one</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>twenty two , twenty three , twenty four , twenty</td>
+      <td>five</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>, twenty six , twenty seven , twenty eight ,</td>
+      <td>twenty</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>nine , thirty , thirty one , thirty two ,</td>
+      <td>thirty</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three , thirty four , thirty five , thirty six</td>
+      <td>,</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>thirty seven , thirty eight , thirty nine , forty</td>
+      <td>,</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Creating <code>dls</code> is an extremely important capability when using fastai because that is what a learn expects to deal with all of the data. There are many different ways to get a dls object created so this isn’t a comprehensive list, but at least shows a few ways to do the task. In a future blog post, I will be using this dls and exploring transformer models with it. Hopefully this will help others get their DLs working.</p>
+<p>I’d like to give a special thanks to Arto for helping me get things working properly and everybody in the fastai discord channel for dealing with my questions and for creating a great community to learn with every step of the way.</p>
+</section>
+<section id="useful-links" class="level2">
+<h2 class="anchored" data-anchor-id="useful-links">Useful Links</h2>
+<p>https://arampacha.github.io/thoughtsamples/fastai/pytorch/2021/01/02/transformer-lm-from-scratch.html</p>
+<p>https://github.com/fastai/fastai/blob/ab154927696338741e59e0ffc4774777c4a9781c/nbs/39_tutorial.transformers.ipynb<br>
+https://github.com/fastai/fastai/blob/ab154927696338741e59e0ffc4774777c4a9781c/dev_nbs/course/lesson7-human-numbers.ipynb</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
