@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kevin Bird">
+<meta name="dcterms.date" content="2022-11-02">
+<meta name="description" content="Implementing the DiffEdit Paper">
+
+<title>Problem Solvers Guild Blog - DiffEdit Paper Implementation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Problem Solvers Guild Blog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/TPSG_io"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#estimate-noise-conditioned-to-reference-text-r" id="toc-estimate-noise-conditioned-to-reference-text-r" class="nav-link active" data-scroll-target="#estimate-noise-conditioned-to-reference-text-r">Estimate noise conditioned to Reference Text R</a></li>
+  <li><a href="#estimate-noise-conditioned-to-query-q" id="toc-estimate-noise-conditioned-to-query-q" class="nav-link" data-scroll-target="#estimate-noise-conditioned-to-query-q">Estimate noise conditioned to Query Q</a></li>
+  <li><a href="#view-latent-noise-channels" id="toc-view-latent-noise-channels" class="nav-link" data-scroll-target="#view-latent-noise-channels">View Latent Noise Channels</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DiffEdit Paper Implementation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">technical</div>
+    <div class="quarto-category">research</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Implementing the DiffEdit Paper
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kevin Bird </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 2, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The goal of this blog post is to implement the <a href="https://arxiv.org/abs/2210.11427">DiffEdit paper</a> to the best of my understanding. While this task is primarily to help my own understanding of the process, I also want to help the reader of my post understand the process better as well.</p>
+<p>Before I start, I want to give a big thanks to the DiffEdit authors (Guillaume Couairon, Jakob Verbeek, Holger Schwenk, and Matthieu Cord) for publishing this paper. Without the openness and willingness to share, this type of implementation would not be possible. I also want to thank the fast.ai community for helping me solve problems when I was unclear about how to move forward. Finally, I want to thank Jonathan Whitaker, the auther of <a href="https://github.com/fastai/diffusion-nbs/blob/master/Stable%20Diffusion%20Deep%20Dive.ipynb">the Stable Diffusion Deep Dive notebook</a>. This was the notebook that I started with in my DiffEdit implementation.</p>
+<p>If anybody reading this blog post works in manufacturing and cares about improving product quality (or knows somebody that does), please reach out to me at kevin@problemsolversguild.com.</p>
+<p>#hide ## Loading the models</p>
+<p>This code (and that in the next section) comes from the <a href="https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/stable_diffusion.ipynb">Huggingface example notebook</a>.</p>
+<p>This will download and set up the relevant models and components we’ll be using. Let’s just run this for now and move on to the next section to check that it all works before diving deeper.</p>
+<p>If you’ve loaded a pipeline, you can also access these components using <code>pipe.unet</code>, <code>pipe.vae</code> and so on.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:34.322622Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:26.757037Z&quot;}">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the autoencoder model which will be used to decode the latents into image space. </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>vae <span class="op">=</span> AutoencoderKL.from_pretrained(<span class="st">"CompVis/stable-diffusion-v1-4"</span>, subfolder<span class="op">=</span><span class="st">"vae"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the tokenizer and text encoder to tokenize and encode the text. </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> CLIPTokenizer.from_pretrained(<span class="st">"openai/clip-vit-large-patch14"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>text_encoder <span class="op">=</span> CLIPTextModel.from_pretrained(<span class="st">"openai/clip-vit-large-patch14"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># The UNet model for generating the latents.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>unet <span class="op">=</span> UNet2DConditionModel.from_pretrained(<span class="st">"CompVis/stable-diffusion-v1-4"</span>, subfolder<span class="op">=</span><span class="st">"unet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:58:52.490515Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:58:52.478186Z&quot;}" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The noise scheduler</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># scheduler = LMSDiscreteScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", num_train_timesteps=1000)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>scheduler <span class="op">=</span> DDIMScheduler(beta_start<span class="op">=</span><span class="fl">0.00085</span>, beta_end<span class="op">=</span><span class="fl">0.012</span>, beta_schedule<span class="op">=</span><span class="st">"scaled_linear"</span>, clip_sample<span class="op">=</span><span class="va">False</span>, set_alpha_to_one<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:59:26.665291Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:59:26.633775Z&quot;}" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>scheduler.timesteps</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<pre><code>tensor([999, 998, 997, 996, 995, 994, 993, 992, 991, 990, 989, 988, 987, 986,
+        985, 984, 983, 982, 981, 980, 979, 978, 977, 976, 975, 974, 973, 972,
+        971, 970, 969, 968, 967, 966, 965, 964, 963, 962, 961, 960, 959, 958,
+        957, 956, 955, 954, 953, 952, 951, 950, 949, 948, 947, 946, 945, 944,
+        943, 942, 941, 940, 939, 938, 937, 936, 935, 934, 933, 932, 931, 930,
+        929, 928, 927, 926, 925, 924, 923, 922, 921, 920, 919, 918, 917, 916,
+        915, 914, 913, 912, 911, 910, 909, 908, 907, 906, 905, 904, 903, 902,
+        901, 900, 899, 898, 897, 896, 895, 894, 893, 892, 891, 890, 889, 888,
+        887, 886, 885, 884, 883, 882, 881, 880, 879, 878, 877, 876, 875, 874,
+        873, 872, 871, 870, 869, 868, 867, 866, 865, 864, 863, 862, 861, 860,
+        859, 858, 857, 856, 855, 854, 853, 852, 851, 850, 849, 848, 847, 846,
+        845, 844, 843, 842, 841, 840, 839, 838, 837, 836, 835, 834, 833, 832,
+        831, 830, 829, 828, 827, 826, 825, 824, 823, 822, 821, 820, 819, 818,
+        817, 816, 815, 814, 813, 812, 811, 810, 809, 808, 807, 806, 805, 804,
+        803, 802, 801, 800, 799, 798, 797, 796, 795, 794, 793, 792, 791, 790,
+        789, 788, 787, 786, 785, 784, 783, 782, 781, 780, 779, 778, 777, 776,
+        775, 774, 773, 772, 771, 770, 769, 768, 767, 766, 765, 764, 763, 762,
+        761, 760, 759, 758, 757, 756, 755, 754, 753, 752, 751, 750, 749, 748,
+        747, 746, 745, 744, 743, 742, 741, 740, 739, 738, 737, 736, 735, 734,
+        733, 732, 731, 730, 729, 728, 727, 726, 725, 724, 723, 722, 721, 720,
+        719, 718, 717, 716, 715, 714, 713, 712, 711, 710, 709, 708, 707, 706,
+        705, 704, 703, 702, 701, 700, 699, 698, 697, 696, 695, 694, 693, 692,
+        691, 690, 689, 688, 687, 686, 685, 684, 683, 682, 681, 680, 679, 678,
+        677, 676, 675, 674, 673, 672, 671, 670, 669, 668, 667, 666, 665, 664,
+        663, 662, 661, 660, 659, 658, 657, 656, 655, 654, 653, 652, 651, 650,
+        649, 648, 647, 646, 645, 644, 643, 642, 641, 640, 639, 638, 637, 636,
+        635, 634, 633, 632, 631, 630, 629, 628, 627, 626, 625, 624, 623, 622,
+        621, 620, 619, 618, 617, 616, 615, 614, 613, 612, 611, 610, 609, 608,
+        607, 606, 605, 604, 603, 602, 601, 600, 599, 598, 597, 596, 595, 594,
+        593, 592, 591, 590, 589, 588, 587, 586, 585, 584, 583, 582, 581, 580,
+        579, 578, 577, 576, 575, 574, 573, 572, 571, 570, 569, 568, 567, 566,
+        565, 564, 563, 562, 561, 560, 559, 558, 557, 556, 555, 554, 553, 552,
+        551, 550, 549, 548, 547, 546, 545, 544, 543, 542, 541, 540, 539, 538,
+        537, 536, 535, 534, 533, 532, 531, 530, 529, 528, 527, 526, 525, 524,
+        523, 522, 521, 520, 519, 518, 517, 516, 515, 514, 513, 512, 511, 510,
+        509, 508, 507, 506, 505, 504, 503, 502, 501, 500, 499, 498, 497, 496,
+        495, 494, 493, 492, 491, 490, 489, 488, 487, 486, 485, 484, 483, 482,
+        481, 480, 479, 478, 477, 476, 475, 474, 473, 472, 471, 470, 469, 468,
+        467, 466, 465, 464, 463, 462, 461, 460, 459, 458, 457, 456, 455, 454,
+        453, 452, 451, 450, 449, 448, 447, 446, 445, 444, 443, 442, 441, 440,
+        439, 438, 437, 436, 435, 434, 433, 432, 431, 430, 429, 428, 427, 426,
+        425, 424, 423, 422, 421, 420, 419, 418, 417, 416, 415, 414, 413, 412,
+        411, 410, 409, 408, 407, 406, 405, 404, 403, 402, 401, 400, 399, 398,
+        397, 396, 395, 394, 393, 392, 391, 390, 389, 388, 387, 386, 385, 384,
+        383, 382, 381, 380, 379, 378, 377, 376, 375, 374, 373, 372, 371, 370,
+        369, 368, 367, 366, 365, 364, 363, 362, 361, 360, 359, 358, 357, 356,
+        355, 354, 353, 352, 351, 350, 349, 348, 347, 346, 345, 344, 343, 342,
+        341, 340, 339, 338, 337, 336, 335, 334, 333, 332, 331, 330, 329, 328,
+        327, 326, 325, 324, 323, 322, 321, 320, 319, 318, 317, 316, 315, 314,
+        313, 312, 311, 310, 309, 308, 307, 306, 305, 304, 303, 302, 301, 300,
+        299, 298, 297, 296, 295, 294, 293, 292, 291, 290, 289, 288, 287, 286,
+        285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273, 272,
+        271, 270, 269, 268, 267, 266, 265, 264, 263, 262, 261, 260, 259, 258,
+        257, 256, 255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244,
+        243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230,
+        229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 216,
+        215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202,
+        201, 200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188,
+        187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174,
+        173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160,
+        159, 158, 157, 156, 155, 154, 153, 152, 151, 150, 149, 148, 147, 146,
+        145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132,
+        131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118,
+        117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104,
+        103, 102, 101, 100,  99,  98,  97,  96,  95,  94,  93,  92,  91,  90,
+         89,  88,  87,  86,  85,  84,  83,  82,  81,  80,  79,  78,  77,  76,
+         75,  74,  73,  72,  71,  70,  69,  68,  67,  66,  65,  64,  63,  62,
+         61,  60,  59,  58,  57,  56,  55,  54,  53,  52,  51,  50,  49,  48,
+         47,  46,  45,  44,  43,  42,  41,  40,  39,  38,  37,  36,  35,  34,
+         33,  32,  31,  30,  29,  28,  27,  26,  25,  24,  23,  22,  21,  20,
+         19,  18,  17,  16,  15,  14,  13,  12,  11,  10,   9,   8,   7,   6,
+          5,   4,   3,   2,   1,   0])</code></pre>
+</div>
+</div>
+<p>The first thing we need to do is choose an image that we want to use as a starting point. I chose to go with a picture that was similar to one of the images used in the paper, but maybe a little harder.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:40.600759Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:40.183380Z&quot;}" data-scrolled="true" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> FastDownload().download(<span class="st">'https://negativespace.co/wp-content/uploads/2020/11/negative-space-horses-in-field-with-trees-1062x705.jpg'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>init_image <span class="op">=</span> Image.<span class="bu">open</span>(p).convert(<span class="st">"RGB"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># init_image = init_image.resize((init_image.size[0]//2, init_image.size[1]//2))</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>init_image <span class="op">=</span> init_image.resize((<span class="dv">512</span>,<span class="dv">512</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>init_image</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="8192" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -819200.00% [8192/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="16384" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -1638400.00% [16384/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="24576" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -2457600.00% [24576/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="32768" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -3276800.00% [32768/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="40960" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -4096000.00% [40960/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="49152" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -4915200.00% [49152/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="57344" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -5734400.00% [57344/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="65536" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -6553600.00% [65536/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="73728" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -7372800.00% [73728/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="81920" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -8192000.00% [81920/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="90112" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -9011200.00% [90112/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="98304" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -9830400.00% [98304/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="106496" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -10649600.00% [106496/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="114688" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -11468800.00% [114688/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="122880" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -12288000.00% [122880/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="131072" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -13107200.00% [131072/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="139264" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -13926400.00% [139264/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="147456" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -14745600.00% [147456/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="155648" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -15564800.00% [155648/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="163840" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -16384000.00% [163840/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="172032" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -17203200.00% [172032/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="180224" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -18022400.00% [180224/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="188416" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -18841600.00% [188416/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="196608" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -19660800.00% [196608/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="204800" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -20480000.00% [204800/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="212992" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -21299200.00% [212992/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="221184" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -22118400.00% [221184/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="229376" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -22937600.00% [229376/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display">
+
+<style>
+    /* Turns off some styling */
+    progress {
+        /* gets rid of default border in Firefox and Opera. */
+        border: none;
+        /* Needs to be in here for Safari polyfill so background images work as expected. */
+        background-size: auto;
+    }
+    progress:not([value]), progress:not([value])::-webkit-progress-bar {
+        background: repeating-linear-gradient(45deg, #7e7e7e, #7e7e7e 10px, #5c5c5c 10px, #5c5c5c 20px);
+    }
+    .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+        background: #F44336;
+    }
+</style>
+</div>
+<div class="cell-output cell-output-display">
+
+    <div>
+      <progress value="237568" class="" max="-1" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      -23756800.00% [237568/-1 00:00&lt;00:00]
+    </div>
+    
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-8-output-59.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Now that I have found an image, let’s define the <code>reference_text</code> and the <code>query_text</code>. These are defined in the paper as <code>R</code> and <code>Q</code>. Let’s follow the paper here and keep Q and R simple.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:46.559228Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:46.550634Z&quot;}" data-scrolled="true" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>reference_text <span class="op">=</span> <span class="st">"Two horses"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>query_text <span class="op">=</span> <span class="st">"Two zebras"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A good amount of the code in the next few cells is coming from the StableDiffusionImg2ImgPipeline function in the diffusers library. This was very helpful in creating the implementation I ended up with</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:48.421950Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:48.405146Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> preprocess(image):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    w, h <span class="op">=</span> image.size</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    w, h <span class="op">=</span> <span class="bu">map</span>(<span class="kw">lambda</span> x: x <span class="op">-</span> x <span class="op">%</span> <span class="dv">32</span>, (w, h))  <span class="co"># resize to integer multiple of 32</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> image.resize((w, h), resample<span class="op">=</span>PIL.Image.Resampling.LANCZOS)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> np.array(image).astype(np.float32) <span class="op">/</span> <span class="fl">255.0</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> image[<span class="va">None</span>].transpose(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> torch.from_numpy(image)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">2.0</span> <span class="op">*</span> image <span class="op">-</span> <span class="fl">1.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:49.402093Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:49.377282Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_text_embeddings(prompt, negative_prompt, tokenizer, text_encoder, do_classifier_free_guidance, device): <span class="co">#outputs text_embeddings</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get prompt text embeddings</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    text_inputs <span class="op">=</span> tokenizer(prompt, padding<span class="op">=</span><span class="st">"max_length"</span>, max_length<span class="op">=</span>tokenizer.model_max_length, </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                            return_tensors<span class="op">=</span><span class="st">"pt"</span>, truncation<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    text_input_ids <span class="op">=</span> text_inputs.input_ids</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    text_embeddings <span class="op">=</span> text_encoder(text_input_ids.to(device))[<span class="dv">0</span>]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># text_embeddings = text_embeddings.repeat_interleave(num_images_per_prompt, dim=0)</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> negative_prompt <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        uncond_tokens <span class="op">=</span> [<span class="st">""</span>]</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        uncond_tokens <span class="op">=</span> negative_prompt</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    max_length <span class="op">=</span> text_input_ids.shape[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    uncond_input <span class="op">=</span> tokenizer(uncond_tokens, padding<span class="op">=</span><span class="st">"max_length"</span>, max_length<span class="op">=</span>max_length, </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                             return_tensors<span class="op">=</span><span class="st">"pt"</span>, truncation<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        uncond_embeddings <span class="op">=</span> text_encoder(uncond_input.input_ids.to(device))[<span class="dv">0</span>]</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># duplicate unconditional embeddings for each generation per prompt</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># uncond_embeddings = uncond_embeddings.repeat_interleave(batch_size * num_images_per_prompt, dim=0)</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># For classifier free guidance, we need to do two forward passes.</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Here we concatenate the unconditional and text embeddings into a single batch</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to avoid doing two forward passes</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    text_embeddings <span class="op">=</span> torch.cat([uncond_embeddings, text_embeddings])</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text_embeddings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:49.875459Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:49.867501Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_timestamps(scheduler, num_inference_steps, strength, device):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    scheduler.set_timesteps(num_inference_steps)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get the original timestep using init_timestep</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    offset <span class="op">=</span> scheduler.config.get(<span class="st">"steps_offset"</span>, <span class="dv">0</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    init_timestep <span class="op">=</span> <span class="bu">int</span>(num_inference_steps <span class="op">*</span> strength) <span class="op">+</span> offset</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    init_timestep <span class="op">=</span> <span class="bu">min</span>(init_timestep, num_inference_steps)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    timesteps <span class="op">=</span> scheduler.timesteps[<span class="op">-</span>init_timestep]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    timesteps <span class="op">=</span> torch.tensor([timesteps], device<span class="op">=</span>device)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    t_start <span class="op">=</span> <span class="bu">max</span>(num_inference_steps <span class="op">-</span> init_timestep <span class="op">+</span> offset, <span class="dv">0</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> timesteps, t_start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:36:50.567497Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:36:50.551314Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encode_image(init_image, latents_dtype, device):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># encode the init image into latents and scale the latents</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    init_image <span class="op">=</span> preprocess(init_image)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    init_image <span class="op">=</span> init_image.to(device<span class="op">=</span>device, dtype<span class="op">=</span>latents_dtype)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad(): init_latent_dist <span class="op">=</span> vae.encode(init_image).latent_dist</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    init_latents <span class="op">=</span> init_latent_dist.sample(generator<span class="op">=</span>generator)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    init_latents <span class="op">=</span> <span class="fl">0.18215</span> <span class="op">*</span> init_latents</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> init_latents</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:56:39.222260Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:56:39.181837Z&quot;}" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> img2noise(init_image, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>              prompt,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>              mask<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>              strength <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>              num_inference_steps <span class="op">=</span> <span class="dv">50</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>              guidance_scale <span class="op">=</span> <span class="dv">5</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>              negative_prompt<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>              generator <span class="op">=</span> <span class="va">None</span>, </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>              output_type <span class="op">=</span> <span class="st">"pil"</span>, </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>              return_dict <span class="op">=</span> <span class="va">True</span>, </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>              callback <span class="op">=</span> <span class="va">None</span>, </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>              callback_steps <span class="op">=</span> <span class="dv">1</span>, </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>              device<span class="op">=</span><span class="st">'cuda'</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>             ):</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    do_classifier_free_guidance <span class="op">=</span> guidance_scale <span class="op">&gt;</span> <span class="fl">1.0</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    text_embeddings <span class="op">=</span> get_text_embeddings(prompt, negative_prompt, tokenizer, text_encoder, do_classifier_free_guidance, device)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    latents_dtype<span class="op">=</span>text_embeddings.dtype</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    timesteps, t_start <span class="op">=</span> get_timestamps(scheduler, num_inference_steps, strength, device)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># encode the init image into latents and scale the latents</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    init_latents <span class="op">=</span> encode_image(init_image, latents_dtype, device)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add noise to latents using the timesteps</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    noise <span class="op">=</span> torch.randn(init_latents.shape, generator<span class="op">=</span>generator, device<span class="op">=</span>device, dtype<span class="op">=</span>latents_dtype)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    noisy_latents <span class="op">=</span> scheduler.add_noise(init_latents, noise, timesteps)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> noisy_latents</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Some schedulers like PNDM have timesteps as arrays</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># It's more optimized to move all timesteps to correct device beforehand</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    timesteps <span class="op">=</span> scheduler.timesteps[t_start:].to(device)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    noise_preds <span class="op">=</span> torch.tensor([], device<span class="op">=</span><span class="st">'cuda'</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(timesteps)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, t <span class="kw">in</span> <span class="bu">enumerate</span>(timesteps):</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># expand the latents if we are doing classifier free guidance</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>        latent_model_input <span class="op">=</span> torch.cat([latents] <span class="op">*</span> <span class="dv">2</span>) <span class="cf">if</span> do_classifier_free_guidance <span class="cf">else</span> latents</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>        latent_model_input <span class="op">=</span> scheduler.scale_model_input(latent_model_input, t)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># predict the noise residual</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>            noise_pred <span class="op">=</span> unet(latent_model_input, t, encoder_hidden_states<span class="op">=</span>text_embeddings).sample</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># perform guidance</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> do_classifier_free_guidance:</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>            noise_pred_uncond, noise_pred_text <span class="op">=</span> noise_pred.chunk(<span class="dv">2</span>)</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>            noise_pred <span class="op">=</span> noise_pred_uncond <span class="op">+</span> guidance_scale <span class="op">*</span> (noise_pred_text <span class="op">-</span> noise_pred_uncond)</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>        noise_preds <span class="op">=</span> torch.concat((noise_preds, noise_pred)) <span class="co">#This performs much worse when outside the for-loop</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># compute the previous noisy sample x_t -&gt; x_t-1</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>        latent_step <span class="op">=</span> scheduler.step(noise_pred, t, latents)</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>        latents <span class="op">=</span> latent_step.prev_sample </span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>: </span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>            latents <span class="op">=</span> mask<span class="op">*</span>latents<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span>mask)<span class="op">*</span>init_latents</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> <span class="fl">0.18215</span> <span class="op">*</span> latents</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad(): image <span class="op">=</span> vae.decode(latents).sample</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> (image <span class="op">/</span> <span class="dv">2</span> <span class="op">+</span> <span class="fl">0.5</span>).clamp(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> image.cpu().permute(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>).numpy()</span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>    images <span class="op">=</span> (image <span class="op">*</span> <span class="dv">255</span>).<span class="bu">round</span>().astype(<span class="st">"uint8"</span>)</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>    pil_images <span class="op">=</span> [Image.fromarray(image) <span class="cf">for</span> image <span class="kw">in</span> images]</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pil_images, noise_preds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="notebook_images/2022-11-02-DiffEdit-Implementation/diffedit_step1.png" class="img-fluid"></p>
+<section id="estimate-noise-conditioned-to-reference-text-r" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-noise-conditioned-to-reference-text-r">Estimate noise conditioned to Reference Text R</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:57:20.513196Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:56:40.596381Z&quot;}" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.cuda.manual_seed(<span class="dv">32</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>reference_noises <span class="op">=</span> torch.tensor([], device<span class="op">=</span><span class="st">'cuda'</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    reference_pil, reference_noise <span class="op">=</span> img2noise(init_image, strength<span class="op">=</span><span class="fl">0.5</span>, prompt<span class="op">=</span>reference_text, generator<span class="op">=</span>generator)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    reference_noises <span class="op">=</span> torch.concat((reference_noises, reference_noise))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)
+tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
+        346.5918, 326.2041, 305.8163, 285.4286, 265.0408, 244.6531, 224.2653,
+        203.8776, 183.4898, 163.1020, 142.7143, 122.3265, 101.9388,  81.5510,
+         61.1633,  40.7755,  20.3878,   0.0000], device='cuda:0',
+       dtype=torch.float64)</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:44:25.783303Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:44:25.764817Z&quot;}" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>scheduler.step??</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimate-noise-conditioned-to-query-q" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-noise-conditioned-to-query-q">Estimate noise conditioned to Query Q</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:16.081885Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:37:35.802517Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>generator <span class="op">=</span> torch.cuda.manual_seed(<span class="dv">32</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>query_noises <span class="op">=</span> torch.tensor([], device<span class="op">=</span><span class="st">'cuda'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    query_pil, query_noise <span class="op">=</span> img2noise(init_image, strength<span class="op">=</span><span class="fl">0.5</span>, prompt<span class="op">=</span>query_text, generator<span class="op">=</span>generator)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    query_noises <span class="op">=</span> torch.concat((query_noises, query_noise))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="view-latent-noise-channels" class="level3">
+<h3 class="anchored" data-anchor-id="view-latent-noise-channels">View Latent Noise Channels</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:16.467213Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:16.083118Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">4</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    axs[c].imshow(reference_noises.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>][c].cpu())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:16.824531Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:16.469156Z&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">4</span>))</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    axs[c].imshow(query_noises.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>)[<span class="dv">0</span>][c].cpu())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>While there isn’t much that looks interesting when looking at the <code>reference_noises</code> or <code>query_noises</code> individually, let’s look at the difference between the two.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:16.828642Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:16.825748Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>diff_noises <span class="op">=</span> (reference_noises.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="op">-</span> query_noises.mean(<span class="dv">0</span>, keepdim<span class="op">=</span><span class="va">True</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.271501Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:16.830040Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">4</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    axs[c].imshow(diff_noises[<span class="dv">0</span>][c].cpu())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Now, we are seeing some signs that the noise that is being removed is quite different over the horse area of the picture and pretty similar outside of that area. One thing to note on these channels is that some of them are darker surrounding the horses and some are lighter.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.277367Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.272714Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>diff_noises.<span class="bu">min</span>(), diff_noises.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>(tensor(-0.8503, device='cuda:0'), tensor(0.6133, device='cuda:0'))</code></pre>
+</div>
+</div>
+<p>One thing I’ve found improves this is to determine the distance away from the midpoint, so I take the absolute value to make sure the intensity, not the direction, is being taken into consideration. The thought here is that whether the zebra query or the horse reference is activating that noise a lot, it is probably a pixel we should include in the mask.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.285984Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.278556Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>diff_noises_abs <span class="op">=</span> diff_noises.<span class="bu">abs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.648946Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.287295Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">4</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    axs[c].imshow(diff_noises_abs[<span class="dv">0</span>][c].cpu())<span class="co">#, cmap='Greys')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Now, let’s scale all of our values to be between 0 and 1 by subtracting the smallest value and then dividing everything by the largest value. I am not removing any values when doing this although I will note here that the paper does say to “remove extreme values in noise predictions”. I wasn’t sure how to go about doing this.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.654270Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.651786Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>diff_noise_normed <span class="op">=</span> (diff_noises_abs <span class="op">-</span> diff_noises_abs.<span class="bu">min</span>())<span class="op">/</span>(diff_noises_abs <span class="op">-</span> diff_noises_abs.<span class="bu">min</span>()).<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.665666Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.655515Z&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>diff_noise_normed.<span class="bu">min</span>(), diff_noise_normed.<span class="bu">max</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>(tensor(0., device='cuda:0'), tensor(1., device='cuda:0'))</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.690946Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.684156Z&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> diff_noise_normed.mean(dim<span class="op">=</span><span class="dv">1</span>).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The next step is to binarize the mask so that everything is either a 0 or a 1. To acheive this, I used Otsu thresholding which I believe deviates from the version that is used in the paper which seems more straightforward: “binarized with a threshold, which we set to 0.5 by default”. I was never able to get a mask that I was happy with when using that strategy.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.737202Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.729970Z&quot;}" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_channel_mask(img, do_inverse<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    kernel <span class="op">=</span> np.ones((<span class="dv">3</span>,<span class="dv">3</span>),np.uint8)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    img <span class="op">=</span> (img<span class="op">*</span><span class="dv">255</span>).squeeze().cpu().to(torch.uint8).numpy()</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> do_inverse:</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        ret2,img2 <span class="op">=</span> cv2.threshold(img,<span class="dv">0</span>,<span class="dv">1</span>,cv2.THRESH_BINARY_INV<span class="op">+</span>cv2.THRESH_OTSU)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        ret2,img2 <span class="op">=</span> cv2.threshold(img,<span class="dv">0</span>,<span class="dv">1</span>,cv2.THRESH_BINARY<span class="op">+</span>cv2.THRESH_OTSU)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    dilate <span class="op">=</span> cv2.dilate(img2, kernel)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dilate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.745266Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.738415Z&quot;}" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>final_mask <span class="op">=</span> extract_channel_mask(mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.875295Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.746303Z&quot;}" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(final_mask)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f3d61067e20&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-35-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Since our mask is generated in Latent Space, we have to find a way to go from latent space back to the original image space. For this, I decided to use F.interpolate.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:17.880192Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.876509Z&quot;}" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>horse_sized_mask <span class="op">=</span> F.interpolate(torch.from_numpy(final_mask).unsqueeze(<span class="dv">0</span>).unsqueeze(<span class="dv">0</span>), mode<span class="op">=</span><span class="st">'nearest'</span>, size<span class="op">=</span>(init_image.size[<span class="dv">1</span>],init_image.size[<span class="dv">0</span>])).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The mask came out looking pretty good for this easy prompt. The horses are definitely well masked and seem to match what would intuitively make sense. I have done some other prompts that didn’t look good including trying to change the grass into sand and changing the forest into a mushroom forest. Both of these included the horses in the mask still.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:18.120890Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:17.881297Z&quot;}" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(init_image)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>plt.imshow(horse_sized_mask.squeeze().cpu(), alpha<span class="op">=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f3d60fadd90&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-37-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Most of the interesting results from this paper are coming from step 1. The other two steps are hard to really build up to, but I will share them here.</p>
+<p>Step 2: Encoding is replicating the step that was done before where we add noise back into the latent. This is already being done so there was no new code that was needed to accomplish this. This is the code where that step occurs:</p>
+<pre><code>    # add noise to latents using the timesteps
+    noise = torch.randn(init_latents.shape, generator=generator, device=device, dtype=latents_dtype)
+    noisy_latents = scheduler.add_noise(init_latents, noise, timesteps)</code></pre>
+<p>Step 3: Decode with mask-wise correction is interesting, but also a step that doesn’t add much code. The idea of step 3 is that anything outside of the mask that was generated from step 1 will be reverted to the original pixel value. So only the pixels that are inside of the masked areas will be changed which helps accomplish the goal of keeping most of the original image the same as before the prompt.</p>
+<p>Here is the equation of the concept I described: <span class="math inline">\(\tilde{y}_t = M*y_t + (1−M)*x_t\)</span> where <span class="math inline">\(y_t\)</span> is the new image and <span class="math inline">\(x_t\)</span> is the original image (both encoded in latent space).</p>
+<p>Let’s look at the results:</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:22.209153Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:18.122093Z&quot;}" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> StableDiffusionInpaintPipeline.from_pretrained(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"runwayml/stable-diffusion-inpainting"</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    revision<span class="op">=</span><span class="st">"fp16"</span>,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    torch_dtype<span class="op">=</span>torch.float16,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>).to(torch_device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"be013ea30edc445dbae430a94b648c3a","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:22.324780Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:22.210351Z&quot;}" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(torch.from_numpy((final_mask)).cuda().<span class="bu">float</span>().cpu())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f3d80ee4610&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-39-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:38:22.329915Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:22.326068Z&quot;}" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> image_grid(imgs, rows, cols):</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">len</span>(imgs) <span class="op">==</span> rows<span class="op">*</span>cols</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    w, h <span class="op">=</span> imgs[<span class="dv">0</span>].size</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> PIL.Image.new(<span class="st">'RGB'</span>, size<span class="op">=</span>(cols<span class="op">*</span>w, rows<span class="op">*</span>h))</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    grid_w, grid_h <span class="op">=</span> grid.size</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, img <span class="kw">in</span> <span class="bu">enumerate</span>(imgs):</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>        grid.paste(img, box<span class="op">=</span>(i<span class="op">%</span>cols<span class="op">*</span>w, i<span class="op">//</span>cols<span class="op">*</span>h))</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-08T16:39:33.919251Z&quot;,&quot;start_time&quot;:&quot;2022-11-08T16:38:22.331428Z&quot;}" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">20</span>):</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    generator <span class="op">=</span> torch.cuda.manual_seed(i)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     final_pil, _= img2noise(init_image, prompt=query_text, mask=torch.from_numpy((final_mask)).cuda(), generator=generator, strength=0.5)</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    final_pil <span class="op">=</span> pipe(prompt<span class="op">=</span>query_text, image<span class="op">=</span>init_image, mask_image<span class="op">=</span>Image.fromarray(<span class="dv">255</span><span class="op">*</span>horse_sized_mask.numpy()), num_images_per_prompt<span class="op">=</span><span class="dv">1</span>).images</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    display(final_pil[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f0ee2a0c8ef1453cb3f103103665db41","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-3.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"eb807b4f5ef04ca9ad07d61e7472a496","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-6.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"ae2b46c0dbc54752bb684d1329eeeafe","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-9.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"3e957c9e5941480b995ce1eb6cd53623","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-12.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"9e3e9cb6274a4a7891ecab80812a4c28","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-15.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"25076b1399ab450fa9ba12ee7d10b0dc","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-18.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"c465587dc60043bbb0cc9a72e011f9f5","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>6</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-21.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f9502090d462460fad63bc7846fbba89","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>7</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-24.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f2a84cef56c841e7be215b32ccb741f4","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>8</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-27.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"97899df3711c479c8432ebe62fbf6ca8","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>9</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-30.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"4fe4606ab60b4d27bf3687c85737bfb6","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>10</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-33.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"39ebc2006d1a41aaa6c7d601ba7ddeb6","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>11</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-36.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f0c34b3b912845199b082d03f0334d60","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>12</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-39.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"a2e38c1d1d034b91b3c01e5529e7f36a","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>13</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-42.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"7172dd9121954674a61b0aba467f9c2d","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>14</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-45.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d0ff5b26d3784a9380ea60c611754201","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>15</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-48.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"9f443cb3be4b49c8b3dc86867a298114","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>16</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-51.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"96273b9eb488434282fac8dd8cd75b54","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>17</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-54.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"b4acf0df99b34dbe921517d5a5061c30","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>18</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-57.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"11f0acf299cd4c1caf8bd54bcd51ff8f","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>19</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-60.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Overall, it seems that the process is doing what we would expect. I am seeing some decent results, but there is definitely still room for innovation in this space. If you noticed any typos or have any ideas for improving this blog post, please reach out to kevin@problemsolversguild.com and let me know! Thank you for reading and I hope this has been helpful in your learning process.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

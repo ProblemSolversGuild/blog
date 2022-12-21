@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kevin Bird">
+<meta name="dcterms.date" content="2021-08-16">
+<meta name="description" content="Exploring the effectiveness of normalization on tabular data">
+
+<title>Problem Solvers Guild Blog - Normalizing fastai Tabular Inputs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Problem Solvers Guild Blog</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/TPSG_io"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-normalization" id="toc-what-is-normalization" class="nav-link active" data-scroll-target="#what-is-normalization">What is Normalization?</a></li>
+  <li><a href="#testing-the-theory-with-fastais-tabular-application" id="toc-testing-the-theory-with-fastais-tabular-application" class="nav-link" data-scroll-target="#testing-the-theory-with-fastais-tabular-application">Testing the Theory with fastai’s Tabular Application</a>
+  <ul class="collapse">
+  <li><a href="#experiment-setup" id="toc-experiment-setup" class="nav-link" data-scroll-target="#experiment-setup">Experiment Setup</a></li>
+  <li><a href="#normalized" id="toc-normalized" class="nav-link" data-scroll-target="#normalized">Normalized</a></li>
+  <li><a href="#not-normalized" id="toc-not-normalized" class="nav-link" data-scroll-target="#not-normalized">Not Normalized</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Normalizing fastai Tabular Inputs</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">technical</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Exploring the effectiveness of normalization on tabular data
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kevin Bird </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 16, 2021</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Normalizing data is an important aspect of data science that seemed like magic to me for the longest time. I could train a model for 10 epochs on un-normalized data and make little or no progress towards an effective model, then restart and run the same data through my model with normalization applied and have a perfect model. Why was this the case? What was happening that caused such a big difference? Let’s explore that question.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:11:21.597995Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:11:21.592477Z&quot;}" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="what-is-normalization" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-normalization">What is Normalization?</h2>
+<p>Normalization is the process of converting all of the numbers so the full set of numbers has a mean of 0 and a standard deviation of 1. My guess is that for most people reading this, those numbers and terms don’t mean a lot. So let’s dig in a bit deeper. Normalization is the process of putting all of our values on a common scale. By ensuring that the overall number range has a mean of 0, each side of zero will have half of the weight of the numbers. That means that all of the values are balanced around 0. Let’s get a real example.</p>
+<p>Let’s assume we have a set of numbers: [1, 5, 10, 25, 100, 1000].</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:26:37.077850Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:26:37.075323Z&quot;}" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>example_1 <span class="op">=</span> np.array([<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">100</span>, <span class="dv">1000</span>])<span class="op">;</span> example_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="76">
+<pre><code>array([   1,    5,   10,   25,  100, 1000])</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:11:21.738540Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:11:21.668674Z&quot;}" data-execution_count="63">
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>How would we transform these numbers to have a mean of 0? Let’s start by finding the current mean of these numbers.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:11:21.741585Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:11:21.739418Z&quot;}" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>example_1.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<pre><code>190.16666666666666</code></pre>
+</div>
+</div>
+<p>190.16666 is the mean of this set of numbers. In order to make this 0, we should be able to just subtract each number by that amount.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:11:21.749494Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:11:21.742473Z&quot;}" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>example_1_mean_0 <span class="op">=</span> example_1<span class="op">-</span>example_1.mean()<span class="op">;</span> example_1_mean_0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<pre><code>array([-189.16666667, -185.16666667, -180.16666667, -165.16666667,
+        -90.16666667,  809.83333333])</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:11:21.811861Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:11:21.750332Z&quot;}" data-execution_count="66">
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:11:21.814719Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:11:21.812656Z&quot;}" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ss">f"The mean is now: </span><span class="sc">{</span>example_1_mean_0<span class="sc">.</span>mean()<span class="sc">}</span><span class="ss"> (AKA: 0)"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="67">
+<pre><code>'The mean is now: 1.8947806286936004e-14 (AKA: 0)'</code></pre>
+</div>
+</div>
+<p>Instead of being distributed around the number 190.1666, the numbers are now distributed around the number 0. With the numbers now balanced correctly, we want to remove scale and units from our dataset. <a href="https://www.statista.com/statistics-glossary/definition/382/standard_deviation/">statista.com</a> has the following example to explain standard deviation: &gt; 1,000 people were questioned about their monthly phone bill. The mean value is \$40 and the standard deviation 27. Which means that the average distance of all answers (=values) to the mean is \$27.</p>
+<p>Let’s consider what it means then to divide by the standard deviation. For this example, we would divide by 27 so that the standard deviation is 1 and that is going put us into the same scale whether we started with a huge scale like monthly mortgage amount or monthly phone bill. It strips the original scaling away from the dataset and puts onto a scale where 1 is the distance from the center point. This is helpful because it means that a step in any direction will change the loss the same amount. Another way of putting this is that it smooths the loss landscape so all attributes have the same amount of pull.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:25:51.492175Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:25:51.489052Z&quot;}" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>example_1_mean_0_std_1 <span class="op">=</span> example_1_mean_0<span class="op">/</span>example_1_mean_0.std()<span class="op">;</span> example_1_mean_0_std_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="72">
+<pre><code>array([-0.52008301, -0.50908566, -0.49533897, -0.45409891, -0.2478986 ,
+        2.22650516])</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:26:08.867740Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:26:08.769604Z&quot;}" data-execution_count="74">
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-18T03:26:14.297260Z&quot;,&quot;start_time&quot;:&quot;2021-08-18T03:26:14.288020Z&quot;}" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>example_1_mean_0_std_1.mean(), example_1_mean_0_std_1.std()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="75">
+<pre><code>(7.401486830834377e-17, 1.0)</code></pre>
+</div>
+</div>
+<p>Notice that in all three graphs, the distribution looks the same. Lots of numbers on the left-hand side and only the one number on the right. But to our neural network, there is a huge difference between taking numbers ranging from -0.52 and 2.23 and taking numbers ranging from 1 to 1000. The weights can make a lot finer adjustments on the normalized version and each incoming data point will be on the same scale. That’s why when an image model has been pretrained on Imagenet, you have to keep the same standard deviation and mean. By using those numbers, you are taking all of the pixels in your image and converting them to the normal range for Imagenet.</p>
+</section>
+<section id="testing-the-theory-with-fastais-tabular-application" class="level2">
+<h2 class="anchored" data-anchor-id="testing-the-theory-with-fastais-tabular-application">Testing the Theory with fastai’s Tabular Application</h2>
+<p>Now that we have an idea of what is happening, let’s see if we can prove that it actually works how we anticipate. To do this, I will be creating a simple tabular learner and a sample dataloader. I will first train the model on an normalized input and then train the same model using the un-normalized input. My assumption is that the normalized inputs will be much better at converting the x value into y than the un-normalized version.</p>
+<section id="experiment-setup" class="level3">
+<h3 class="anchored" data-anchor-id="experiment-setup">Experiment Setup</h3>
+<p>x1 + xN = y</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:53:10.715585Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:53:09.800728Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastai.tabular.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.rand((<span class="dv">200000</span>,<span class="dv">10</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>scale_amt <span class="op">=</span> torch.randint(<span class="dv">0</span>,<span class="dv">100</span>,size<span class="op">=</span>(<span class="dv">10</span>,))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#x = x*scale_amt</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(x, columns<span class="op">=</span>[<span class="ss">f"x</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">11</span>)])</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#df['x1']=df['x1']*1000</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#df.columns</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#df['y'] = df['x1'] + df['x2'] + df['x3'] + df['x4'] + df['x5'] + df['x6'] + df['x7'] + df['x8'] + df['x9'] + df['x10']</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'y'</span>] <span class="op">=</span> (df.values<span class="op">*</span>scale_amt.tolist()).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>splits <span class="op">=</span> RandomSplitter()(df)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>x1</th>
+      <th>x2</th>
+      <th>x3</th>
+      <th>x4</th>
+      <th>x5</th>
+      <th>x6</th>
+      <th>x7</th>
+      <th>x8</th>
+      <th>x9</th>
+      <th>x10</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.075054</td>
+      <td>0.456406</td>
+      <td>0.745085</td>
+      <td>0.930838</td>
+      <td>0.109559</td>
+      <td>0.498177</td>
+      <td>0.565746</td>
+      <td>0.743462</td>
+      <td>0.893542</td>
+      <td>0.796160</td>
+      <td>343.622546</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.823718</td>
+      <td>0.925904</td>
+      <td>0.418757</td>
+      <td>0.579081</td>
+      <td>0.645427</td>
+      <td>0.502683</td>
+      <td>0.689346</td>
+      <td>0.439689</td>
+      <td>0.281477</td>
+      <td>0.984495</td>
+      <td>380.632963</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.212132</td>
+      <td>0.928440</td>
+      <td>0.068775</td>
+      <td>0.974991</td>
+      <td>0.274955</td>
+      <td>0.107026</td>
+      <td>0.274451</td>
+      <td>0.439982</td>
+      <td>0.731169</td>
+      <td>0.026224</td>
+      <td>295.966817</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.874167</td>
+      <td>0.900319</td>
+      <td>0.221668</td>
+      <td>0.755159</td>
+      <td>0.525875</td>
+      <td>0.861770</td>
+      <td>0.347837</td>
+      <td>0.993839</td>
+      <td>0.466206</td>
+      <td>0.554722</td>
+      <td>442.779244</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.836071</td>
+      <td>0.795962</td>
+      <td>0.009992</td>
+      <td>0.531759</td>
+      <td>0.619634</td>
+      <td>0.196202</td>
+      <td>0.648332</td>
+      <td>0.899659</td>
+      <td>0.893503</td>
+      <td>0.094362</td>
+      <td>408.136464</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p><code>monitor_parameters</code> is a hook that can be used to monitor values inside of a model. It is a little bit of a hack, but it works really well for getting a better idea what is happening inside the model.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:53:10.718451Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:53:10.716433Z&quot;}" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> monitor_parameters(m, i, o):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    m.weight_track.append(<span class="bu">list</span>(m.parameters())[<span class="dv">0</span>].tolist()[<span class="dv">0</span>])</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    m.bias_track.append(<span class="bu">list</span>(m.parameters())[<span class="dv">1</span>].tolist())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="normalized" class="level3">
+<h3 class="anchored" data-anchor-id="normalized">Normalized</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:53:13.720448Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:53:10.719249Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>to_normalized <span class="op">=</span> TabularPandas(df, cont_names<span class="op">=</span>[<span class="st">'x1'</span>, <span class="st">'x2'</span>, <span class="st">'x3'</span>, <span class="st">'x4'</span>, <span class="st">'x5'</span>, <span class="st">'x6'</span>, <span class="st">'x7'</span>, <span class="st">'x8'</span>, <span class="st">'x9'</span>, <span class="st">'x10'</span>], y_names<span class="op">=</span><span class="st">'y'</span>, procs<span class="op">=</span>[Normalize], splits<span class="op">=</span>splits)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dls_normalized <span class="op">=</span> to_normalized.dataloaders(verbose<span class="op">=</span><span class="va">True</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>learn_normalized <span class="op">=</span> tabular_learner(dls_normalized, layers<span class="op">=</span>[], config<span class="op">=</span>tabular_config(use_bn<span class="op">=</span><span class="va">False</span>, bn_cont<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>learn_normalized.lr_find(start_lr<span class="op">=</span><span class="fl">1e-3</span>, end_lr<span class="op">=</span><span class="dv">1000000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Setting up after_item: Pipeline: 
+Setting up before_batch: Pipeline: 
+Setting up after_batch: Pipeline: ReadTabBatch</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>SuggestedLRs(valley=3.981071710586548)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-14-output-4.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:53:13.723877Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:53:13.721344Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>learn_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].bias_track <span class="op">=</span> []</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>learn_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].weight_track <span class="op">=</span> []</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>learn_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].register_full_backward_hook(monitor_parameters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>&lt;torch.utils.hooks.RemovableHandle at 0x7f44a05ccf70&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:41.806702Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:53:13.724656Z&quot;}" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>learn_normalized.fit_one_cycle(<span class="dv">10</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1.142768</td>
+      <td>0.722641</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>6.045738</td>
+      <td>0.614625</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>16.018417</td>
+      <td>7.314993</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>8.353395</td>
+      <td>5.835221</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>3.468160</td>
+      <td>0.493669</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>2.660133</td>
+      <td>1.251976</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>0.722458</td>
+      <td>0.373421</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>0.367568</td>
+      <td>0.272525</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>0.025171</td>
+      <td>0.010871</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>0.000455</td>
+      <td>0.000518</td>
+      <td>00:08</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:42.067219Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:41.807519Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>learn_normalized.recorder.plot_loss(skip_start<span class="op">=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:42.102342Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.068035Z&quot;}" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>learn_normalized.show_results(ds_idx<span class="op">=</span><span class="dv">0</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>x1</th>
+      <th>x2</th>
+      <th>x3</th>
+      <th>x4</th>
+      <th>x5</th>
+      <th>x6</th>
+      <th>x7</th>
+      <th>x8</th>
+      <th>x9</th>
+      <th>x10</th>
+      <th>y</th>
+      <th>y_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.562167</td>
+      <td>-1.569042</td>
+      <td>-1.114254</td>
+      <td>0.678972</td>
+      <td>-0.447562</td>
+      <td>-0.721848</td>
+      <td>0.950705</td>
+      <td>-0.506051</td>
+      <td>1.427110</td>
+      <td>1.305289</td>
+      <td>318.861755</td>
+      <td>318.871887</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.558561</td>
+      <td>1.409515</td>
+      <td>-1.694918</td>
+      <td>0.051202</td>
+      <td>-1.187221</td>
+      <td>0.865891</td>
+      <td>1.003036</td>
+      <td>-0.675074</td>
+      <td>1.489744</td>
+      <td>-1.504115</td>
+      <td>319.647339</td>
+      <td>319.605621</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.580085</td>
+      <td>1.621262</td>
+      <td>1.555035</td>
+      <td>-1.474297</td>
+      <td>0.485046</td>
+      <td>1.653549</td>
+      <td>-1.121346</td>
+      <td>0.184075</td>
+      <td>1.324292</td>
+      <td>-0.353307</td>
+      <td>442.348450</td>
+      <td>442.299805</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.634533</td>
+      <td>1.501764</td>
+      <td>0.694681</td>
+      <td>-0.052227</td>
+      <td>0.998929</td>
+      <td>-0.802163</td>
+      <td>0.824090</td>
+      <td>1.452214</td>
+      <td>0.217072</td>
+      <td>-0.867735</td>
+      <td>456.612335</td>
+      <td>456.587646</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.305931</td>
+      <td>0.446660</td>
+      <td>0.606511</td>
+      <td>0.404355</td>
+      <td>-0.881533</td>
+      <td>-0.470554</td>
+      <td>1.398422</td>
+      <td>0.411920</td>
+      <td>0.697609</td>
+      <td>1.205599</td>
+      <td>364.134827</td>
+      <td>364.130890</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>-0.953506</td>
+      <td>-1.129230</td>
+      <td>1.685477</td>
+      <td>0.200103</td>
+      <td>1.446620</td>
+      <td>1.669933</td>
+      <td>0.654975</td>
+      <td>-0.218070</td>
+      <td>0.763460</td>
+      <td>1.622134</td>
+      <td>378.366058</td>
+      <td>378.378632</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>-1.729204</td>
+      <td>1.402740</td>
+      <td>1.129965</td>
+      <td>-1.550283</td>
+      <td>-0.174763</td>
+      <td>-1.702276</td>
+      <td>0.349754</td>
+      <td>-1.626720</td>
+      <td>-0.736905</td>
+      <td>0.554198</td>
+      <td>219.651688</td>
+      <td>219.670380</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1.051801</td>
+      <td>0.651880</td>
+      <td>-0.606515</td>
+      <td>-0.211603</td>
+      <td>1.065033</td>
+      <td>1.140438</td>
+      <td>1.395582</td>
+      <td>-1.302371</td>
+      <td>0.548107</td>
+      <td>0.569542</td>
+      <td>379.511841</td>
+      <td>379.522766</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.845884</td>
+      <td>-0.547829</td>
+      <td>-1.420988</td>
+      <td>0.976506</td>
+      <td>-1.266368</td>
+      <td>-0.449748</td>
+      <td>-0.053614</td>
+      <td>-0.578055</td>
+      <td>0.252759</td>
+      <td>-0.031057</td>
+      <td>266.948334</td>
+      <td>266.938416</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:42.190626Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.103183Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>plt.plot(learn_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].bias_track)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:42.352713Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.191486Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>plt.plot(learn_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].weight_track)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="not-normalized" class="level3">
+<h3 class="anchored" data-anchor-id="not-normalized">Not Normalized</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:42.917630Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.353834Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>to_not_normalized <span class="op">=</span> TabularPandas(df, cont_names<span class="op">=</span>[<span class="st">'x1'</span>, <span class="st">'x2'</span>, <span class="st">'x3'</span>, <span class="st">'x4'</span>, <span class="st">'x5'</span>, <span class="st">'x6'</span>, <span class="st">'x7'</span>, <span class="st">'x8'</span>, <span class="st">'x9'</span>, <span class="st">'x10'</span>], y_names<span class="op">=</span>[<span class="st">'y'</span>], splits<span class="op">=</span>splits)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>dls_not_normalized <span class="op">=</span> to_not_normalized.dataloaders(verbose<span class="op">=</span><span class="va">True</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>dls_not_normalized.one_batch()</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>learn_not_normalized <span class="op">=</span> tabular_learner(dls_not_normalized, layers<span class="op">=</span>[], config<span class="op">=</span>tabular_config(use_bn<span class="op">=</span><span class="va">False</span>, bn_cont<span class="op">=</span><span class="va">False</span>), train_bn<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.lr_find(start_lr<span class="op">=</span><span class="fl">1e-3</span>, end_lr<span class="op">=</span><span class="dv">1000000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Setting up after_item: Pipeline: 
+Setting up before_batch: Pipeline: 
+Setting up after_batch: Pipeline: ReadTabBatch</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>SuggestedLRs(valley=3.2359366416931152)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-21-output-4.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:42.921725Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.918693Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].bias_track <span class="op">=</span> []</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].weight_track <span class="op">=</span> []</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].register_full_backward_hook(monitor_parameters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>&lt;torch.utils.hooks.RemovableHandle at 0x7f4473678e80&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:08.756330Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.922723Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.fit_one_cycle(<span class="dv">10</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>154.066040</td>
+      <td>153.006943</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>453.208710</td>
+      <td>498.198853</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>450.821014</td>
+      <td>405.338318</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>462.034576</td>
+      <td>507.816345</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>402.913025</td>
+      <td>391.320465</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>299.577545</td>
+      <td>273.074860</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>187.224609</td>
+      <td>182.667740</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>95.384758</td>
+      <td>89.960159</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>57.199078</td>
+      <td>54.958164</td>
+      <td>00:08</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>27.854624</td>
+      <td>28.252810</td>
+      <td>00:08</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.024926Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:08.757916Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.recorder.plot_loss(skip_start<span class="op">=</span><span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.058590Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:09.025855Z&quot;}" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.show_results(ds_idx<span class="op">=</span><span class="dv">0</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+
+</div>
+<div class="cell-output cell-output-display">
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>x1</th>
+      <th>x2</th>
+      <th>x3</th>
+      <th>x4</th>
+      <th>x5</th>
+      <th>x6</th>
+      <th>x7</th>
+      <th>x8</th>
+      <th>x9</th>
+      <th>x10</th>
+      <th>y</th>
+      <th>y_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.950224</td>
+      <td>0.048134</td>
+      <td>0.178727</td>
+      <td>0.696215</td>
+      <td>0.370312</td>
+      <td>0.293320</td>
+      <td>0.776244</td>
+      <td>0.353630</td>
+      <td>0.912490</td>
+      <td>0.877288</td>
+      <td>318.861755</td>
+      <td>318.913208</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.339225</td>
+      <td>0.906561</td>
+      <td>0.010991</td>
+      <td>0.514821</td>
+      <td>0.156830</td>
+      <td>0.751503</td>
+      <td>0.791369</td>
+      <td>0.304868</td>
+      <td>0.930580</td>
+      <td>0.066351</td>
+      <td>319.647339</td>
+      <td>318.007935</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.667278</td>
+      <td>0.967587</td>
+      <td>0.949804</td>
+      <td>0.074028</td>
+      <td>0.639484</td>
+      <td>0.978802</td>
+      <td>0.177347</td>
+      <td>0.552729</td>
+      <td>0.882794</td>
+      <td>0.398533</td>
+      <td>442.348450</td>
+      <td>431.576630</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.971073</td>
+      <td>0.933147</td>
+      <td>0.701273</td>
+      <td>0.484935</td>
+      <td>0.787802</td>
+      <td>0.270143</td>
+      <td>0.739647</td>
+      <td>0.918583</td>
+      <td>0.563008</td>
+      <td>0.250043</td>
+      <td>456.612335</td>
+      <td>444.280334</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.588292</td>
+      <td>0.629064</td>
+      <td>0.675804</td>
+      <td>0.616864</td>
+      <td>0.245058</td>
+      <td>0.365837</td>
+      <td>0.905650</td>
+      <td>0.618462</td>
+      <td>0.701796</td>
+      <td>0.848512</td>
+      <td>364.134827</td>
+      <td>360.096039</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.225438</td>
+      <td>0.174889</td>
+      <td>0.987485</td>
+      <td>0.557846</td>
+      <td>0.917016</td>
+      <td>0.983530</td>
+      <td>0.690767</td>
+      <td>0.436712</td>
+      <td>0.720815</td>
+      <td>0.968745</td>
+      <td>378.366058</td>
+      <td>374.773651</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.001953</td>
+      <td>0.904608</td>
+      <td>0.827014</td>
+      <td>0.052072</td>
+      <td>0.449048</td>
+      <td>0.010392</td>
+      <td>0.602547</td>
+      <td>0.030322</td>
+      <td>0.287482</td>
+      <td>0.660485</td>
+      <td>219.651688</td>
+      <td>226.905151</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.803183</td>
+      <td>0.688209</td>
+      <td>0.325397</td>
+      <td>0.438884</td>
+      <td>0.806881</td>
+      <td>0.830731</td>
+      <td>0.904829</td>
+      <td>0.123895</td>
+      <td>0.658617</td>
+      <td>0.664914</td>
+      <td>379.511841</td>
+      <td>374.775940</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.743857</td>
+      <td>0.342450</td>
+      <td>0.090121</td>
+      <td>0.782187</td>
+      <td>0.133986</td>
+      <td>0.371841</td>
+      <td>0.485960</td>
+      <td>0.332858</td>
+      <td>0.573315</td>
+      <td>0.491550</td>
+      <td>266.948334</td>
+      <td>270.995636</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.144830Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:09.059386Z&quot;}" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>plt.plot(learn_not_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].bias_track)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.277217Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:09.145620Z&quot;}" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>plt.plot(learn_not_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].weight_track)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.280146Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:09.278036Z&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#actual values the parameter value should have</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>scale_amt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>tensor([79, 93, 48, 48, 84, 53, 18, 92, 93, 22])</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.292081Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:09.280880Z&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(learn_not_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].parameters())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>[Parameter containing:
+ tensor([[73.1407, 84.1651, 45.1576, 45.1585, 77.2888, 49.8361, 16.7273, 83.5148,
+          84.1355, 20.6937]], device='cuda:0', requires_grad=True),
+ Parameter containing:
+ tensor([25.1835], device='cuda:0', requires_grad=True)]</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:09.298458Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:56:09.292841Z&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(learn_normalized.model.layers[<span class="dv">0</span>][<span class="dv">0</span>].parameters())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>[Parameter containing:
+ tensor([[22.7578, 26.8047, 13.8633, 13.8707, 24.2422, 15.2929,  5.2018, 26.5390,
+          26.8526,  6.3496]], device='cuda:0', requires_grad=True),
+ Parameter containing:
+ tensor([315.1483], device='cuda:0', requires_grad=True)]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>The results ended up matching our theory but in a slightly different way than I had anticipated. You can see that the non-normalized weights line up a lot closer to the scale_amt and after thinking about the reason for that, I think I understand. When the input values are normalized, all of the numbers are put onto the same scale so the easiest way for the gradients to be adjusted is to just move the bias. But in the non-normalized version when adjusting the bias, all of the individual weights would be moving at different rates so it is a lot less likely that the bias will be moved as the best step for the model. Instead the weights are adjusted more during the training process.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
