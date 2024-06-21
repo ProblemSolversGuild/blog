@@ -1,6 +1,6 @@
 ---
 aliases:
-- /advice/2022/12/08/Should_We_Use_ChatGPT
+- /travel/2024/06/21/Cartagena_Colombia
 author: Kevin Bird
 categories:
 - Travel
@@ -8,8 +8,9 @@ categories:
 date: '2024-06-21'
 hide: false
 layout: post
-title: Cartagena, Colombia Travel
+title: Cartagena Colombia Travel
 toc: true
+
 ---
 
 ### Day -1 (2/4): Bus to Chicago

@@ -47,10 +47,10 @@ RUN pip install -r requirements.txt
 RUN . ~/.bashrc
 RUN /home/dev/.local/bin/nbdev_install_quarto
 RUN git config --global credential.helper store
-RUN /home/dev/.local/bin/jupyter contrib nbextension install --user
+# RUN /home/dev/.local/bin/jupyter contrib nbextension install --user
 RUN sudo apt install jq -y
-RUN /home/dev/.local/bin/jupyter nbextension enable gist_it/main
-RUN /home/dev/.local/bin/jupyter nbextension enable execute_time/ExecuteTime
-RUN jq '.ExecuteTime.display_right_aligned = true' ~/.jupyter/nbconfig/notebook.json > ~/.jupyter/nbconfig/notebook1.json && cp ~/.jupyter/nbconfig/notebook1.json ~/.jupyter/nbconfig/notebook.json
+# RUN /home/dev/.local/bin/jupyter nbextension enable gist_it/main
+# RUN /home/dev/.local/bin/jupyter nbextension enable execute_time/ExecuteTime
+# RUN jq '.ExecuteTime.display_right_aligned = true' ~/.jupyter/nbconfig/notebook.json > ~/.jupyter/nbconfig/notebook1.json && cp ~/.jupyter/nbconfig/notebook1.json ~/.jupyter/nbconfig/notebook.json
 
 ADD . .
