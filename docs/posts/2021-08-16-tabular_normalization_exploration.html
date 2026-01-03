@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.280">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,9 +20,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -49,43 +50,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -122,7 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
@@ -153,32 +125,34 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
     <span class="navbar-title">Problem Solvers Guild Blog</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html">
+    <a class="nav-link" href="../about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/TPSG_io"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/TPSG_io" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -330,99 +304,100 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>splits <span class="op">=</span> RandomSplitter()(df)</span>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
-
 <div>
 
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>x1</th>
-      <th>x2</th>
-      <th>x3</th>
-      <th>x4</th>
-      <th>x5</th>
-      <th>x6</th>
-      <th>x7</th>
-      <th>x8</th>
-      <th>x9</th>
-      <th>x10</th>
-      <th>y</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.075054</td>
-      <td>0.456406</td>
-      <td>0.745085</td>
-      <td>0.930838</td>
-      <td>0.109559</td>
-      <td>0.498177</td>
-      <td>0.565746</td>
-      <td>0.743462</td>
-      <td>0.893542</td>
-      <td>0.796160</td>
-      <td>343.622546</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.823718</td>
-      <td>0.925904</td>
-      <td>0.418757</td>
-      <td>0.579081</td>
-      <td>0.645427</td>
-      <td>0.502683</td>
-      <td>0.689346</td>
-      <td>0.439689</td>
-      <td>0.281477</td>
-      <td>0.984495</td>
-      <td>380.632963</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.212132</td>
-      <td>0.928440</td>
-      <td>0.068775</td>
-      <td>0.974991</td>
-      <td>0.274955</td>
-      <td>0.107026</td>
-      <td>0.274451</td>
-      <td>0.439982</td>
-      <td>0.731169</td>
-      <td>0.026224</td>
-      <td>295.966817</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.874167</td>
-      <td>0.900319</td>
-      <td>0.221668</td>
-      <td>0.755159</td>
-      <td>0.525875</td>
-      <td>0.861770</td>
-      <td>0.347837</td>
-      <td>0.993839</td>
-      <td>0.466206</td>
-      <td>0.554722</td>
-      <td>442.779244</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.836071</td>
-      <td>0.795962</td>
-      <td>0.009992</td>
-      <td>0.531759</td>
-      <td>0.619634</td>
-      <td>0.196202</td>
-      <td>0.648332</td>
-      <td>0.899659</td>
-      <td>0.893503</td>
-      <td>0.094362</td>
-      <td>408.136464</td>
-    </tr>
-  </tbody>
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">x1</th>
+<th data-quarto-table-cell-role="th">x2</th>
+<th data-quarto-table-cell-role="th">x3</th>
+<th data-quarto-table-cell-role="th">x4</th>
+<th data-quarto-table-cell-role="th">x5</th>
+<th data-quarto-table-cell-role="th">x6</th>
+<th data-quarto-table-cell-role="th">x7</th>
+<th data-quarto-table-cell-role="th">x8</th>
+<th data-quarto-table-cell-role="th">x9</th>
+<th data-quarto-table-cell-role="th">x10</th>
+<th data-quarto-table-cell-role="th">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.075054</td>
+<td>0.456406</td>
+<td>0.745085</td>
+<td>0.930838</td>
+<td>0.109559</td>
+<td>0.498177</td>
+<td>0.565746</td>
+<td>0.743462</td>
+<td>0.893542</td>
+<td>0.796160</td>
+<td>343.622546</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.823718</td>
+<td>0.925904</td>
+<td>0.418757</td>
+<td>0.579081</td>
+<td>0.645427</td>
+<td>0.502683</td>
+<td>0.689346</td>
+<td>0.439689</td>
+<td>0.281477</td>
+<td>0.984495</td>
+<td>380.632963</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.212132</td>
+<td>0.928440</td>
+<td>0.068775</td>
+<td>0.974991</td>
+<td>0.274955</td>
+<td>0.107026</td>
+<td>0.274451</td>
+<td>0.439982</td>
+<td>0.731169</td>
+<td>0.026224</td>
+<td>295.966817</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.874167</td>
+<td>0.900319</td>
+<td>0.221668</td>
+<td>0.755159</td>
+<td>0.525875</td>
+<td>0.861770</td>
+<td>0.347837</td>
+<td>0.993839</td>
+<td>0.466206</td>
+<td>0.554722</td>
+<td>442.779244</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.836071</td>
+<td>0.795962</td>
+<td>0.009992</td>
+<td>0.531759</td>
+<td>0.619634</td>
+<td>0.196202</td>
+<td>0.648332</td>
+<td>0.899659</td>
+<td>0.893503</td>
+<td>0.094362</td>
+<td>408.136464</td>
+</tr>
+</tbody>
 </table>
+
 </div>
 </div>
 </div>
@@ -466,78 +441,77 @@ Setting up after_batch: Pipeline: ReadTabBatch</code></pre>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:54:41.806702Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:53:13.724656Z&quot;}" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>learn_normalized.fit_one_cycle(<span class="dv">10</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th>epoch</th>
-      <th>train_loss</th>
-      <th>valid_loss</th>
-      <th>time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>1.142768</td>
-      <td>0.722641</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>6.045738</td>
-      <td>0.614625</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>16.018417</td>
-      <td>7.314993</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>8.353395</td>
-      <td>5.835221</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>3.468160</td>
-      <td>0.493669</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td>2.660133</td>
-      <td>1.251976</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>6</td>
-      <td>0.722458</td>
-      <td>0.373421</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>7</td>
-      <td>0.367568</td>
-      <td>0.272525</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td>0.025171</td>
-      <td>0.010871</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>9</td>
-      <td>0.000455</td>
-      <td>0.000518</td>
-      <td>00:08</td>
-    </tr>
-  </tbody>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>1.142768</td>
+<td>0.722641</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>6.045738</td>
+<td>0.614625</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>16.018417</td>
+<td>7.314993</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>8.353395</td>
+<td>5.835221</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>3.468160</td>
+<td>0.493669</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>2.660133</td>
+<td>1.251976</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>0.722458</td>
+<td>0.373421</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>0.367568</td>
+<td>0.272525</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>0.025171</td>
+<td>0.010871</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>0.000455</td>
+<td>0.000518</td>
+<td>00:08</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -553,162 +527,161 @@ Setting up after_batch: Pipeline: ReadTabBatch</code></pre>
 
 </div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>x1</th>
-      <th>x2</th>
-      <th>x3</th>
-      <th>x4</th>
-      <th>x5</th>
-      <th>x6</th>
-      <th>x7</th>
-      <th>x8</th>
-      <th>x9</th>
-      <th>x10</th>
-      <th>y</th>
-      <th>y_pred</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1.562167</td>
-      <td>-1.569042</td>
-      <td>-1.114254</td>
-      <td>0.678972</td>
-      <td>-0.447562</td>
-      <td>-0.721848</td>
-      <td>0.950705</td>
-      <td>-0.506051</td>
-      <td>1.427110</td>
-      <td>1.305289</td>
-      <td>318.861755</td>
-      <td>318.871887</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>-0.558561</td>
-      <td>1.409515</td>
-      <td>-1.694918</td>
-      <td>0.051202</td>
-      <td>-1.187221</td>
-      <td>0.865891</td>
-      <td>1.003036</td>
-      <td>-0.675074</td>
-      <td>1.489744</td>
-      <td>-1.504115</td>
-      <td>319.647339</td>
-      <td>319.605621</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.580085</td>
-      <td>1.621262</td>
-      <td>1.555035</td>
-      <td>-1.474297</td>
-      <td>0.485046</td>
-      <td>1.653549</td>
-      <td>-1.121346</td>
-      <td>0.184075</td>
-      <td>1.324292</td>
-      <td>-0.353307</td>
-      <td>442.348450</td>
-      <td>442.299805</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1.634533</td>
-      <td>1.501764</td>
-      <td>0.694681</td>
-      <td>-0.052227</td>
-      <td>0.998929</td>
-      <td>-0.802163</td>
-      <td>0.824090</td>
-      <td>1.452214</td>
-      <td>0.217072</td>
-      <td>-0.867735</td>
-      <td>456.612335</td>
-      <td>456.587646</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.305931</td>
-      <td>0.446660</td>
-      <td>0.606511</td>
-      <td>0.404355</td>
-      <td>-0.881533</td>
-      <td>-0.470554</td>
-      <td>1.398422</td>
-      <td>0.411920</td>
-      <td>0.697609</td>
-      <td>1.205599</td>
-      <td>364.134827</td>
-      <td>364.130890</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>-0.953506</td>
-      <td>-1.129230</td>
-      <td>1.685477</td>
-      <td>0.200103</td>
-      <td>1.446620</td>
-      <td>1.669933</td>
-      <td>0.654975</td>
-      <td>-0.218070</td>
-      <td>0.763460</td>
-      <td>1.622134</td>
-      <td>378.366058</td>
-      <td>378.378632</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>-1.729204</td>
-      <td>1.402740</td>
-      <td>1.129965</td>
-      <td>-1.550283</td>
-      <td>-0.174763</td>
-      <td>-1.702276</td>
-      <td>0.349754</td>
-      <td>-1.626720</td>
-      <td>-0.736905</td>
-      <td>0.554198</td>
-      <td>219.651688</td>
-      <td>219.670380</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>1.051801</td>
-      <td>0.651880</td>
-      <td>-0.606515</td>
-      <td>-0.211603</td>
-      <td>1.065033</td>
-      <td>1.140438</td>
-      <td>1.395582</td>
-      <td>-1.302371</td>
-      <td>0.548107</td>
-      <td>0.569542</td>
-      <td>379.511841</td>
-      <td>379.522766</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>0.845884</td>
-      <td>-0.547829</td>
-      <td>-1.420988</td>
-      <td>0.976506</td>
-      <td>-1.266368</td>
-      <td>-0.449748</td>
-      <td>-0.053614</td>
-      <td>-0.578055</td>
-      <td>0.252759</td>
-      <td>-0.031057</td>
-      <td>266.948334</td>
-      <td>266.938416</td>
-    </tr>
-  </tbody>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">x1</th>
+<th data-quarto-table-cell-role="th">x2</th>
+<th data-quarto-table-cell-role="th">x3</th>
+<th data-quarto-table-cell-role="th">x4</th>
+<th data-quarto-table-cell-role="th">x5</th>
+<th data-quarto-table-cell-role="th">x6</th>
+<th data-quarto-table-cell-role="th">x7</th>
+<th data-quarto-table-cell-role="th">x8</th>
+<th data-quarto-table-cell-role="th">x9</th>
+<th data-quarto-table-cell-role="th">x10</th>
+<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">y_pred</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.562167</td>
+<td>-1.569042</td>
+<td>-1.114254</td>
+<td>0.678972</td>
+<td>-0.447562</td>
+<td>-0.721848</td>
+<td>0.950705</td>
+<td>-0.506051</td>
+<td>1.427110</td>
+<td>1.305289</td>
+<td>318.861755</td>
+<td>318.871887</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>-0.558561</td>
+<td>1.409515</td>
+<td>-1.694918</td>
+<td>0.051202</td>
+<td>-1.187221</td>
+<td>0.865891</td>
+<td>1.003036</td>
+<td>-0.675074</td>
+<td>1.489744</td>
+<td>-1.504115</td>
+<td>319.647339</td>
+<td>319.605621</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.580085</td>
+<td>1.621262</td>
+<td>1.555035</td>
+<td>-1.474297</td>
+<td>0.485046</td>
+<td>1.653549</td>
+<td>-1.121346</td>
+<td>0.184075</td>
+<td>1.324292</td>
+<td>-0.353307</td>
+<td>442.348450</td>
+<td>442.299805</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.634533</td>
+<td>1.501764</td>
+<td>0.694681</td>
+<td>-0.052227</td>
+<td>0.998929</td>
+<td>-0.802163</td>
+<td>0.824090</td>
+<td>1.452214</td>
+<td>0.217072</td>
+<td>-0.867735</td>
+<td>456.612335</td>
+<td>456.587646</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.305931</td>
+<td>0.446660</td>
+<td>0.606511</td>
+<td>0.404355</td>
+<td>-0.881533</td>
+<td>-0.470554</td>
+<td>1.398422</td>
+<td>0.411920</td>
+<td>0.697609</td>
+<td>1.205599</td>
+<td>364.134827</td>
+<td>364.130890</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>-0.953506</td>
+<td>-1.129230</td>
+<td>1.685477</td>
+<td>0.200103</td>
+<td>1.446620</td>
+<td>1.669933</td>
+<td>0.654975</td>
+<td>-0.218070</td>
+<td>0.763460</td>
+<td>1.622134</td>
+<td>378.366058</td>
+<td>378.378632</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>-1.729204</td>
+<td>1.402740</td>
+<td>1.129965</td>
+<td>-1.550283</td>
+<td>-0.174763</td>
+<td>-1.702276</td>
+<td>0.349754</td>
+<td>-1.626720</td>
+<td>-0.736905</td>
+<td>0.554198</td>
+<td>219.651688</td>
+<td>219.670380</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>1.051801</td>
+<td>0.651880</td>
+<td>-0.606515</td>
+<td>-0.211603</td>
+<td>1.065033</td>
+<td>1.140438</td>
+<td>1.395582</td>
+<td>-1.302371</td>
+<td>0.548107</td>
+<td>0.569542</td>
+<td>379.511841</td>
+<td>379.522766</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.845884</td>
+<td>-0.547829</td>
+<td>-1.420988</td>
+<td>0.976506</td>
+<td>-1.266368</td>
+<td>-0.449748</td>
+<td>-0.053614</td>
+<td>-0.578055</td>
+<td>0.252759</td>
+<td>-0.031057</td>
+<td>266.948334</td>
+<td>266.938416</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -761,78 +734,77 @@ Setting up after_batch: Pipeline: ReadTabBatch</code></pre>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2021-08-16T21:56:08.756330Z&quot;,&quot;start_time&quot;:&quot;2021-08-16T21:54:42.922723Z&quot;}" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>learn_not_normalized.fit_one_cycle(<span class="dv">10</span>, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th>epoch</th>
-      <th>train_loss</th>
-      <th>valid_loss</th>
-      <th>time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>154.066040</td>
-      <td>153.006943</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>453.208710</td>
-      <td>498.198853</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>450.821014</td>
-      <td>405.338318</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>462.034576</td>
-      <td>507.816345</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>402.913025</td>
-      <td>391.320465</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>5</td>
-      <td>299.577545</td>
-      <td>273.074860</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>6</td>
-      <td>187.224609</td>
-      <td>182.667740</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>7</td>
-      <td>95.384758</td>
-      <td>89.960159</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>8</td>
-      <td>57.199078</td>
-      <td>54.958164</td>
-      <td>00:08</td>
-    </tr>
-    <tr>
-      <td>9</td>
-      <td>27.854624</td>
-      <td>28.252810</td>
-      <td>00:08</td>
-    </tr>
-  </tbody>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">epoch</th>
+<th data-quarto-table-cell-role="th">train_loss</th>
+<th data-quarto-table-cell-role="th">valid_loss</th>
+<th data-quarto-table-cell-role="th">time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>154.066040</td>
+<td>153.006943</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>453.208710</td>
+<td>498.198853</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>450.821014</td>
+<td>405.338318</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>462.034576</td>
+<td>507.816345</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>402.913025</td>
+<td>391.320465</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>299.577545</td>
+<td>273.074860</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>187.224609</td>
+<td>182.667740</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>95.384758</td>
+<td>89.960159</td>
+<td>00:08</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>57.199078</td>
+<td>54.958164</td>
+<td>00:08</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>27.854624</td>
+<td>28.252810</td>
+<td>00:08</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -848,162 +820,161 @@ Setting up after_batch: Pipeline: ReadTabBatch</code></pre>
 
 </div>
 <div class="cell-output cell-output-display">
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>x1</th>
-      <th>x2</th>
-      <th>x3</th>
-      <th>x4</th>
-      <th>x5</th>
-      <th>x6</th>
-      <th>x7</th>
-      <th>x8</th>
-      <th>x9</th>
-      <th>x10</th>
-      <th>y</th>
-      <th>y_pred</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.950224</td>
-      <td>0.048134</td>
-      <td>0.178727</td>
-      <td>0.696215</td>
-      <td>0.370312</td>
-      <td>0.293320</td>
-      <td>0.776244</td>
-      <td>0.353630</td>
-      <td>0.912490</td>
-      <td>0.877288</td>
-      <td>318.861755</td>
-      <td>318.913208</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.339225</td>
-      <td>0.906561</td>
-      <td>0.010991</td>
-      <td>0.514821</td>
-      <td>0.156830</td>
-      <td>0.751503</td>
-      <td>0.791369</td>
-      <td>0.304868</td>
-      <td>0.930580</td>
-      <td>0.066351</td>
-      <td>319.647339</td>
-      <td>318.007935</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.667278</td>
-      <td>0.967587</td>
-      <td>0.949804</td>
-      <td>0.074028</td>
-      <td>0.639484</td>
-      <td>0.978802</td>
-      <td>0.177347</td>
-      <td>0.552729</td>
-      <td>0.882794</td>
-      <td>0.398533</td>
-      <td>442.348450</td>
-      <td>431.576630</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.971073</td>
-      <td>0.933147</td>
-      <td>0.701273</td>
-      <td>0.484935</td>
-      <td>0.787802</td>
-      <td>0.270143</td>
-      <td>0.739647</td>
-      <td>0.918583</td>
-      <td>0.563008</td>
-      <td>0.250043</td>
-      <td>456.612335</td>
-      <td>444.280334</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.588292</td>
-      <td>0.629064</td>
-      <td>0.675804</td>
-      <td>0.616864</td>
-      <td>0.245058</td>
-      <td>0.365837</td>
-      <td>0.905650</td>
-      <td>0.618462</td>
-      <td>0.701796</td>
-      <td>0.848512</td>
-      <td>364.134827</td>
-      <td>360.096039</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>0.225438</td>
-      <td>0.174889</td>
-      <td>0.987485</td>
-      <td>0.557846</td>
-      <td>0.917016</td>
-      <td>0.983530</td>
-      <td>0.690767</td>
-      <td>0.436712</td>
-      <td>0.720815</td>
-      <td>0.968745</td>
-      <td>378.366058</td>
-      <td>374.773651</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>0.001953</td>
-      <td>0.904608</td>
-      <td>0.827014</td>
-      <td>0.052072</td>
-      <td>0.449048</td>
-      <td>0.010392</td>
-      <td>0.602547</td>
-      <td>0.030322</td>
-      <td>0.287482</td>
-      <td>0.660485</td>
-      <td>219.651688</td>
-      <td>226.905151</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>0.803183</td>
-      <td>0.688209</td>
-      <td>0.325397</td>
-      <td>0.438884</td>
-      <td>0.806881</td>
-      <td>0.830731</td>
-      <td>0.904829</td>
-      <td>0.123895</td>
-      <td>0.658617</td>
-      <td>0.664914</td>
-      <td>379.511841</td>
-      <td>374.775940</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>0.743857</td>
-      <td>0.342450</td>
-      <td>0.090121</td>
-      <td>0.782187</td>
-      <td>0.133986</td>
-      <td>0.371841</td>
-      <td>0.485960</td>
-      <td>0.332858</td>
-      <td>0.573315</td>
-      <td>0.491550</td>
-      <td>266.948334</td>
-      <td>270.995636</td>
-    </tr>
-  </tbody>
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">x1</th>
+<th data-quarto-table-cell-role="th">x2</th>
+<th data-quarto-table-cell-role="th">x3</th>
+<th data-quarto-table-cell-role="th">x4</th>
+<th data-quarto-table-cell-role="th">x5</th>
+<th data-quarto-table-cell-role="th">x6</th>
+<th data-quarto-table-cell-role="th">x7</th>
+<th data-quarto-table-cell-role="th">x8</th>
+<th data-quarto-table-cell-role="th">x9</th>
+<th data-quarto-table-cell-role="th">x10</th>
+<th data-quarto-table-cell-role="th">y</th>
+<th data-quarto-table-cell-role="th">y_pred</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0.950224</td>
+<td>0.048134</td>
+<td>0.178727</td>
+<td>0.696215</td>
+<td>0.370312</td>
+<td>0.293320</td>
+<td>0.776244</td>
+<td>0.353630</td>
+<td>0.912490</td>
+<td>0.877288</td>
+<td>318.861755</td>
+<td>318.913208</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0.339225</td>
+<td>0.906561</td>
+<td>0.010991</td>
+<td>0.514821</td>
+<td>0.156830</td>
+<td>0.751503</td>
+<td>0.791369</td>
+<td>0.304868</td>
+<td>0.930580</td>
+<td>0.066351</td>
+<td>319.647339</td>
+<td>318.007935</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0.667278</td>
+<td>0.967587</td>
+<td>0.949804</td>
+<td>0.074028</td>
+<td>0.639484</td>
+<td>0.978802</td>
+<td>0.177347</td>
+<td>0.552729</td>
+<td>0.882794</td>
+<td>0.398533</td>
+<td>442.348450</td>
+<td>431.576630</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0.971073</td>
+<td>0.933147</td>
+<td>0.701273</td>
+<td>0.484935</td>
+<td>0.787802</td>
+<td>0.270143</td>
+<td>0.739647</td>
+<td>0.918583</td>
+<td>0.563008</td>
+<td>0.250043</td>
+<td>456.612335</td>
+<td>444.280334</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0.588292</td>
+<td>0.629064</td>
+<td>0.675804</td>
+<td>0.616864</td>
+<td>0.245058</td>
+<td>0.365837</td>
+<td>0.905650</td>
+<td>0.618462</td>
+<td>0.701796</td>
+<td>0.848512</td>
+<td>364.134827</td>
+<td>360.096039</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>0.225438</td>
+<td>0.174889</td>
+<td>0.987485</td>
+<td>0.557846</td>
+<td>0.917016</td>
+<td>0.983530</td>
+<td>0.690767</td>
+<td>0.436712</td>
+<td>0.720815</td>
+<td>0.968745</td>
+<td>378.366058</td>
+<td>374.773651</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>0.001953</td>
+<td>0.904608</td>
+<td>0.827014</td>
+<td>0.052072</td>
+<td>0.449048</td>
+<td>0.010392</td>
+<td>0.602547</td>
+<td>0.030322</td>
+<td>0.287482</td>
+<td>0.660485</td>
+<td>219.651688</td>
+<td>226.905151</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>0.803183</td>
+<td>0.688209</td>
+<td>0.325397</td>
+<td>0.438884</td>
+<td>0.806881</td>
+<td>0.830731</td>
+<td>0.904829</td>
+<td>0.123895</td>
+<td>0.658617</td>
+<td>0.664914</td>
+<td>379.511841</td>
+<td>374.775940</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>0.743857</td>
+<td>0.342450</td>
+<td>0.090121</td>
+<td>0.782187</td>
+<td>0.133986</td>
+<td>0.371841</td>
+<td>0.485960</td>
+<td>0.332858</td>
+<td>0.573315</td>
+<td>0.491550</td>
+<td>266.948334</td>
+<td>270.995636</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -1085,9 +1056,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1152,6 +1137,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

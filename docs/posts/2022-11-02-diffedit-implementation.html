@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.280">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,9 +20,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -49,43 +50,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -122,7 +93,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
@@ -139,6 +111,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 <script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../styles.css">
@@ -155,32 +128,34 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
     <span class="navbar-title">Problem Solvers Guild Blog</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html">
+    <a class="nav-link" href="../about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/TPSG_io"><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/TPSG_io" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -1431,7 +1406,7 @@ tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>).to(torch_device)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"be013ea30edc445dbae430a94b648c3a","version_major":2,"version_minor":0}
+{"model_id":"be013ea30edc445dbae430a94b648c3a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -1465,223 +1440,185 @@ tensor([489.3061, 468.9184, 448.5306, 428.1429, 407.7551, 387.3673, 366.9796,
 <span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    display(final_pil[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f0ee2a0c8ef1453cb3f103103665db41","version_major":2,"version_minor":0}
+{"model_id":"f0ee2a0c8ef1453cb3f103103665db41","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0</code></pre>
+<pre><code>0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-3.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"eb807b4f5ef04ca9ad07d61e7472a496","version_major":2,"version_minor":0}
+{"model_id":"eb807b4f5ef04ca9ad07d61e7472a496","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>1</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-6.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-5.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ae2b46c0dbc54752bb684d1329eeeafe","version_major":2,"version_minor":0}
+{"model_id":"ae2b46c0dbc54752bb684d1329eeeafe","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>2</code></pre>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-7.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"3e957c9e5941480b995ce1eb6cd53623","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-9.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"3e957c9e5941480b995ce1eb6cd53623","version_major":2,"version_minor":0}
+{"model_id":"9e3e9cb6274a4a7891ecab80812a4c28","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>3</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-12.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-11.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"9e3e9cb6274a4a7891ecab80812a4c28","version_major":2,"version_minor":0}
+{"model_id":"25076b1399ab450fa9ba12ee7d10b0dc","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>4</code></pre>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-13.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"c465587dc60043bbb0cc9a72e011f9f5","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-15.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"25076b1399ab450fa9ba12ee7d10b0dc","version_major":2,"version_minor":0}
+{"model_id":"f9502090d462460fad63bc7846fbba89","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>5</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-18.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-17.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"c465587dc60043bbb0cc9a72e011f9f5","version_major":2,"version_minor":0}
+{"model_id":"f2a84cef56c841e7be215b32ccb741f4","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>6</code></pre>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-19.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"97899df3711c479c8432ebe62fbf6ca8","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-21.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f9502090d462460fad63bc7846fbba89","version_major":2,"version_minor":0}
+{"model_id":"4fe4606ab60b4d27bf3687c85737bfb6","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>7</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-24.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-23.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f2a84cef56c841e7be215b32ccb741f4","version_major":2,"version_minor":0}
+{"model_id":"39ebc2006d1a41aaa6c7d601ba7ddeb6","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>8</code></pre>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-25.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f0c34b3b912845199b082d03f0334d60","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-27.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"97899df3711c479c8432ebe62fbf6ca8","version_major":2,"version_minor":0}
+{"model_id":"a2e38c1d1d034b91b3c01e5529e7f36a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>9</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-30.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-29.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4fe4606ab60b4d27bf3687c85737bfb6","version_major":2,"version_minor":0}
+{"model_id":"7172dd9121954674a61b0aba467f9c2d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>10</code></pre>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-31.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d0ff5b26d3784a9380ea60c611754201","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-33.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"39ebc2006d1a41aaa6c7d601ba7ddeb6","version_major":2,"version_minor":0}
+{"model_id":"9f443cb3be4b49c8b3dc86867a298114","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>11</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-36.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-35.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f0c34b3b912845199b082d03f0334d60","version_major":2,"version_minor":0}
+{"model_id":"96273b9eb488434282fac8dd8cd75b54","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>12</code></pre>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-37.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"b4acf0df99b34dbe921517d5a5061c30","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-39.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"a2e38c1d1d034b91b3c01e5529e7f36a","version_major":2,"version_minor":0}
+{"model_id":"11f0acf299cd4c1caf8bd54bcd51ff8f","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>13</code></pre>
-</div>
 <div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-42.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"7172dd9121954674a61b0aba467f9c2d","version_major":2,"version_minor":0}
-</script>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>14</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-45.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"d0ff5b26d3784a9380ea60c611754201","version_major":2,"version_minor":0}
-</script>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>15</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-48.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"9f443cb3be4b49c8b3dc86867a298114","version_major":2,"version_minor":0}
-</script>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>16</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-51.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"96273b9eb488434282fac8dd8cd75b54","version_major":2,"version_minor":0}
-</script>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>17</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-54.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"b4acf0df99b34dbe921517d5a5061c30","version_major":2,"version_minor":0}
-</script>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>18</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-57.png" class="img-fluid"></p>
-</div>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"11f0acf299cd4c1caf8bd54bcd51ff8f","version_major":2,"version_minor":0}
-</script>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>19</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-60.png" class="img-fluid"></p>
+<p><img src="2022-11-02-DiffEdit-Implementation_files/figure-html/cell-41-output-41.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Overall, it seems that the process is doing what we would expect. I am seeing some decent results, but there is definitely still room for innovation in this space. If you noticed any typos or have any ideas for improving this blog post, please reach out to kevin@problemsolversguild.com and let me know! Thank you for reading and I hope this has been helpful in your learning process.</p>
@@ -1717,9 +1654,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1784,6 +1735,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
