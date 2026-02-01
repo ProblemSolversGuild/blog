@@ -8,7 +8,7 @@
 
 <meta name="author" content="Kevin Bird">
 <meta name="dcterms.date" content="2026-02-01">
-<meta name="description" content="Contiguous Memory A Cautionary Tale">
+<meta name="description" content="Breaking down some functions that break contiguity in memory and the performance implications of those breaks.">
 
 <title>Contiguous Memory A Cautionary Tale – Problem Solvers Guild Blog</title>
 <style>
@@ -173,18 +173,15 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#contiguous-memory-a-cautionary-tale" id="toc-contiguous-memory-a-cautionary-tale" class="nav-link active" data-scroll-target="#contiguous-memory-a-cautionary-tale">Contiguous Memory: A Cautionary Tale</a>
-  <ul class="collapse">
-  <li><a href="#the-misleading-profile" id="toc-the-misleading-profile" class="nav-link" data-scroll-target="#the-misleading-profile">The Misleading Profile</a></li>
+  <li><a href="#the-misleading-profile" id="toc-the-misleading-profile" class="nav-link active" data-scroll-target="#the-misleading-profile">The Misleading Profile</a></li>
   <li><a href="#what-is-contiguous-memory" id="toc-what-is-contiguous-memory" class="nav-link" data-scroll-target="#what-is-contiguous-memory">What Is Contiguous Memory?</a></li>
   <li><a href="#seeing-it-in-code" id="toc-seeing-it-in-code" class="nav-link" data-scroll-target="#seeing-it-in-code">Seeing It in Code</a></li>
   <li><a href="#flip-vs-rotate" id="toc-flip-vs-rotate" class="nav-link" data-scroll-target="#flip-vs-rotate">Flip vs Rotate</a></li>
   <li><a href="#opencv-returns-contiguous-arrays" id="toc-opencv-returns-contiguous-arrays" class="nav-link" data-scroll-target="#opencv-returns-contiguous-arrays">OpenCV Returns Contiguous Arrays</a></li>
   <li><a href="#performance-comparison" id="toc-performance-comparison" class="nav-link" data-scroll-target="#performance-comparison">Performance Comparison</a></li>
   <li><a href="#pytorch-behavior" id="toc-pytorch-behavior" class="nav-link" data-scroll-target="#pytorch-behavior">PyTorch Behavior</a></li>
-  <li><a href="#why-this-matters" id="toc-why-this-matters" class="nav-link" data-scroll-target="#why-this-matters">Why This Matters</a></li>
+  <li><a href="#the-fix" id="toc-the-fix" class="nav-link" data-scroll-target="#the-fix">The Fix</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
@@ -203,7 +200,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 
 <div>
   <div class="description">
-    Contiguous Memory A Cautionary Tale
+    Breaking down some functions that break contiguity in memory and the performance implications of those breaks.
   </div>
 </div>
 
@@ -232,8 +229,6 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 </header>
 
 
-<section id="contiguous-memory-a-cautionary-tale" class="level1">
-<h1>Contiguous Memory: A Cautionary Tale</h1>
 <p>I was optimizing some image processing code recently when I hit a wall. My <code>tobytes()</code> call was taking three times longer than expected.</p>
 <p>I profiled. I tweaked. I stared at the code. Nothing helped.</p>
 <p>I tried different buffer sizes. I experimented with memory allocation patterns. I even suspected thermal throttling. Nothing made a difference.</p>
@@ -242,7 +237,7 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <section id="the-misleading-profile" class="level2">
 <h2 class="anchored" data-anchor-id="the-misleading-profile">The Misleading Profile</h2>
 <p>Here’s a simplified version of what my code looked like:</p>
-<div id="40440825" class="cell" data-time_run="2026-02-01T15:41:40.030087+00:00">
+<div id="40440825" class="cell" data-time_run="2026-02-01T23:36:40.118486+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -259,31 +254,31 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"tobytes: </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> start<span class="sc">:.4f}</span><span class="ss">s"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>rotate: 0.0001s
-tobytes: 0.0059s</code></pre>
+tobytes: 0.0068s</code></pre>
 </div>
 </div>
 <p>The rotation takes a fraction of a millisecond. The <code>tobytes()</code> takes much longer. So obviously <code>tobytes()</code> is the problem, right?</p>
 <p>But watch what happens when I skip the rotation:</p>
-<div id="0b43c454" class="cell" data-time_run="2026-02-01T15:41:40.031706+00:00">
+<div id="0b43c454" class="cell" data-time_run="2026-02-01T23:36:40.142996+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> img.tobytes()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"tobytes (no rotation): </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> start<span class="sc">:.4f}</span><span class="ss">s"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>tobytes (no rotation): 0.0003s</code></pre>
+<pre><code>tobytes (no rotation): 0.0014s</code></pre>
 </div>
 </div>
-<p>Now <code>tobytes()</code> is fast. The rotation wasn’t slow — it was <em>too</em> fast. It didn’t actually rearrange the data; it just changed how NumPy <em>views</em> the data. And that left <code>tobytes()</code> to do the hard work of gathering scattered bytes.</p>
+<p>Now <code>tobytes()</code> is fast. The rotation wasn’t slow. It was <em>too</em> fast. It didn’t actually rearrange the data; it just changed how NumPy <em>views</em> the data. And that left <code>tobytes()</code> to do the hard work of gathering scattered bytes.</p>
 </section>
 <section id="what-is-contiguous-memory" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-contiguous-memory">What Is Contiguous Memory?</h2>
-<p>Imagine a bookshelf with novels arranged side by side — Book 1, Book 2, Book 3, and so on. If you need to grab all of them, you can sweep your hand across and scoop them up in one motion. That’s contiguous memory: data stored in one unbroken sequence.</p>
-<p>Now imagine those same books scattered across the room — one on the couch, one on the kitchen table, one under the bed. Getting them all requires walking around and picking up each one individually. Same books, same information, but much more work.</p>
+<p>Imagine a bookshelf with novels arranged side by side: Book 1, Book 2, Book 3, and so on. If you need to grab all of them, you can sweep your hand across and scoop them up in one motion. That’s contiguous memory, where data is stored in one unbroken sequence.</p>
+<p>Now imagine those same books scattered across the room: one on the couch, one on the kitchen table, one under the bed. Getting them all requires walking around and picking up each one individually. Same books, same information, but much more work.</p>
 <p>When data is contiguous in memory, operations like copying or converting can happen quickly. The computer can grab everything at once. When it’s not contiguous, every piece requires a separate lookup.</p>
 </section>
 <section id="seeing-it-in-code" class="level2">
 <h2 class="anchored" data-anchor-id="seeing-it-in-code">Seeing It in Code</h2>
 <p>NumPy makes this easy to observe. Let’s create an array and check if it’s contiguous:</p>
-<div id="75a2c70c" class="cell" data-time_run="2026-02-01T15:41:40.062295+00:00">
+<div id="75a2c70c" class="cell" data-time_run="2026-02-01T23:36:40.168180+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> np.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>arr<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -299,7 +294,7 @@ Contiguous: True</code></pre>
 <section id="flip-vs-rotate" class="level2">
 <h2 class="anchored" data-anchor-id="flip-vs-rotate">Flip vs Rotate</h2>
 <p>Let’s flip the array horizontally:</p>
-<div id="f4a64aee" class="cell" data-time_run="2026-02-01T15:41:40.087184+00:00">
+<div id="f4a64aee" class="cell" data-time_run="2026-02-01T23:36:40.195349+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>flipped <span class="op">=</span> np.flip(arr, axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(flipped)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>flipped<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -310,9 +305,9 @@ Contiguous: True</code></pre>
 Contiguous: False</code></pre>
 </div>
 </div>
-<p>It says <code>False</code>! But here’s the trick — flipping doesn’t actually move any data. It just changes <em>how NumPy reads</em> the existing data. Back to our bookshelf: it’s like deciding to read the titles from right to left instead of left to right. The books haven’t moved — you’ve just changed your reading direction.</p>
+<p>It says <code>False</code>! Flipping doesn’t actually move any data, it just changes <em>how NumPy reads</em> the existing data. It creates a <em>view</em>. Back to our bookshelf: it’s like we wrote down the books in reverse order, but didn’t actually change where the books are on the shelf. This is perfectly fine until somebody asks us to hand them the stack of books in the reversed order. Before we can do this, we must actually reverse the books and this is the operation that takes time. I am going to move away from the book analogy now, but I hope it has helped think about things up to this point.</p>
 <p>Now let’s rotate:</p>
-<div id="e5a882da" class="cell" data-time_run="2026-02-01T15:41:40.118526+00:00">
+<div id="e5a882da" class="cell" data-time_run="2026-02-01T23:36:40.225113+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rotated <span class="op">=</span> np.rot90(arr)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rotated)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>rotated<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -324,12 +319,14 @@ Contiguous: False</code></pre>
 Contiguous: False</code></pre>
 </div>
 </div>
-<p>Also <code>False</code>, but for a different reason. Rotation is like trying to read down the spines of books arranged horizontally. The information is there, but it’s not <em>arranged</em> for that reading pattern. Every element NumPy needs is in a different place than where sequential memory access would find it.</p>
+<p>Also <code>False</code>, but for a different reason. With <code>flip</code>, the data is still in rows, just read backward. With <code>rot90</code>, the data that <em>should</em> be in rows is actually scattered across columns of the original array.</p>
+<p>Look at what rotation does: the first row of output <code>[3, 7, 11]</code> comes from the <em>last column</em> of the input. In memory, those values are 4 elements apart from each other. The second row <code>[2, 6, 10]</code> pulls from the second-to-last column, and again each value is separated by 4 memory positions.</p>
+<p>When you call <code>tobytes()</code> on this view, NumPy can’t just stream through memory. It has to jump around, grabbing one byte here, skipping 4, grabbing another. This scattered access pattern is what makes non-contiguous arrays slow to serialize.</p>
 </section>
 <section id="opencv-returns-contiguous-arrays" class="level2">
 <h2 class="anchored" data-anchor-id="opencv-returns-contiguous-arrays">OpenCV Returns Contiguous Arrays</h2>
 <p>OpenCV’s functions return new contiguous arrays instead of views:</p>
-<div id="9c220f5d" class="cell" data-time_run="2026-02-01T15:41:40.150145+00:00">
+<div id="9c220f5d" class="cell" data-time_run="2026-02-01T23:36:40.249552+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>arr_uint8 <span class="op">=</span> np.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>).astype(np.uint8)</span>
@@ -349,34 +346,34 @@ cv2.rotate contiguous: True</code></pre>
 <section id="performance-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="performance-comparison">Performance Comparison</h2>
 <p>You might expect NumPy views to be faster since they avoid copying. For the view operation itself, that’s true:</p>
-<div id="f21e1dd0" class="cell" data-time_run="2026-02-01T15:41:40.176372+00:00">
+<div id="f21e1dd0" class="cell" data-time_run="2026-02-01T23:36:40.310040+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>big <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">256</span>, (<span class="dv">1000</span>, <span class="dv">2000</span>), dtype<span class="op">=</span>np.uint8)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.rot90(big)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit cv2.rotate(big, cv2.ROTATE_90_CLOCKWISE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>4.88 μs ± 48.5 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
-151 μs ± 590 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+<pre><code>4.96 μs ± 6.97 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+152 μs ± 30.8 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
 </div>
 </div>
 <p>But if you need contiguous data afterward (for <code>tobytes()</code>, GPU transfer, etc.), you have to pay the copy cost eventually:</p>
-<div id="39062976" class="cell" data-time_run="2026-02-01T15:41:56.390344+00:00">
+<div id="39062976" class="cell" data-time_run="2026-02-01T23:36:56.638579+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.ascontiguousarray(np.rot90(big))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit cv2.rotate(big, cv2.ROTATE_90_CLOCKWISE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.17 ms ± 2.99 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
-150 μs ± 170 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+<pre><code>1.16 ms ± 293 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+152 μs ± 18.4 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
 </div>
 </div>
 <p>And for flip operations:</p>
-<div id="84673e4c" class="cell" data-time_run="2026-02-01T15:51:33.716531+00:00">
+<div id="84673e4c" class="cell" data-time_run="2026-02-01T23:37:18.394420+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.flip(big, axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.ascontiguousarray(np.flip(big, axis<span class="op">=</span><span class="dv">1</span>))</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit cv2.flip(big, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.64 μs ± 3.25 ns per loop (mean ± std. dev. of 7 runs, 1,000,000 loops each)
-557 μs ± 945 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
-52.6 μs ± 144 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+<pre><code>1.7 μs ± 5.63 ns per loop (mean ± std. dev. of 7 runs, 1,000,000 loops each)
+555 μs ± 115 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+53 μs ± 5.16 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
 </div>
 </div>
 <p><code>cv2.rotate</code> is significantly faster when you need contiguous output. The difference: <code>np.ascontiguousarray</code> has to traverse a non-contiguous strided view, hopping around memory. <code>cv2.rotate</code> does the rotation and copy in a single optimized C++ pass.</p>
@@ -384,7 +381,7 @@ cv2.rotate contiguous: True</code></pre>
 <section id="pytorch-behavior" class="level2">
 <h2 class="anchored" data-anchor-id="pytorch-behavior">PyTorch Behavior</h2>
 <p>PyTorch has different behavior depending on the operation:</p>
-<div id="f05706c2" class="cell" data-time_run="2026-02-01T15:42:18.045075+00:00">
+<div id="f05706c2" class="cell" data-time_run="2026-02-01T23:37:40.950009+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.randint(<span class="dv">0</span>, <span class="dv">256</span>, (<span class="dv">1000</span>, <span class="dv">2000</span>), dtype<span class="op">=</span>torch.uint8)</span>
@@ -403,30 +400,33 @@ After flip contiguous: True</code></pre>
 </div>
 <p><code>torch.flip</code> returns a contiguous copy, while <code>torch.rot90</code> returns a non-contiguous view (like NumPy).</p>
 <p>For rotation timing:</p>
-<div id="e0790049" class="cell" data-time_run="2026-02-01T15:51:55.786445+00:00">
+<div id="e0790049" class="cell" data-time_run="2026-02-01T23:37:42.952165+00:00">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit torch.rot90(t)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit torch.rot90(t).contiguous()</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit torch.flip(t, [<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>285 μs ± 45.6 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
-3.66 ms ± 184 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
-323 μs ± 45.7 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)</code></pre>
+<pre><code>300 μs ± 66.6 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+1.77 ms ± 125 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+285 μs ± 37.8 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)</code></pre>
 </div>
 </div>
 <p>The <code>.contiguous()</code> call adds significant overhead as it copies the strided view into a new contiguous tensor.</p>
 </section>
-<section id="why-this-matters" class="level2">
-<h2 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h2>
-<p>When I called <code>tobytes()</code> on my rotated image, NumPy had to hop around memory collecting scattered pieces. It’s like photocopying books that are spread across the room versus books lined up on a shelf.</p>
-<p>The fix was simple:</p>
-<div id="fb29a33c" class="cell" data-time_run="2026-02-01T15:42:40.418575+00:00">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rotated_contiguous <span class="op">=</span> np.ascontiguousarray(np.rot90(arr))</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>rotated_contiguous<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Contiguous: True</code></pre>
+<section id="the-fix" class="level2">
+<h2 class="anchored" data-anchor-id="the-fix">The Fix</h2>
+<p>When I called <code>tobytes()</code> on my rotated image, NumPy had to hop around memory collecting scattered pieces. Each value it needed was in a different memory location rather than sitting in a nice sequential block.</p>
+<p>The solution? Use OpenCV instead of NumPy for transformations when you need contiguous output:</p>
+<div id="fb29a33c" class="cell" data-time_run="2026-02-01T23:37:49.224578+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instead of this (slow when you need contiguous):</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>rotated <span class="op">=</span> np.rot90(img)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> rotated.tobytes()  <span class="co"># forced to gather scattered bytes</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use this:</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>rotated <span class="op">=</span> cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> rotated.tobytes()  <span class="co"># already contiguous, fast</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</div>
-<p>This creates a fresh copy with all the data in proper sequential order. Yes, it costs memory and some time upfront — but if you’re about to do operations that need contiguous data, it’s worth it.</p>
+<p>OpenCV’s functions do the transformation and produce contiguous memory in a single optimized C++ pass, about 8x faster than creating a NumPy view and then forcing it contiguous with <code>np.ascontiguousarray()</code>.</p>
+<p>NumPy’s <code>np.ascontiguousarray()</code> is still useful when you <em>already have</em> a non-contiguous array and can’t go back to change how it was created. But if you control the transformation step, OpenCV is the better choice.</p>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
@@ -502,7 +502,6 @@ After flip contiguous: True</code></pre>
 <p>If something seems inexplicably slow, check your contiguity. That <code>.flags['C_CONTIGUOUS']</code> might just solve your mystery.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
