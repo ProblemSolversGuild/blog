@@ -1,56 +1,52 @@
-FROM nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
 
 ARG USERNAME=dev
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.cn/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub
 
-ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu116
-ENV LANG=C.UTF-8 \
-  LC_ALL=C.UTF-8 
-RUN apt update -y && apt install -y sudo
-RUN groupadd --gid $USER_GID $USERNAME &&\
- useradd --uid $USER_UID --gid $USER_GID -m $USERNAME &&\  
- echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} &&\
- chmod 0440 /etc/sudoers.d/${USERNAME} &&\
- chsh ${USERNAME} -s /bin/bash
+ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cu121
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=~/.bash_history" && echo $SNIPPET >> "/home/${USERNAME}/.bashrc"
-
-RUN apt update -y
-RUN DEBIAN_FRONTEND=noninteractive apt install -y tzdata
-RUN apt install -y \
+# Install system packages
+RUN apt update -y && apt install -y \
+    sudo \
     build-essential \
     curl \
-    git
-
-# GPU Setup
-RUN apt-get install -y \
+    git \
     libcairo2-dev \
     libgl1-mesa-glx \
-    software-properties-common
+    software-properties-common \
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
+    python3-pip \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.9
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt install -y python3.9-dev python3.9-venv
-RUN python3.9 -m ensurepip
-RUN ln -s /usr/bin/python3.9 /usr/local/bin/python
-RUN ln -s /usr/local/bin/pip3.9 /usr/local/bin/pip
-RUN pip install --upgrade pip
+# Set up Python
+RUN ln -sf /usr/bin/python3.11 /usr/local/bin/python && \
+    ln -sf /usr/bin/python3.11 /usr/bin/python3 && \
+    python -m pip install --upgrade pip
 
-USER ${USERNAME}
-
-CMD mkdir -p /code
+# Install Python packages as root (before switching user)
 WORKDIR /code
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-RUN . ~/.bashrc
-RUN /home/dev/.local/bin/nbdev_install_quarto
-RUN git config --global credential.helper store
-# RUN /home/dev/.local/bin/jupyter contrib nbextension install --user
-RUN sudo apt install jq -y
-# RUN /home/dev/.local/bin/jupyter nbextension enable gist_it/main
-# RUN /home/dev/.local/bin/jupyter nbextension enable execute_time/ExecuteTime
-# RUN jq '.ExecuteTime.display_right_aligned = true' ~/.jupyter/nbconfig/notebook.json > ~/.jupyter/nbconfig/notebook1.json && cp ~/.jupyter/nbconfig/notebook1.json ~/.jupyter/nbconfig/notebook.json
+RUN python -c "from nbdev.quarto import install_quarto; install_quarto()"
+# RUN nbdev_install_quarto
 
-ADD . .
+# Create user
+RUN groupadd --gid $USER_GID $USERNAME && \
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+    echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} && \
+    chmod 0440 /etc/sudoers.d/${USERNAME} && \
+    chsh ${USERNAME} -s /bin/bash
+
+RUN echo "export PROMPT_COMMAND='history -a' && export HISTFILE=~/.bash_history" >> "/home/${USERNAME}/.bashrc"
+
+# Switch to user
+USER ${USERNAME}
+RUN git config --global credential.helper store
+
+COPY . .

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Contiguous Memory: A Cautionary Tale – Problem Solvers Guild Blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-f361158387980322bf8014ef187f8002.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FJDC3EN75W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Problem Solvers Guild Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/TPSG_io"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Contiguous Memory: A Cautionary Tale</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="5da3c11e" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>author: Kevin Bird</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>badges: true</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>branch: master</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>categories:</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> technical</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> performance</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> python</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>date: <span class="st">'2026-02-01'</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>description: Contiguous Memory A Cautionary Tale</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>output<span class="op">-</span><span class="bu">file</span>: <span class="dv">2026</span><span class="op">-</span><span class="dv">0</span><span class="er">2</span><span class="op">-</span><span class="dv">0</span><span class="er">1</span><span class="op">-</span>contiguity<span class="op">-</span>the<span class="op">-</span>hidden<span class="op">-</span>slowdown.html</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>title: Contiguous Memory A Cautionary Tale</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>toc: true</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>I was optimizing some image processing code recently when I hit a wall. My <code>tobytes()</code> call was taking three times longer than expected.</p>
+<p>I profiled. I tweaked. I stared at the code. Nothing helped.</p>
+<p>I tried different buffer sizes. I experimented with memory allocation patterns. I even suspected thermal throttling. Nothing made a difference.</p>
+<p>Eventually, I mentioned the problem to a chatbot. It asked me to add a log right before the call: <code>img.flags['C_CONTIGUOUS']</code>. To my surprise, this returned <code>False</code>. I deployed a version without any flipping or rotating, and suddenly <code>tobytes()</code> was fast again.</p>
+<p>This led me to learn about contiguous memory. Hopefully this post helps others avoid the same issue.</p>
+<section id="the-misleading-profile" class="level2">
+<h2 class="anchored" data-anchor-id="the-misleading-profile">The Misleading Profile</h2>
+<p>Here’s a simplified version of what my code looked like:</p>
+<div id="40440825" class="cell" data-time_run="2026-02-01T15:41:40.030087+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">256</span>, (<span class="dv">1000</span>, <span class="dv">2000</span>), dtype<span class="op">=</span>np.uint8)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Rotate</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>rotated <span class="op">=</span> np.rot90(img)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"rotate: </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> start<span class="sc">:.4f}</span><span class="ss">s"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Convert to bytes</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> rotated.tobytes()</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"tobytes: </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> start<span class="sc">:.4f}</span><span class="ss">s"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>rotate: 0.0001s
+tobytes: 0.0059s</code></pre>
+</div>
+</div>
+<p>The rotation takes a fraction of a millisecond. The <code>tobytes()</code> takes much longer. So obviously <code>tobytes()</code> is the problem, right?</p>
+<p>But watch what happens when I skip the rotation:</p>
+<div id="0b43c454" class="cell" data-time_run="2026-02-01T15:41:40.031706+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.perf_counter()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> img.tobytes()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"tobytes (no rotation): </span><span class="sc">{</span>time<span class="sc">.</span>perf_counter() <span class="op">-</span> start<span class="sc">:.4f}</span><span class="ss">s"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tobytes (no rotation): 0.0003s</code></pre>
+</div>
+</div>
+<p>Now <code>tobytes()</code> is fast. The rotation wasn’t slow — it was <em>too</em> fast. It didn’t actually rearrange the data; it just changed how NumPy <em>views</em> the data. And that left <code>tobytes()</code> to do the hard work of gathering scattered bytes.</p>
+</section>
+<section id="what-is-contiguous-memory" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-contiguous-memory">What Is Contiguous Memory?</h2>
+<p>Imagine a bookshelf with novels arranged side by side — Book 1, Book 2, Book 3, and so on. If you need to grab all of them, you can sweep your hand across and scoop them up in one motion. That’s contiguous memory: data stored in one unbroken sequence.</p>
+<p>Now imagine those same books scattered across the room — one on the couch, one on the kitchen table, one under the bed. Getting them all requires walking around and picking up each one individually. Same books, same information, but much more work.</p>
+<p>When data is contiguous in memory, operations like copying or converting can happen quickly. The computer can grab everything at once. When it’s not contiguous, every piece requires a separate lookup.</p>
+</section>
+<section id="seeing-it-in-code" class="level2">
+<h2 class="anchored" data-anchor-id="seeing-it-in-code">Seeing It in Code</h2>
+<p>NumPy makes this easy to observe. Let’s create an array and check if it’s contiguous:</p>
+<div id="75a2c70c" class="cell" data-time_run="2026-02-01T15:41:40.062295+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> np.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>arr<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]]
+Contiguous: True</code></pre>
+</div>
+</div>
+<p>The data is laid out in memory exactly as you’d read it: 0, 1, 2, 3, 4, 5… in one unbroken sequence.</p>
+</section>
+<section id="flip-vs-rotate" class="level2">
+<h2 class="anchored" data-anchor-id="flip-vs-rotate">Flip vs Rotate</h2>
+<p>Let’s flip the array horizontally:</p>
+<div id="f4a64aee" class="cell" data-time_run="2026-02-01T15:41:40.087184+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flipped <span class="op">=</span> np.flip(arr, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(flipped)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>flipped<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 3  2  1  0]
+ [ 7  6  5  4]
+ [11 10  9  8]]
+Contiguous: False</code></pre>
+</div>
+</div>
+<p>It says <code>False</code>! But here’s the trick — flipping doesn’t actually move any data. It just changes <em>how NumPy reads</em> the existing data. Back to our bookshelf: it’s like deciding to read the titles from right to left instead of left to right. The books haven’t moved — you’ve just changed your reading direction.</p>
+<p>Now let’s rotate:</p>
+<div id="e5a882da" class="cell" data-time_run="2026-02-01T15:41:40.118526+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rotated <span class="op">=</span> np.rot90(arr)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rotated)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>rotated<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[ 3  7 11]
+ [ 2  6 10]
+ [ 1  5  9]
+ [ 0  4  8]]
+Contiguous: False</code></pre>
+</div>
+</div>
+<p>Also <code>False</code>, but for a different reason. Rotation is like trying to read down the spines of books arranged horizontally. The information is there, but it’s not <em>arranged</em> for that reading pattern. Every element NumPy needs is in a different place than where sequential memory access would find it.</p>
+</section>
+<section id="opencv-returns-contiguous-arrays" class="level2">
+<h2 class="anchored" data-anchor-id="opencv-returns-contiguous-arrays">OpenCV Returns Contiguous Arrays</h2>
+<p>OpenCV’s functions return new contiguous arrays instead of views:</p>
+<div id="9c220f5d" class="cell" data-time_run="2026-02-01T15:41:40.150145+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>arr_uint8 <span class="op">=</span> np.arange(<span class="dv">12</span>).reshape(<span class="dv">3</span>, <span class="dv">4</span>).astype(np.uint8)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>flipped_cv2 <span class="op">=</span> cv2.flip(arr_uint8, <span class="dv">1</span>)  <span class="co"># horizontal flip</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"cv2.flip contiguous: </span><span class="sc">{</span>flipped_cv2<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>rotated_cv2 <span class="op">=</span> cv2.rotate(arr_uint8, cv2.ROTATE_90_CLOCKWISE)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"cv2.rotate contiguous: </span><span class="sc">{</span>rotated_cv2<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cv2.flip contiguous: True
+cv2.rotate contiguous: True</code></pre>
+</div>
+</div>
+<p>Both stay contiguous because cv2 copies the data into a new, properly-laid-out array.</p>
+</section>
+<section id="performance-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="performance-comparison">Performance Comparison</h2>
+<p>You might expect NumPy views to be faster since they avoid copying. For the view operation itself, that’s true:</p>
+<div id="f21e1dd0" class="cell" data-time_run="2026-02-01T15:41:40.176372+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>big <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="dv">256</span>, (<span class="dv">1000</span>, <span class="dv">2000</span>), dtype<span class="op">=</span>np.uint8)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.rot90(big)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit cv2.rotate(big, cv2.ROTATE_90_CLOCKWISE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4.88 μs ± 48.5 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+151 μs ± 590 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+</div>
+</div>
+<p>But if you need contiguous data afterward (for <code>tobytes()</code>, GPU transfer, etc.), you have to pay the copy cost eventually:</p>
+<div id="39062976" class="cell" data-time_run="2026-02-01T15:41:56.390344+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.ascontiguousarray(np.rot90(big))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit cv2.rotate(big, cv2.ROTATE_90_CLOCKWISE)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.17 ms ± 2.99 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+150 μs ± 170 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+</div>
+</div>
+<p>And for flip operations:</p>
+<div id="84673e4c" class="cell" data-time_run="2026-02-01T15:51:33.716531+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.flip(big, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.ascontiguousarray(np.flip(big, axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit cv2.flip(big, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.64 μs ± 3.25 ns per loop (mean ± std. dev. of 7 runs, 1,000,000 loops each)
+557 μs ± 945 ns per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+52.6 μs ± 144 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)</code></pre>
+</div>
+</div>
+<p><code>cv2.rotate</code> is significantly faster when you need contiguous output. The difference: <code>np.ascontiguousarray</code> has to traverse a non-contiguous strided view, hopping around memory. <code>cv2.rotate</code> does the rotation and copy in a single optimized C++ pass.</p>
+</section>
+<section id="pytorch-behavior" class="level2">
+<h2 class="anchored" data-anchor-id="pytorch-behavior">PyTorch Behavior</h2>
+<p>PyTorch has different behavior depending on the operation:</p>
+<div id="f05706c2" class="cell" data-time_run="2026-02-01T15:42:18.045075+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.randint(<span class="dv">0</span>, <span class="dv">256</span>, (<span class="dv">1000</span>, <span class="dv">2000</span>), dtype<span class="op">=</span>torch.uint8)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Original contiguous: </span><span class="sc">{</span>t<span class="sc">.</span>is_contiguous()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>t_rot <span class="op">=</span> torch.rot90(t)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"After rot90 contiguous: </span><span class="sc">{</span>t_rot<span class="sc">.</span>is_contiguous()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>t_flip <span class="op">=</span> torch.flip(t, [<span class="dv">1</span>])</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"After flip contiguous: </span><span class="sc">{</span>t_flip<span class="sc">.</span>is_contiguous()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Original contiguous: True
+After rot90 contiguous: False
+After flip contiguous: True</code></pre>
+</div>
+</div>
+<p><code>torch.flip</code> returns a contiguous copy, while <code>torch.rot90</code> returns a non-contiguous view (like NumPy).</p>
+<p>For rotation timing:</p>
+<div id="e0790049" class="cell" data-time_run="2026-02-01T15:51:55.786445+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit torch.rot90(t)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit torch.rot90(t).contiguous()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit torch.flip(t, [<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>285 μs ± 45.6 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+3.66 ms ± 184 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+323 μs ± 45.7 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)</code></pre>
+</div>
+</div>
+<p>The <code>.contiguous()</code> call adds significant overhead as it copies the strided view into a new contiguous tensor.</p>
+</section>
+<section id="why-this-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h2>
+<p>When I called <code>tobytes()</code> on my rotated image, NumPy had to hop around memory collecting scattered pieces. It’s like photocopying books that are spread across the room versus books lined up on a shelf.</p>
+<p>The fix was simple:</p>
+<div id="fb29a33c" class="cell" data-time_run="2026-02-01T15:42:40.418575+00:00">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rotated_contiguous <span class="op">=</span> np.ascontiguousarray(np.rot90(arr))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Contiguous: </span><span class="sc">{</span>rotated_contiguous<span class="sc">.</span>flags[<span class="st">'C_CONTIGUOUS'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Contiguous: True</code></pre>
+</div>
+</div>
+<p>This creates a fresh copy with all the data in proper sequential order. Yes, it costs memory and some time upfront — but if you’re about to do operations that need contiguous data, it’s worth it.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>If you’re doing image processing and need contiguous output:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Library</th>
+<th>Function</th>
+<th>Contiguous?</th>
+<th>Time (1000×2000)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>NumPy</td>
+<td><code>np.flip</code></td>
+<td>No (view)</td>
+<td>1.6 μs</td>
+</tr>
+<tr class="even">
+<td>NumPy</td>
+<td><code>np.flip</code> + <code>ascontiguousarray</code></td>
+<td>Yes</td>
+<td>557 μs</td>
+</tr>
+<tr class="odd">
+<td>NumPy</td>
+<td><code>np.rot90</code></td>
+<td>No (view)</td>
+<td>5 μs</td>
+</tr>
+<tr class="even">
+<td>NumPy</td>
+<td><code>np.rot90</code> + <code>ascontiguousarray</code></td>
+<td>Yes</td>
+<td>1.17 ms</td>
+</tr>
+<tr class="odd">
+<td>OpenCV</td>
+<td><code>cv2.flip</code></td>
+<td>Yes (copy)</td>
+<td>53 μs</td>
+</tr>
+<tr class="even">
+<td>OpenCV</td>
+<td><code>cv2.rotate</code></td>
+<td>Yes (copy)</td>
+<td>150 μs</td>
+</tr>
+<tr class="odd">
+<td>PyTorch</td>
+<td><code>torch.flip</code></td>
+<td>Yes (copy)</td>
+<td>323 μs</td>
+</tr>
+<tr class="even">
+<td>PyTorch</td>
+<td><code>torch.rot90</code></td>
+<td>No (view)</td>
+<td>328 μs</td>
+</tr>
+<tr class="odd">
+<td>PyTorch</td>
+<td><code>torch.rot90</code> + <code>.contiguous()</code></td>
+<td>Yes</td>
+<td>2.32 ms</td>
+</tr>
+</tbody>
+</table>
+<p>OpenCV is ~8x faster than NumPy when you need contiguous output.</p>
+<p>When chasing performance, the slow operation isn’t always the guilty one. My <code>tobytes()</code> was the <em>victim</em>, not the culprit. The rotation upstream had silently broken the memory layout, and <code>tobytes()</code> was left doing the hard work of reassembling it.</p>
+<p>If something seems inexplicably slow, check your contiguity. That <code>.flags['C_CONTIGUOUS']</code> might just solve your mystery.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

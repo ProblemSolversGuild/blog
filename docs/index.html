@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Problem Solvers Guild Blog -</title>
+<title>Problem Solvers Guild Blog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,22 +33,30 @@ ul.task-list li input[type="checkbox"] {
 <link href="./favicon.ico" rel="icon">
 <script src="site_libs/quarto-listing/list.min.js"></script>
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f361158387980322bf8014ef187f8002.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -57,6 +65,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -101,52 +110,79 @@ gtag('js', new Date());
 gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Problem Solvers Guild Blog</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/orgs/ProblemSolversGuild"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/TPSG_io" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/TPSG_io"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/company/theproblemsolversguild"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
+          </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -156,9 +192,10 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(20)</span></div><div class="category" data-category="Art">Art <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Buffett">Buffett <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ChatGPT">ChatGPT <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Experiences">Experiences <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Manufacturing">Manufacturing <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Quality">Quality <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Travel">Travel <span class="quarto-category-count">(1)</span></div><div class="category" data-category="advice">advice <span class="quarto-category-count">(3)</span></div><div class="category" data-category="exploration">exploration <span class="quarto-category-count">(5)</span></div><div class="category" data-category="fastai">fastai <span class="quarto-category-count">(2)</span></div><div class="category" data-category="python">python <span class="quarto-category-count">(3)</span></div><div class="category" data-category="rate">rate <span class="quarto-category-count">(1)</span></div><div class="category" data-category="research">research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="technical">technical <span class="quarto-category-count">(12)</span></div><div class="category" data-category="texas">texas <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(21)</span></div><div class="category" data-category="YWR2aWNl">advice <span class="quarto-category-count">(3)</span></div><div class="category" data-category="QXJ0">Art <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QnVmZmV0dA==">Buffett <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q2hhdEdQVA==">ChatGPT <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RXhwZXJpZW5jZXM=">Experiences <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ZXhwbG9yYXRpb24=">exploration <span class="quarto-category-count">(5)</span></div><div class="category" data-category="ZmFzdGFp">fastai <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TWFudWZhY3R1cmluZw==">Manufacturing <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cHl0aG9u">python <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UXVhbGl0eQ==">Quality <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmF0ZQ==">rate <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cmVzZWFyY2g=">research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="dGVjaG5pY2Fs">technical <span class="quarto-category-count">(12)</span></div><div class="category" data-category="dGV4YXM=">texas <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHJhdmVs">Travel <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
 
 
 
@@ -168,32 +205,46 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Buffett" data-listing-date-sort="1735884000000" data-listing-file-modified-sort="1767461127218" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/2025-01-03-The_5_Dollar_Match.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2025-01-03-The_5_Dollar_Match.html">
-<h3 class="no-anchor listing-title">
-The $5 Match
-</h3>
-<div class="listing-subtitle">
+<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1769961534917" data-listing-reading-time-sort="5" data-listing-word-count-sort="843">
+<div class="thumbnail"><a href="./posts/2026-02-01-contiguity_the_hidden_slowdown_post.html" class="no-external">
 
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Buffett'); return false;">
-Buffett
-</div>
-</div>
-<a href="./posts/2025-01-03-The_5_Dollar_Match.html">
-<div class="listing-description">
-<strong>Warren Buffett vs.&nbsp;Tiger Woods — The $5 Match</strong>
-</div>
-</a>
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-02-01-contiguity_the_hidden_slowdown_post.html" class="no-external">Contiguous Memory: A Cautionary Tale</a>
+</h3>
+<div class="delink listing-description"><a href="./posts/2026-02-01-contiguity_the_hidden_slowdown_post.html" class="no-external">
+I was optimizing some image processing code recently when I hit a wall. My <code>tobytes()</code> call was taking three times longer than expected.
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2025-01-03-The_5_Dollar_Match.html">
+<a href="./posts/2026-02-01-contiguity_the_hidden_slowdown_post.html" class="no-external">
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="QnVmZmV0dA==" data-listing-date-sort="1735862400000" data-listing-file-modified-sort="1767461127218" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="131">
+<div class="thumbnail"><a href="./posts/2026-01-03-The_5_Dollar_Match.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-01-03-The_5_Dollar_Match.html" class="no-external">The $5 Match</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QnVmZmV0dA=='); return false;">Buffett</div>
+
+</div>
+<div class="delink listing-description"><a href="./posts/2026-01-03-The_5_Dollar_Match.html" class="no-external">
+<strong>Warren Buffett vs.&nbsp;Tiger Woods — The $5 Match</strong>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-01-03-The_5_Dollar_Match.html" class="no-external">
 <div class="listing-date">
 Jan 3, 2025
 </div>
@@ -203,35 +254,29 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="Travel,Experiences" data-listing-date-sort="1718946000000" data-listing-file-modified-sort="1767461308930" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20">
-<div class="thumbnail">
-<p><a href="./posts/2024-06-21-Cartagena_Colombia.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="2" data-categories="VHJhdmVsJTJDRXhwZXJpZW5jZXM=" data-listing-date-sort="1718928000000" data-listing-file-modified-sort="1767461308930" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20" data-listing-word-count-sort="3953">
+<div class="thumbnail"><a href="./posts/2024-06-21-Cartagena_Colombia.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2024-06-21-Cartagena_Colombia.html">
 <h3 class="no-anchor listing-title">
-Cartagena Colombia Travel
+<a href="./posts/2024-06-21-Cartagena_Colombia.html" class="no-external">Cartagena Colombia Travel</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHJhdmVs'); return false;">Travel</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RXhwZXJpZW5jZXM='); return false;">Experiences</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Travel'); return false;">
-Travel
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Experiences'); return false;">
-Experiences
-</div>
-</div>
-<a href="./posts/2024-06-21-Cartagena_Colombia.html">
-<div class="listing-description">
-We started our journey in…
-</div>
-</a>
+<div class="delink listing-description"><a href="./posts/2024-06-21-Cartagena_Colombia.html" class="no-external">
+We started our journey in Fitchburg, WI. We took a Lyft to the bus stop and took the bus down to Chicago the night before our flights. This was not necessary but it did make…
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-06-21-Cartagena_Colombia.html">
+<a href="./posts/2024-06-21-Cartagena_Colombia.html" class="no-external">
 <div class="listing-date">
 Jun 21, 2024
 </div>
@@ -241,32 +286,27 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="Art" data-listing-date-sort="1718946000000" data-listing-file-modified-sort="1767461308930" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html"> <p class="card-img-top"><img src="https://us1-photo.nextdoor.com/post_photos/a2/bb/a2bba5d84c0b1a050c56a2b18a64ec84.jpg" alt="img"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="3" data-categories="QXJ0" data-listing-date-sort="1718928000000" data-listing-file-modified-sort="1767461308930" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="342">
+<div class="thumbnail"><a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html" class="no-external">
+
+<p class="card-img-top"><img src="posts/notebook_images/2024-06-21-Artist_Identification_EJ_Whitney/final_spot.png" title="Painting Hanging in lounge" class="thumbnail-image card-img"/></p>
+
+</a></div>
 <div class="body">
-<a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html">
 <h3 class="no-anchor listing-title">
-Artist Identification - EJ Whitney
+<a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html" class="no-external">Artist Identification - EJ Whitney</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXJ0'); return false;">Art</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Art'); return false;">
-Art
-</div>
-</div>
-<a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html">
-<div class="listing-description">
-My wife sent me a link to a painting that…
-</div>
-</a>
+<div class="delink listing-description"><a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html" class="no-external">
+My wife sent me a link to a painting that caught her eye. It had all of the colors that we have been working into the lounge in our house. It was a 44in x 34 oil painting…
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html">
+<a href="./posts/2024-06-21-Artist_Identification_EJ_Whitney.html" class="no-external">
 <div class="listing-date">
 Jun 21, 2024
 </div>
@@ -276,35 +316,29 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="technical,ChatGPT" data-listing-date-sort="1671602400000" data-listing-file-modified-sort="1767461308930" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
-<div class="thumbnail">
-<p><a href="./posts/2022-12-21-genetic_algorithm.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="4" data-categories="dGVjaG5pY2FsJTJDQ2hhdEdQVA==" data-listing-date-sort="1671580800000" data-listing-file-modified-sort="1767461308930" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1576">
+<div class="thumbnail"><a href="./posts/2022-12-21-genetic_algorithm.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-12-21-genetic_algorithm.html">
 <h3 class="no-anchor listing-title">
-Genetic Algorithm Intro
+<a href="./posts/2022-12-21-genetic_algorithm.html" class="no-external">Genetic Algorithm Intro</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2hhdEdQVA=='); return false;">ChatGPT</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('ChatGPT'); return false;">
-ChatGPT
-</div>
-</div>
-<a href="./posts/2022-12-21-genetic_algorithm.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-12-21-genetic_algorithm.html" class="no-external">
 <p>A walkthrough of genetic algorithms generated using ChatGPT</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-12-21-genetic_algorithm.html">
+<a href="./posts/2022-12-21-genetic_algorithm.html" class="no-external">
 <div class="listing-date">
 Dec 21, 2022
 </div>
@@ -314,35 +348,29 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="advice,ChatGPT" data-listing-date-sort="1670479200000" data-listing-file-modified-sort="1767461308929" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="5" data-categories="YWR2aWNlJTJDQ2hhdEdQVA==" data-listing-date-sort="1670457600000" data-listing-file-modified-sort="1767461308929" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="493">
+<div class="thumbnail"><a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html">
 <h3 class="no-anchor listing-title">
-Should We Use ChatGPT?
+<a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html" class="no-external">Should We Use ChatGPT?</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YWR2aWNl'); return false;">advice</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('Q2hhdEdQVA=='); return false;">ChatGPT</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('advice'); return false;">
-advice
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('ChatGPT'); return false;">
-ChatGPT
-</div>
-</div>
-<a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html" class="no-external">
 Until a few days ago when I started trying out ChatGPT, I didn’t think this was a question I would have to contemplate for at least a few years, but, realistically, I…
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html">
+<a href="./posts/2022-12-08-Should_We_Use_ChatGPT.html" class="no-external">
 <div class="listing-date">
 Dec 8, 2022
 </div>
@@ -352,35 +380,29 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="technical,research" data-listing-date-sort="1667365200000" data-listing-file-modified-sort="1767461308929" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6">
-<div class="thumbnail">
-<p><a href="./posts/2022-11-02-diffedit-implementation.html"> <p class="card-img-top"><img src="posts/2022-11-02-DiffEdit-Implementation_files/figure-html/cell-8-output-59.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="6" data-categories="dGVjaG5pY2FsJTJDcmVzZWFyY2g=" data-listing-date-sort="1667347200000" data-listing-file-modified-sort="1767461308929" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1013">
+<div class="thumbnail"><a href="./posts/2022-11-02-diffedit-implementation.html" class="no-external">
+
+<p class="card-img-top"><img src="posts/2022-11-02-DiffEdit-Implementation_files/figure-html/cell-8-output-59.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-11-02-diffedit-implementation.html">
 <h3 class="no-anchor listing-title">
-DiffEdit Paper Implementation
+<a href="./posts/2022-11-02-diffedit-implementation.html" class="no-external">DiffEdit Paper Implementation</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cmVzZWFyY2g='); return false;">research</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('research'); return false;">
-research
-</div>
-</div>
-<a href="./posts/2022-11-02-diffedit-implementation.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-11-02-diffedit-implementation.html" class="no-external">
 <p>Implementing the DiffEdit Paper</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-11-02-diffedit-implementation.html">
+<a href="./posts/2022-11-02-diffedit-implementation.html" class="no-external">
 <div class="listing-date">
 Nov 2, 2022
 </div>
@@ -390,35 +412,29 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="Manufacturing,Quality" data-listing-date-sort="1664168400000" data-listing-file-modified-sort="1767461308851" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
-<div class="thumbnail">
-<p><a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="7" data-categories="TWFudWZhY3R1cmluZyUyQ1F1YWxpdHk=" data-listing-date-sort="1664150400000" data-listing-file-modified-sort="1767461308851" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="783">
+<div class="thumbnail"><a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html">
 <h3 class="no-anchor listing-title">
-5 Ways to Improve Your Quality Inspection Process
+<a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html" class="no-external">5 Ways to Improve Your Quality Inspection Process</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('TWFudWZhY3R1cmluZw=='); return false;">Manufacturing</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UXVhbGl0eQ=='); return false;">Quality</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Manufacturing'); return false;">
-Manufacturing
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Quality'); return false;">
-Quality
-</div>
-</div>
-<a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html">
-<div class="listing-description">
-If you work in manufacturing and are struggling to with rising costs, returned products, and unhappy…
-</div>
-</a>
+<div class="delink listing-description"><a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html" class="no-external">
+If you work in manufacturing and are struggling to with rising costs, returned products, and unhappy customers, check out some of my ideas below on how to improve your…
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html">
+<a href="./posts/2022-09-26-5-Ways-to-Improve-Your-Quality-Inspection-Process.html" class="no-external">
 <div class="listing-date">
 Sep 26, 2022
 </div>
@@ -428,38 +444,31 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="fastai,technical,exploration" data-listing-date-sort="1651467600000" data-listing-file-modified-sort="1767461308851" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/2022-05-02-zero_init_last_resnetperformance.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="8" data-categories="ZmFzdGFpJTJDdGVjaG5pY2FsJTJDZXhwbG9yYXRpb24=" data-listing-date-sort="1651449600000" data-listing-file-modified-sort="1767461308851" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="580">
+<div class="thumbnail"><a href="./posts/2022-05-02-zero_init_last_resnetperformance.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-05-02-zero_init_last_resnetperformance.html">
 <h3 class="no-anchor listing-title">
-Exploring Timm vs Torchvision Resnet18 Difference
+<a href="./posts/2022-05-02-zero_init_last_resnetperformance.html" class="no-external">Exploring Timm vs Torchvision Resnet18 Difference</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZmFzdGFp'); return false;">fastai</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZXhwbG9yYXRpb24='); return false;">exploration</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('fastai'); return false;">
-fastai
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('exploration'); return false;">
-exploration
-</div>
-</div>
-<a href="./posts/2022-05-02-zero_init_last_resnetperformance.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-05-02-zero_init_last_resnetperformance.html" class="no-external">
 <p>Reviewing the impact batchnorm initialization has on non-pretrained model performance</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-05-02-zero_init_last_resnetperformance.html">
+<a href="./posts/2022-05-02-zero_init_last_resnetperformance.html" class="no-external">
 <div class="listing-date">
 May 2, 2022
 </div>
@@ -469,38 +478,31 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="python,technical,exploration" data-listing-date-sort="1645509600000" data-listing-file-modified-sort="1767461308851" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/2022-02-22-exploring-torch.lerp.html"> <p class="card-img-top"><img src="posts/notebook_images/2022-02-22-Exploring-Torch.lerp/mixup_screenshot.png" alt="image.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="9" data-categories="cHl0aG9uJTJDdGVjaG5pY2FsJTJDZXhwbG9yYXRpb24=" data-listing-date-sort="1645488000000" data-listing-file-modified-sort="1767461308851" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="239">
+<div class="thumbnail"><a href="./posts/2022-02-22-exploring-torch.lerp.html" class="no-external">
+
+<p class="card-img-top"><img src="posts/notebook_images/2022-02-22-Exploring-Torch.lerp/mixup_screenshot.png" alt="image.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-02-22-exploring-torch.lerp.html">
 <h3 class="no-anchor listing-title">
-PyTorch torch.lerp Exploration
+<a href="./posts/2022-02-22-exploring-torch.lerp.html" class="no-external">PyTorch torch.lerp Exploration</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('cHl0aG9u'); return false;">python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZXhwbG9yYXRpb24='); return false;">exploration</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
-python
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('exploration'); return false;">
-exploration
-</div>
-</div>
-<a href="./posts/2022-02-22-exploring-torch.lerp.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-02-22-exploring-torch.lerp.html" class="no-external">
 <p>Reviewing torch.lerp and its uses</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-02-22-exploring-torch.lerp.html">
+<a href="./posts/2022-02-22-exploring-torch.lerp.html" class="no-external">
 <div class="listing-date">
 Feb 22, 2022
 </div>
@@ -510,32 +512,27 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="technical" data-listing-date-sort="1645077600000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/2022-02-17-Cron_job_failure_email.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="10" data-categories="dGVjaG5pY2Fs" data-listing-date-sort="1645056000000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="319">
+<div class="thumbnail"><a href="./posts/2022-02-17-Cron_job_failure_email.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-02-17-Cron_job_failure_email.html">
 <h3 class="no-anchor listing-title">
-A cron job that will run conda, run python script, and email when it fails
+<a href="./posts/2022-02-17-Cron_job_failure_email.html" class="no-external">A cron job that will run conda, run python script, and email when it fails</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-</div>
-<a href="./posts/2022-02-17-Cron_job_failure_email.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-02-17-Cron_job_failure_email.html" class="no-external">
 I have searched high and low trying to create a scheduled task (cron job) that will: 1. Use a conda environment 2. Run a python script 3. Email if/when errors occur
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-02-17-Cron_job_failure_email.html">
+<a href="./posts/2022-02-17-Cron_job_failure_email.html" class="no-external">
 <div class="listing-date">
 Feb 17, 2022
 </div>
@@ -545,32 +542,27 @@ Hiromi Suenaga
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="technical" data-listing-date-sort="1644904800000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/2022-02-15-SSH-key.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="11" data-categories="dGVjaG5pY2Fs" data-listing-date-sort="1644883200000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="336">
+<div class="thumbnail"><a href="./posts/2022-02-15-SSH-key.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-02-15-SSH-key.html">
 <h3 class="no-anchor listing-title">
-Create SSH key pair and using it
+<a href="./posts/2022-02-15-SSH-key.html" class="no-external">Create SSH key pair and using it</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-</div>
-<a href="./posts/2022-02-15-SSH-key.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-02-15-SSH-key.html" class="no-external">
 It is fairly simple to create a SSH key pair as <code>ssh-keygen</code> will guide you through the whole process.
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-02-15-SSH-key.html">
+<a href="./posts/2022-02-15-SSH-key.html" class="no-external">
 <div class="listing-date">
 Feb 15, 2022
 </div>
@@ -580,38 +572,31 @@ Hiromi Suenaga
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-categories="python,technical,exploration" data-listing-date-sort="1644213600000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/2022-02-07-python-function-default-argument-value.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="12" data-categories="cHl0aG9uJTJDdGVjaG5pY2FsJTJDZXhwbG9yYXRpb24=" data-listing-date-sort="1644192000000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="519">
+<div class="thumbnail"><a href="./posts/2022-02-07-python-function-default-argument-value.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-02-07-python-function-default-argument-value.html">
 <h3 class="no-anchor listing-title">
-Python Function Default Argument Value
+<a href="./posts/2022-02-07-python-function-default-argument-value.html" class="no-external">Python Function Default Argument Value</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('cHl0aG9u'); return false;">python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZXhwbG9yYXRpb24='); return false;">exploration</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
-python
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('exploration'); return false;">
-exploration
-</div>
-</div>
-<a href="./posts/2022-02-07-python-function-default-argument-value.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-02-07-python-function-default-argument-value.html" class="no-external">
 <p>Exploring an unexpected Python behavior that could cause your program to behave inconsistently</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-02-07-python-function-default-argument-value.html">
+<a href="./posts/2022-02-07-python-function-default-argument-value.html" class="no-external">
 <div class="listing-date">
 Feb 7, 2022
 </div>
@@ -621,32 +606,27 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-categories="technical" data-listing-date-sort="1644127200000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/2022-02-06-Makefile_to_create_githook.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="13" data-categories="dGVjaG5pY2Fs" data-listing-date-sort="1644105600000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="206">
+<div class="thumbnail"><a href="./posts/2022-02-06-Makefile_to_create_githook.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-02-06-Makefile_to_create_githook.html">
 <h3 class="no-anchor listing-title">
-Using Makefile to Create Git Hook
+<a href="./posts/2022-02-06-Makefile_to_create_githook.html" class="no-external">Using Makefile to Create Git Hook</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-</div>
-<a href="./posts/2022-02-06-Makefile_to_create_githook.html">
-<div class="listing-description">
-In our previous post, we created a Git Hook that will…
-</div>
-</a>
+<div class="delink listing-description"><a href="./posts/2022-02-06-Makefile_to_create_githook.html" class="no-external">
+In our previous post, we created a Git Hook that will strip all the superfluous metadata automatically when you commit notebooks. We wanted to make the installation of this…
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-02-06-Makefile_to_create_githook.html">
+<a href="./posts/2022-02-06-Makefile_to_create_githook.html" class="no-external">
 <div class="listing-date">
 Feb 6, 2022
 </div>
@@ -656,32 +636,27 @@ Hiromi Suenaga
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-categories="technical" data-listing-date-sort="1644040800000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/2022-02-05-GitHook_to_clean_notebook.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="14" data-categories="dGVjaG5pY2Fs" data-listing-date-sort="1644019200000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="134">
+<div class="thumbnail"><a href="./posts/2022-02-05-GitHook_to_clean_notebook.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2022-02-05-GitHook_to_clean_notebook.html">
 <h3 class="no-anchor listing-title">
-Using Git Hook to Clean Jupyter Notebook on Commit
+<a href="./posts/2022-02-05-GitHook_to_clean_notebook.html" class="no-external">Using Git Hook to Clean Jupyter Notebook on Commit</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-</div>
-<a href="./posts/2022-02-05-GitHook_to_clean_notebook.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2022-02-05-GitHook_to_clean_notebook.html" class="no-external">
 To avoid merge issues and make PR review easier, we wanted a Git Hook which will: - Clear output of Jupyter Notebook - Only clean the files that were modified for this PR
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2022-02-05-GitHook_to_clean_notebook.html">
+<a href="./posts/2022-02-05-GitHook_to_clean_notebook.html" class="no-external">
 <div class="listing-date">
 Feb 5, 2022
 </div>
@@ -691,35 +666,29 @@ Hiromi Suenaga
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-categories="texas,rate" data-listing-date-sort="1632027600000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
-<div class="thumbnail">
-<p><a href="./posts/2021-09-19-texas-rate-inspector.html"> <p class="card-img-top"><img src="posts/notebook_images/2021-09-19-Texas-Rate-Inspector/powertochoose.png" title="159 Plans found on PowerToChoose for 77095" class="thumbnail-image card-img"/></p> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="15" data-categories="dGV4YXMlMkNyYXRl" data-listing-date-sort="1632009600000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="909">
+<div class="thumbnail"><a href="./posts/2021-09-19-texas-rate-inspector.html" class="no-external">
+
+<p class="card-img-top"><img src="posts/notebook_images/2021-09-19-Texas-Rate-Inspector/powertochoose.png" title="159 Plans found on PowerToChoose for 77095" class="thumbnail-image card-img"/></p>
+
+</a></div>
 <div class="body">
-<a href="./posts/2021-09-19-texas-rate-inspector.html">
 <h3 class="no-anchor listing-title">
-Texas Rate Inspector Overview
+<a href="./posts/2021-09-19-texas-rate-inspector.html" class="no-external">Texas Rate Inspector Overview</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGV4YXM='); return false;">texas</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('cmF0ZQ=='); return false;">rate</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('texas'); return false;">
-texas
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('rate'); return false;">
-rate
-</div>
-</div>
-<a href="./posts/2021-09-19-texas-rate-inspector.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2021-09-19-texas-rate-inspector.html" class="no-external">
 Currently Texas’ rate selection process is heavily driven by the lowest cost for a typical user. However, this limits the imagination of Retail Electricity Providers (REP)…
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2021-09-19-texas-rate-inspector.html">
+<a href="./posts/2021-09-19-texas-rate-inspector.html" class="no-external">
 <div class="listing-date">
 Sep 19, 2021
 </div>
@@ -729,32 +698,27 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-categories="technical" data-listing-date-sort="1629090000000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
-<div class="thumbnail">
-<p><a href="./posts/2021-08-16-tabular_normalization_exploration.html"> <p class="card-img-top"><img src="posts/2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-4-output-1.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="16" data-categories="dGVjaG5pY2Fs" data-listing-date-sort="1629072000000" data-listing-file-modified-sort="1767461308848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="852">
+<div class="thumbnail"><a href="./posts/2021-08-16-tabular_normalization_exploration.html" class="no-external">
+
+<p class="card-img-top"><img src="posts/2021-08-16-Tabular_Normalization_Exploration_files/figure-html/cell-4-output-1.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
 <div class="body">
-<a href="./posts/2021-08-16-tabular_normalization_exploration.html">
 <h3 class="no-anchor listing-title">
-Normalizing fastai Tabular Inputs
+<a href="./posts/2021-08-16-tabular_normalization_exploration.html" class="no-external">Normalizing fastai Tabular Inputs</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-</div>
-<a href="./posts/2021-08-16-tabular_normalization_exploration.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2021-08-16-tabular_normalization_exploration.html" class="no-external">
 <p>Exploring the effectiveness of normalization on tabular data</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2021-08-16-tabular_normalization_exploration.html">
+<a href="./posts/2021-08-16-tabular_normalization_exploration.html" class="no-external">
 <div class="listing-date">
 Aug 16, 2021
 </div>
@@ -764,32 +728,27 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-categories="advice" data-listing-date-sort="1627966800000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="17" data-categories="YWR2aWNl" data-listing-date-sort="1627948800000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="514">
+<div class="thumbnail"><a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html">
 <h3 class="no-anchor listing-title">
-5 Lessons from Richard Feynman
+<a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html" class="no-external">5 Lessons from Richard Feynman</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YWR2aWNl'); return false;">advice</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('advice'); return false;">
-advice
-</div>
-</div>
-<a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html">
-<div class="listing-description">
-I recently listened to a biography about Richard Feynman and I had some takeaways that surprised me. I had always vaguely known that Richard…
-</div>
-</a>
+<div class="delink listing-description"><a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html" class="no-external">
+I recently listened to a biography about Richard Feynman and I had some takeaways that surprised me. I had always vaguely known that Richard Feynman was an interesting guy…
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html">
+<a href="./posts/2021-08-03-5_Lessons_From_Richard_Feynman.html" class="no-external">
 <div class="listing-date">
 Aug 3, 2021
 </div>
@@ -799,38 +758,31 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="17" data-categories="python,technical,exploration" data-listing-date-sort="1621573200000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/2021-05-21-python_slots_exploration.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="18" data-categories="cHl0aG9uJTJDdGVjaG5pY2FsJTJDZXhwbG9yYXRpb24=" data-listing-date-sort="1621555200000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="510">
+<div class="thumbnail"><a href="./posts/2021-05-21-python_slots_exploration.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2021-05-21-python_slots_exploration.html">
 <h3 class="no-anchor listing-title">
-Python Native <strong>slots</strong> Attribute Exploration
+<a href="./posts/2021-05-21-python_slots_exploration.html" class="no-external">Python Native <strong>slots</strong> Attribute Exploration</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('cHl0aG9u'); return false;">python</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZXhwbG9yYXRpb24='); return false;">exploration</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
-python
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('exploration'); return false;">
-exploration
-</div>
-</div>
-<a href="./posts/2021-05-21-python_slots_exploration.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2021-05-21-python_slots_exploration.html" class="no-external">
 <p>Diving into Python to see what <strong>slots</strong> does and how it can be used</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2021-05-21-python_slots_exploration.html">
+<a href="./posts/2021-05-21-python_slots_exploration.html" class="no-external">
 <div class="listing-date">
 May 21, 2021
 </div>
@@ -840,32 +792,27 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="18" data-categories="advice" data-listing-date-sort="1621314000000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
-<div class="thumbnail">
-<p><a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="19" data-categories="YWR2aWNl" data-listing-date-sort="1621296000000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="974">
+<div class="thumbnail"><a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html">
 <h3 class="no-anchor listing-title">
-5 Tips for a New CIO
+<a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html" class="no-external">5 Tips for a New CIO</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YWR2aWNl'); return false;">advice</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('advice'); return false;">
-advice
-</div>
-</div>
-<a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html">
-<div class="listing-description">
-Congratulations on your new role as CIO! As the CIO, your job is to remove roadblocks, provide a…
-</div>
-</a>
+<div class="delink listing-description"><a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html" class="no-external">
+Congratulations on your new role as CIO! As the CIO, your job is to remove roadblocks, provide a vision, and enable your business partners without spending more than is…
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html">
+<a href="./posts/2021-05-18-5_Tips_for_a_New_CIO.html" class="no-external">
 <div class="listing-date">
 May 18, 2021
 </div>
@@ -875,38 +822,31 @@ Kevin Bird
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="19" data-categories="fastai,technical,exploration" data-listing-date-sort="1620968400000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
-<div class="thumbnail">
-<p><a href="./posts/2021-05-14-text_dls_exploration.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
+<div class="quarto-post image-right" data-index="20" data-categories="ZmFzdGFpJTJDdGVjaG5pY2FsJTJDZXhwbG9yYXRpb24=" data-listing-date-sort="1620950400000" data-listing-file-modified-sort="1767461308846" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="687">
+<div class="thumbnail"><a href="./posts/2021-05-14-text_dls_exploration.html" class="no-external">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
 <div class="body">
-<a href="./posts/2021-05-14-text_dls_exploration.html">
 <h3 class="no-anchor listing-title">
-fastai’s Text DLs Exploration
+<a href="./posts/2021-05-14-text_dls_exploration.html" class="no-external">fastai’s Text DLs Exploration</a>
 </h3>
-<div class="listing-subtitle">
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZmFzdGFp'); return false;">fastai</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGVjaG5pY2Fs'); return false;">technical</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('ZXhwbG9yYXRpb24='); return false;">exploration</div>
 
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('fastai'); return false;">
-fastai
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('technical'); return false;">
-technical
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('exploration'); return false;">
-exploration
-</div>
-</div>
-<a href="./posts/2021-05-14-text_dls_exploration.html">
-<div class="listing-description">
+<div class="delink listing-description"><a href="./posts/2021-05-14-text_dls_exploration.html" class="no-external">
 <p>Exploring different methods to create the dls object in fastai</p>
-</div>
-</a>
+</a></div>
 </div>
 <div class="metadata">
-<a href="./posts/2021-05-14-text_dls_exploration.html">
+<a href="./posts/2021-05-14-text_dls_exploration.html" class="no-external">
 <div class="listing-date">
 May 14, 2021
 </div>
@@ -917,48 +857,61 @@ Kevin Bird
 </div>
 </div>
 </div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
+<div class="listing-no-matching d-none">No matching items</div>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
@@ -966,195 +919,348 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
       return codeEl.innerText;
     }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
-    };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
     });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script>
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
+
 
 
 
