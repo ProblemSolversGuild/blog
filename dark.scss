@@ -1,0 +1,11 @@
+/*-- scss:defaults --*/
+// Same vertical header padding as Cosmo, so the bar does not grow in dark mode.
+$navbar-padding-y: 0.5rem;
+
+// Same typeface as the light theme, so titles wrap and space the same way.
+$font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$headings-font-weight: 400;
+$web-font-path: false;
+
+// Dark gray bar in place of Darkly's blue header.
+$navbar-bg: #2a2a2a;
