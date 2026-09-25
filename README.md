@@ -27,4 +27,4 @@ This repository is a Cloudflare Pages project, separate from the homepage.
 | Build command | none |
 | Build output directory | `docs` |
 
-Preview on the project's `*.pages.dev` URL before changing DNS. `blog.problemsolversguild.com` currently points at GitHub Pages. After the Cloudflare preview matches this site, point that hostname at the Pages project and attach it there. Cloudflare renews the certificate. Do not add a `CNAME` file; that file was only for GitHub Pages.
+Preview on the project's `*.pages.dev` URL before changing DNS. `blog.problemsolversguild.com` currently points at GitHub Pages, and `docs/CNAME` is what keeps that hostname attached. Leave that file in place until the hostname is moved to the Cloudflare Pages project. After the preview matches this site, point the hostname at the Pages project and attach it there, then remove `docs/CNAME`. Cloudflare renews the certificate.
