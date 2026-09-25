@@ -5,3 +5,5 @@ _freeze/
 .env.*
 **/*.quarto_ipynb
 .DS_Store
+
+/.quarto/
