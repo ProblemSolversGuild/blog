@@ -6,7 +6,7 @@ Posts are markdown files and Jupyter notebooks in `posts/`. Notebook outputs are
 
 ## Write and publish
 
-Install [Quarto](https://quarto.org/docs/get-started/).
+Install [Quarto](https://quarto.org/docs/get-started/) 1.10.18.
 
 ```bash
 quarto preview
@@ -27,4 +27,4 @@ This repository is a Cloudflare Pages project, separate from the homepage.
 | Build command | none |
 | Build output directory | `docs` |
 
-Preview on the project's `*.pages.dev` URL before changing DNS. `blog.problemsolversguild.com` currently points at GitHub Pages, and `docs/CNAME` is what keeps that hostname attached. Leave that file in place until the hostname is moved to the Cloudflare Pages project. After the preview matches this site, point the hostname at the Pages project and attach it there, then remove `docs/CNAME`. Cloudflare renews the certificate.
+Preview on the project's `*.pages.dev` URL before changing DNS. `blog.problemsolversguild.com` currently points at GitHub Pages, and `CNAME` is copied into `docs/` on render so that hostname stays attached. Leave that file in place until the hostname is moved to the Cloudflare Pages project. After the preview matches this site, point the hostname at the Pages project and attach it there, then remove `CNAME`. Cloudflare renews the certificate.

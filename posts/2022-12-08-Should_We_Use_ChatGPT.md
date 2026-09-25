@@ -4,7 +4,7 @@ aliases:
 author: Kevin Bird
 categories:
 - advice
-- ChatGPT
+- chatgpt
 date: '2022-12-08'
 hide: false
 layout: post

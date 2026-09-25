@@ -3,8 +3,8 @@ aliases:
 - /travel/2024/06/21/Cartagena_Colombia
 author: Kevin Bird
 categories:
-- Travel
-- Experiences
+- travel
+- experiences
 date: '2024-06-21'
 hide: false
 layout: post

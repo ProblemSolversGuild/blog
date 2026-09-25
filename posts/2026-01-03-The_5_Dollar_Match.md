@@ -3,7 +3,7 @@ aliases:
 - /2025/01/03/the-5-dollar-match
 author: Kevin Bird
 categories:
-- Buffett
+- buffett
 date: '2025-01-03'
 hide: false
 layout: post

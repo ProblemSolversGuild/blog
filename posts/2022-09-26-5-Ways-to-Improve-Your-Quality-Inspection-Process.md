@@ -3,8 +3,8 @@ aliases:
 - /Manufacturing/Quality/2022/09/26/5-Ways-to-Improve-Your-Quality-Inspection-Process
 author: Kevin Bird
 categories:
-- Manufacturing
-- Quality
+- manufacturing
+- quality
 date: '2022-09-26'
 hide: false
 layout: post

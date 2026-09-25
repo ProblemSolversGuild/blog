@@ -3,7 +3,7 @@ aliases:
 - /art/2024/06/21/EJ_Whitney
 author: Kevin Bird
 categories:
-- Art
+- art
 date: '2024-06-21'
 hide: false
 layout: post
