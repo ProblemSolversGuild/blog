@@ -1,5 +1,7 @@
-_site
-.*
-/.quarto/
-
+.quarto/
+_site/
+_freeze/
+.env
+.env.*
 **/*.quarto_ipynb
+.DS_Store

@@ -1,3 +1,0 @@
-nbdev
-jupyter
-jupyter_contrib_nbextensions
