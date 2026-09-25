@@ -13,8 +13,6 @@ website:
       - about.qmd
       - icon: github
         href: https://github.com/orgs/ProblemSolversGuild
-      - icon: twitter
-        href: https://twitter.com/TPSG_io
       - icon: linkedin
         href: https://www.linkedin.com/company/theproblemsolversguild
 

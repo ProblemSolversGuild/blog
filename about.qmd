@@ -4,9 +4,6 @@ image: profile.jpg
 about:
   template: jolla
   links:
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/TPSG_io
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/company/theproblemsolversguild
