@@ -10,7 +10,6 @@ website:
   google-analytics: "G-FJDC3EN75W"
   navbar:
     right:
-      - about.qmd
       - icon: github
         href: https://github.com/orgs/ProblemSolversGuild
       - icon: linkedin
