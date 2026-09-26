@@ -1,0 +1,9 @@
+# Workers Builds runs `npx wrangler deploy` with an empty build command.
+# The rendered site is already committed, so this only tells Wrangler which folder to publish.
+name = "blog"
+compatibility_date = "2026-09-25"
+
+[assets]
+directory = "./docs"
+# Quarto publishes both posts/file.html and folder/index.html paths.
+html_handling = "auto-trailing-slash"
