@@ -385,6 +385,48 @@ gtag('config', 'G-FJDC3EN75W', { 'anonymize_ip': true});
 </section>
 
 </main> <!-- /main -->
+<script>
+// Shows "Back" only on the page reached directly from the company site.
+// A later click inside the blog changes the referrer, so the link stays hidden.
+// history.back() returns the reader to the same spot on the company page.
+(function () {
+  var companyOrigins = [
+    "https://website.royal-unit-fc2e.workers.dev",
+    "http://localhost:4321",
+    "http://127.0.0.1:4321"
+  ];
+  var referrer;
+  try {
+    referrer = new URL(document.referrer);
+  } catch (error) {
+    return;
+  }
+  if (companyOrigins.indexOf(referrer.origin) === -1) {
+    return;
+  }
+
+  var main = document.querySelector("#quarto-content main.content");
+  if (!main) {
+    return;
+  }
+
+  var home = referrer.origin + "/";
+  var bar = document.createElement("p");
+  bar.className = "back-link";
+  var link = document.createElement("a");
+  link.href = home;
+  link.setAttribute("aria-label", "Back to Problem Solvers Guild");
+  link.textContent = "← Back";
+  link.addEventListener("click", function (event) {
+    if (window.history.length > 1) {
+      event.preventDefault();
+      window.history.back();
+    }
+  });
+  bar.appendChild(link);
+  main.insertBefore(bar, main.firstChild);
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right

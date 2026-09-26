@@ -1,1 +1,10 @@
 /* css styles */
+
+/* Back link shown only after arriving from the company site. */
+.back-link {
+  margin: 0 0 1rem;
+}
+
+.back-link a {
+  text-decoration: none;
+}

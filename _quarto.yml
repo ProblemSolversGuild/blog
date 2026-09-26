@@ -22,6 +22,8 @@ format:
       dark: [darkly, dark.scss]
     respect-user-color-scheme: true
     css: styles.css
+    # Inserts the conditional back link on every page.
+    include-after-body: back-link.html
 
 
 
