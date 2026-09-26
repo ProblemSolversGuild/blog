@@ -7,5 +7,44 @@ $font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "
 $headings-font-weight: 400;
 $web-font-path: false;
 
-// Dark gray bar in place of Darkly's blue header.
-$navbar-bg: #2a2a2a;
+// Cool blue-gray palette from the company site's dark mode.
+$body-bg: #12161a;
+$body-bg-dark: #12161a;
+$body-color: #e7eef3;
+$body-color-dark: #e7eef3;
+$body-secondary-color: #9aa7b2;
+$body-secondary-color-dark: #9aa7b2;
+$body-tertiary-color: rgba(154, 167, 178, 0.75);
+$body-tertiary-color-dark: rgba(154, 167, 178, 0.75);
+$body-secondary-bg: #1a2026;
+$body-secondary-bg-dark: #1a2026;
+$body-tertiary-bg: #1a2026;
+$body-tertiary-bg-dark: #1a2026;
+$emphasis-color: #e7eef3;
+$emphasis-color-dark: #e7eef3;
+$border-color: #2c363f;
+$border-color-dark: #2c363f;
+$primary: #7eb4d6;
+$link-color: #7eb4d6;
+$link-hover-color: #9ac6e2;
+$link-color-dark: #7eb4d6;
+$link-hover-color-dark: #9ac6e2;
+$navbar-bg: #12161a;
+
+/*-- scss:rules --*/
+// Header rule and muted dates, matching the company site's dark surfaces.
+.navbar {
+  border-bottom: 1px solid #2c363f;
+}
+
+.listing-date,
+.listing-author,
+.listing-category,
+.quarto-listing-category .category {
+  color: #9aa7b2;
+}
+
+.listing-category,
+.quarto-listing-category .category {
+  border-color: #2c363f;
+}
