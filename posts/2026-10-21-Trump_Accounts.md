@@ -104,7 +104,7 @@ Trump Accounts are designed to give eligible children a head start on long-term 
 
 ---
 
-# Just for Illustration: What Could $1,000 Grow Into?
+## Just for Illustration: What Could $1,000 Grow Into?
 
 Now that we’ve covered the official program information, let’s imagine one simple scenario: a child receives the $1,000 starting contribution, nobody adds any more money, and the money stays invested for the long term.
 
