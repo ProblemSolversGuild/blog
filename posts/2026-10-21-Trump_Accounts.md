@@ -12,7 +12,7 @@ format:
     link-external-newwindow: true
 ---
 
-I had not looked closely at Trump Accounts until this week, when an email from the Social Security Administration landed in my inbox. It described them as investment accounts for children, said parents and guardians can claim an account in a free app, and said children born from January 1, 2025, through December 31, 2028, can receive a one-time $1,000 from the U.S. Treasury. It also said nearly 70 million accounts are already open, and that many already have money from donors waiting to be claimed. ↗ [Social Security email](notebook_images/2026-10-21-Trump_Accounts/ssa-email.png){target="_blank"}
+I had not looked closely at Trump Accounts until this week, when an email from the Social Security Administration landed in my inbox. It described them as investment accounts for children, said parents and guardians can claim an account in a free app, and said children born from January 1, 2025, through December 31, 2028, can receive a one-time $1,000 from the U.S. Treasury. It also said nearly 70 million accounts are already open, and that many already have money from donors waiting to be claimed. ↗ [Social Security email](notebook_images/2026-10-21-Trump_Accounts/ssa-email.png?v=2){target="_blank"}
 
 That was enough to make me curious. What is the account, exactly? Who receives the $1,000? And what happens to the money later? Here is what I found.
 
@@ -99,7 +99,7 @@ Trump Accounts are designed to give eligible children a head start on long-term 
 - [U.S. Treasury — Fund Choices, July 1, 2026](https://home.treasury.gov/news/press-releases/sb0551)
 - [U.S. Treasury — Program launch, July 4, 2026](https://home.treasury.gov/news/press-releases/sb0554)
 - [U.S. Treasury — Automatic enrollment, October 1, 2026](https://home.treasury.gov/news/press-releases/sb0642/)
-- [Social Security Administration email](notebook_images/2026-10-21-Trump_Accounts/ssa-email.png){target="_blank"}
+- [Social Security Administration email](notebook_images/2026-10-21-Trump_Accounts/ssa-email.png?v=2){target="_blank"}
 
 
 ---
