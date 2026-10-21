@@ -8,3 +8,42 @@
 .back-link a {
   text-decoration: none;
 }
+
+/* Event dates sit on their own line. The left rule connects them. */
+.timeline {
+  --timeline-pad: 1.15rem;
+  position: relative;
+  margin: 0.25rem 0 1.25rem 0.35rem;
+  padding: 0 0 0 var(--timeline-pad);
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0.72em;
+  bottom: 1.15rem;
+  width: 2px;
+  background: var(--bs-primary);
+}
+
+.timeline p {
+  margin-bottom: 1.15rem;
+}
+
+.timeline p:has(> strong:only-child) {
+  position: relative;
+  margin-bottom: 0.15rem;
+}
+
+.timeline p:has(> strong:only-child)::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--timeline-pad) * -1 - 5px);
+  top: 0.35em;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--bs-primary);
+  box-shadow: 0 0 0 3px var(--bs-body-bg);
+}
