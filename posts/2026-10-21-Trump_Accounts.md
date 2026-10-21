@@ -110,7 +110,7 @@ Now that we’ve covered the official program information, let’s imagine one s
 
 The table below is **only an illustration**. It is not a government projection, a promise, or a prediction of what a Trump Account will earn. It simply shows how different hypothetical rates of growth can lead to different outcomes over time.
 
-| Child’s age | Slower growth (4% a year) | Middle example (7% a year) | Faster growth (10% a year) |
+| Age | Slower growth<br>(4% a year) | Middle example<br>(7% a year) | Faster growth<br>(10% a year) |
 |---:|---:|---:|---:|
 | 18 | $2,026 | $3,380 | $5,560 |
 | 30 | $3,243 | $7,612 | $17,449 |
