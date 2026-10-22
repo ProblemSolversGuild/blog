@@ -175,7 +175,23 @@ div.quarto-post .thumbnail img {
     padding-bottom: 0.5rem;
   }
 
+  /* The wide desktop gap becomes vertical space once the date drops below the text. */
+  div.quarto-post.image-right,
+  div.quarto-post.image-left {
+    gap: 0.35rem;
+  }
+
+  div.quarto-post .body {
+    flex: 0 1 auto;
+  }
+
+  div.quarto-post .listing-description,
+  div.quarto-post .listing-description p {
+    margin: 0;
+  }
+
   div.quarto-post .metadata {
+    margin-top: 0;
     padding-bottom: 0;
   }
 
@@ -207,7 +223,7 @@ div.quarto-post .thumbnail img {
 }
 
 .navbar-logo {
-  height: 1.55rem;
+  height: 1.9rem;
   max-height: none;
   padding-right: 0;
 }
@@ -223,15 +239,15 @@ div.quarto-post .thumbnail img {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: Montserrat, "Avenir Next", "Century Gothic", sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.22rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: normal;
   line-height: 1;
   text-transform: uppercase;
 }
 
 body.quarto-light .navbar-title {
-  color: #626260;
+  color: #5d6e7a;
 }
 
 body.quarto-dark .navbar-title {
@@ -273,16 +289,40 @@ body.quarto-dark .navbar-title {
   line-height: 0;
 }
 
-.navbar .quarto-color-scheme-toggle .bi,
-.navbar .quarto-color-scheme-toggle .bi::before {
+/* Same pill as problemsolversguild.com: taupe track, white knob on the left. */
+.navbar .quarto-color-scheme-toggle .bi {
+  position: relative;
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: #c9c3ba;
   line-height: 0;
 }
 
-.navbar .quarto-color-scheme-toggle .bi::before {
-  background-size: 32px 32px;
+.navbar .quarto-color-scheme-toggle:not(.alternate) .bi::before,
+.navbar .quarto-color-scheme-toggle.alternate .bi::before {
+  content: "";
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: #fff;
+  background-image: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.18s ease;
+}
+
+.navbar .quarto-color-scheme-toggle.alternate .bi {
+  background: #969696;
+}
+
+.navbar .quarto-color-scheme-toggle.alternate .bi::before {
+  background-color: #171716;
+  transform: translateX(0.75rem);
 }
 
 .navbar .nav-item.compact {

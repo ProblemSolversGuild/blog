@@ -1,0 +1,39 @@
+/*-- scss:defaults --*/
+// Same reading size as dark mode, so the page does not reflow when toggling.
+$font-size-base: 1.0625rem;
+$line-height-base: 1.65;
+$headings-font-weight: 400;
+$h1h2h3-font-weight: 400;
+
+// Google's page white. Links stay the deeper ice blue.
+$body-bg: #fff;
+$body-color: #24303a;
+$body-secondary-color: #5d6e7a;
+$body-tertiary-color: rgba(93, 110, 122, 0.75);
+$body-secondary-bg: #f8f9fa;
+$body-tertiary-bg: #f8f9fa;
+$body-emphasis-color: #24303a;
+$border-color: #dadce0;
+$primary: #2f6f96;
+$link-color: #2f6f96;
+$link-hover-color: #24587a;
+$navbar-bg: #fff;
+$code-bg: #f1f3f4;
+$code-color: #24303a;
+
+/*-- scss:rules --*/
+.navbar {
+  border-bottom: none;
+}
+
+.listing-date,
+.listing-author,
+.listing-category,
+.quarto-listing-category .category {
+  color: #5d6e7a;
+}
+
+.listing-category,
+.quarto-listing-category .category {
+  border-color: #dadce0;
+}
