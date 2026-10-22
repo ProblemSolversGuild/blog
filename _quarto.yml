@@ -9,6 +9,14 @@ website:
   favicon: "favicon.ico"
   google-analytics: "G-FJDC3EN75W"
   navbar:
+    collapse: false
+    logo:
+      light:
+        path: castle-light.svg
+        alt: Problem Solvers Guild
+      dark:
+        path: castle-dark.svg
+        alt: Problem Solvers Guild
     right:
       # Stays on every page. The back link above the posts does not.
       - icon: house

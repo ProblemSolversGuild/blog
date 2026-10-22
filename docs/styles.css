@@ -1,4 +1,5 @@
 /* css styles */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap");
 
 /* Back link shown only after arriving from the company site. */
 .back-link {
@@ -46,4 +47,289 @@
   border-radius: 50%;
   background: var(--bs-primary);
   box-shadow: 0 0 0 3px var(--bs-body-bg);
+}
+
+/* The title bar scrolls with the page. Headroom's inline offset is cancelled. */
+body.nav-fixed {
+  padding-top: 0 !important;
+}
+
+#quarto-header {
+  position: static;
+  transform: none;
+  transition: none;
+}
+
+.sidebar {
+  top: 0 !important;
+}
+
+/* One column for the title bar and the page. */
+:root {
+  --shell: min(68rem, calc(100% - 2.5rem));
+}
+
+#quarto-header > nav.navbar {
+  position: relative;
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: none;
+}
+
+#quarto-header > nav.navbar::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: var(--shell);
+  border-bottom: 1px solid var(--bs-border-color, #2c363f);
+  transform: translateX(-50%);
+}
+
+.navbar > .navbar-container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+/* Posts, then categories. Listing pages use a shorter top gap. */
+#quarto-content.page-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  width: var(--shell);
+  margin-inline: auto;
+  padding-top: 1.5rem;
+}
+
+body:has(.quarto-listing) #quarto-content.page-columns {
+  padding-top: 0.5rem;
+}
+
+#quarto-content > main {
+  order: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#quarto-content > #quarto-margin-sidebar {
+  order: 2;
+  flex: 0 0 13rem;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+body:has(.quarto-listing) #title-block-header {
+  display: none;
+}
+
+div.quarto-post {
+  margin-bottom: 0.5rem;
+}
+
+.quarto-listing.quarto-listing-container-default {
+  margin-right: 0;
+}
+
+div.quarto-post .listing-categories {
+  margin-top: 0.45rem;
+}
+
+body.quarto-dark :not(pre) > code {
+  background-color: #2c363f;
+  color: #e7eef3;
+}
+
+.quarto-post .thumbnail:has(.listing-item-img-placeholder) {
+  display: none;
+}
+
+div.quarto-post .thumbnail img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  div.quarto-post .metadata {
+    flex: 0 0 9.5rem;
+  }
+
+  div.quarto-post .body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  div.quarto-post .thumbnail {
+    flex: 0 0 auto;
+    width: min(11rem, 32%);
+  }
+}
+
+@media (max-width: 767.98px) {
+  div.quarto-post {
+    padding-bottom: 0.5rem;
+  }
+
+  div.quarto-post .metadata {
+    padding-bottom: 0;
+  }
+
+  div.quarto-post .metadata a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+}
+
+/* Castle, title, toggle, icons, search. The title shrinks before the icons do. */
+.navbar > .navbar-container > .navbar-brand-container {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: none;
+  margin-left: 0 !important;
+  margin-right: 0.75rem !important;
+}
+
+.navbar .navbar-brand {
+  margin-right: 0;
+}
+
+.navbar .navbar-brand-logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-right: 0.7rem;
+}
+
+.navbar-logo {
+  height: 1.55rem;
+  max-height: none;
+  padding-right: 0;
+}
+
+.navbar .navbar-brand:not(.navbar-brand-logo) {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.navbar-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: Montserrat, "Avenir Next", "Century Gothic", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+body.quarto-light .navbar-title {
+  color: #626260;
+}
+
+body.quarto-dark .navbar-title {
+  color: #969696;
+}
+
+.navbar .navbar-nav {
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.navbar .quarto-navbar-tools {
+  order: 2;
+  display: flex;
+  align-items: center;
+  height: 2rem;
+  margin-right: 0.45rem;
+}
+
+.navbar .navbar-container > .navbar-nav {
+  order: 3;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.navbar #quarto-search {
+  order: 4;
+  display: flex;
+  align-items: center;
+  height: 2rem;
+  margin-left: 0.15rem;
+}
+
+.navbar .quarto-color-scheme-toggle {
+  display: inline-flex;
+  align-items: center;
+  height: 2rem;
+  padding: 0 !important;
+  line-height: 0;
+}
+
+.navbar .quarto-color-scheme-toggle .bi,
+.navbar .quarto-color-scheme-toggle .bi::before {
+  display: block;
+  width: 32px;
+  height: 32px;
+  line-height: 0;
+}
+
+.navbar .quarto-color-scheme-toggle .bi::before {
+  background-size: 32px 32px;
+}
+
+.navbar .nav-item.compact {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .nav-item.compact .nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 2rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.navbar .nav-link i.bi,
+.navbar #quarto-search.type-overlay .aa-Autocomplete svg.aa-SubmitIcon,
+.navbar .aa-SubmitIcon {
+  display: block;
+  width: 1.15rem;
+  height: 1.15rem;
+  line-height: 1;
+}
+
+.navbar .nav-link i.bi {
+  font-size: 1.15rem;
+  padding: 0;
+}
+
+.navbar .nav-link i.bi::before {
+  display: block;
+  line-height: 1;
+}
+
+.navbar .aa-Autocomplete,
+.navbar .aa-DetachedSearchButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  padding: 0;
+}
+
+.navbar .aa-DetachedSearchButton,
+.navbar #quarto-search.type-overlay .aa-Autocomplete {
+  width: 1.75rem;
+  min-width: 0;
 }
