@@ -20,7 +20,7 @@ website:
     right:
       # Stays on every page. The back link above the posts does not.
       - icon: house
-        href: https://website.royal-unit-fc2e.workers.dev/
+        href: https://problemsolversguild.com/
         aria-label: Problem Solvers Guild
       - icon: github
         href: https://github.com/orgs/ProblemSolversGuild
